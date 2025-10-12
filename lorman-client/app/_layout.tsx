@@ -20,6 +20,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+
       <View className="flex h-screen w-screen items-center justify-center">
         <View style={{ flex: 1 }} className="w-full max-w-[1920px]">
           <Stack screenOptions={{ headerShown: false }} />
