@@ -47,7 +47,7 @@ const nosotros = () => {
         <Accordion type="single" collapsible className="w-3/4" defaultValue="item-1">
           {FAQ_DATA.map((faq, index) => (
             <View key={`faq-${index}`} className="w-full">
-              <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionItem value={`item-${index}`}>
                 <AccordionTrigger>
                   <Text className="text-primaryDark text-2xl font-semibold">{faq.question}</Text>
                 </AccordionTrigger>
