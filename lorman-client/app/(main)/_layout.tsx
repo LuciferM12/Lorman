@@ -2,15 +2,14 @@ import Header from '@/components/custom/Header';
 import React from 'react';
 import { View } from 'react-native';
 import { Stack } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MainLayout = () => {
   return (
-    <View className="flex h-full w-full flex-col">
+    <SafeAreaView className="flex-1 bg-white">
       <Header />
-      <View className="flex-1 pt-20">
-        <Stack screenOptions={{ headerShown: false }} />
-      </View>
-    </View>
+      <Stack screenOptions={{ headerShown: false }} />
+    </SafeAreaView>
   );
 };
 
