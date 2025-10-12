@@ -10,27 +10,27 @@ import { Text, View } from 'react-native';
 
 const FAQ_DATA = [
   {
-    question: 'What is your return policy?',
+    question: '¿Cuál es su política de devoluciones?',
     answer:
-      "We stand behind our products with a comprehensive 30-day return policy. If you're not completely satisfied, simply return the item in its original condition.",
+      "Respaldamos nuestros productos con una política de devolución de 30 días. Si no estás completamente satisfecho, simplemente devuelve el artículo en su estado original.",
   },
   {
-    question: 'How long does shipping take?',
+    question: '¿Cuánto tarda el envío?',
     answer:
-      'Shipping times vary based on your location, but most orders are delivered within 5-7 business days.',
+      'El tiempo de envío varía según tu ubicación, pero la mayoría de los pedidos se entregan en un plazo de 5 a 7 días hábiles.',
   },
   {
-    question: 'Do you offer international shipping?',
-    answer: 'Yes, we ship to many countries worldwide. Shipping fees and delivery times may vary.',
+    question: '¿Ofrecen envíos internacionales?',
+    answer: 'Sí, realizamos envíos a muchos países del mundo. Las tarifas y los tiempos de entrega pueden variar.',
   },
   {
-    question: 'How can I track my order?',
+    question: '¿Cómo puedo rastrear mi pedido?',
     answer:
-      "Once your order is shipped, you will receive a tracking number via email to monitor your package's progress.",
+      "Una vez que tu pedido sea enviado, recibirás un número de seguimiento por correo electrónico para monitorear el progreso de tu paquete.",
   },
   {
-    question: 'What payment methods do you accept?',
-    answer: 'We accept all major credit cards, PayPal, and other secure payment methods.',
+    question: '¿Qué métodos de pago aceptan?',
+    answer: 'Aceptamos todas las principales tarjetas de crédito, PayPal y otros métodos de pago seguros.',
   },
 ];
 
