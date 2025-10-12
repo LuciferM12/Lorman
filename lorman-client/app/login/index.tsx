@@ -1,4 +1,4 @@
-import { SignInForm } from '@/components/sign-in-form';
+import { SignInForm } from '@/components/custom/sign-in-form';
 import { ScrollView, View, ImageBackground } from 'react-native';
 
 export default function SignInScreen() {

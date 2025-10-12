@@ -18,7 +18,7 @@ const Header = () => {
 
   return (
     <View className="absolute left-0 right-0 top-0 z-50 h-20 items-center justify-center bg-white">
-      <View className="flex w-full flex-row items-center justify-between gap-2 p-4">
+      <View className="flex w-full flex-row items-center justify-between gap-2 p-4 max-w-[1920px]">
         <Link href={'./'}>
           <Pressable>
             <View className="flex flex-row items-center justify-center gap-1">
@@ -42,9 +42,8 @@ const Header = () => {
 
         <Button
           onPress={() => router.push('/pedido' as any)}
-          style={{ backgroundColor: COLORS.primaryLight }}
-        >
-          <Text className='text-lg text-white font-bold'>Pedir ahora</Text>
+          style={{ backgroundColor: COLORS.primaryLight }}>
+          <Text className="text-lg font-bold text-white">Pedir ahora</Text>
         </Button>
       </View>
     </View>

@@ -22,7 +22,7 @@ export default function RootLayout() {
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
 
       <View className="flex h-screen w-screen items-center justify-center">
-        <View style={{ flex: 1 }} className="w-full max-w-[1920px]">
+        <View style={{ flex: 1 }} className="w-full">
           <Stack screenOptions={{ headerShown: false }} />
           <PortalHost />
         </View>

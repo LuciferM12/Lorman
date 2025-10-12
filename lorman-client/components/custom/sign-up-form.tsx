@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
-import { COLORS } from '../constants/colors';
+import { COLORS } from '../../constants/colors';
 
 type SignUpData = {
   fullName: string;

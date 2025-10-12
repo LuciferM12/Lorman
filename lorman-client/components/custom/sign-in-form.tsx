@@ -12,7 +12,7 @@ import { Text } from '@/components/ui/text';
 import * as React from 'react';
 import { Pressable, type TextInput, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-import { COLORS } from '../constants/colors';
+import { COLORS } from '../../constants/colors';
 
 type SignInData = {
   email: string;
