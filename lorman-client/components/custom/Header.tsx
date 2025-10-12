@@ -43,8 +43,8 @@ const Header = () => {
         <Button
           onPress={() => router.push('/pedido' as any)}
           style={{ backgroundColor: COLORS.primaryLight }}
-          className="text-lg text-white">
-          <Text>Pedir ahora</Text>
+        >
+          <Text className='text-lg text-white font-bold'>Pedir ahora</Text>
         </Button>
       </View>
     </View>
