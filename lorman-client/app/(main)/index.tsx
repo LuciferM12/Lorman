@@ -51,13 +51,13 @@ export default function Screen() {
         }}
       />
 
-      {/* Más contenido debajo */}
+      
       <View style={styles.content}>
         <Text className="font-bold text-3xl text-center mt-20">
           Welcome to Lorman App!
         </Text>
         <Text className="text-center mt-4 px-6">
-          Aquí puedes agregar todo tu contenido adicional
+          Aqui falta agregar la info jeje, promos etc
         </Text>
       </View>
     </Animated.ScrollView>

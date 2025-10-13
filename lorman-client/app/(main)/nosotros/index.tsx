@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import { Text, View } from 'react-native';
 import Banner from '@/components/custom/banner/banner';
+import FeatureCard from '@/components/custom/featureCard';
 
 import Animated, {
   useAnimatedRef,
@@ -40,6 +41,32 @@ const FAQ_DATA = [
   },
 ];
 
+
+import { Feather } from '@expo/vector-icons';
+
+const features: {
+    iconName: keyof typeof Feather.glyphMap;
+    title: string;
+    description: string;
+  }[] = [
+      {
+        iconName: 'target',
+        title: 'Misión',
+        description: 'Proveer agua purificada y hielo de la más alta calidad, contribuyendo a la salud y bienestar de las familias y negocios.',
+      },
+      {
+        iconName: 'eye',
+        title: 'Visión',
+        description: 'Ser la empresa líder en el mercado local de agua y hielo, reconocida por nuestra innovación, compromiso y excelencia.',
+      },
+      {
+        iconName: 'heart',
+        title: 'Valores',
+        description: 'Calidad, Confianza, Puntualidad, Integridad y Compromiso son los pilares que guían nuestras acciones.',
+      },
+    ];
+
+
 const nosotros = () => {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
@@ -51,12 +78,12 @@ const nosotros = () => {
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
       >
-        {/* Banner pequeño con parallax */}
+        
         <Banner
           size="small"
-          title="Conoce sobre nosotros"
-          subtitle="Calidad y confianza en cada gota. Llevamos la frescura del agua y hielo Lorman directamente a tu hogar."
-          buttonText="Descúbrenos"
+          title="Comprometidos con tu Bienestar"
+          subtitle="Conoce la historia y los valores que hacen de Lorman tu mejor opción."
+          buttonText="Preguntas Frecuentes"
           imageSource={require('@/assets/images/agua.jpg')}
           scrollOffset={scrollOffset}
           onButtonPress={() => {
@@ -64,9 +91,24 @@ const nosotros = () => {
           }}
         />
 
-        {/* Contenido de FAQ */}
+        
         <View className="flex items-center justify-center p-4 py-12">
           <View className="w-full max-w-[90%] items-center lg:w-[1920px]">
+            {/* Tarjetas de características */}
+            <View className="flex-row justify-around items-start w-full mb-8">
+              {features.map((feature, index) => (
+                <FeatureCard
+                  key={index}
+                  iconName={feature.iconName}
+                  title={feature.title}
+                  description={feature.description}
+                />
+              ))}
+            </View>
+            
+            <Separator className="m-10" />
+
+            {/* Preguntas frecuentes */}
             <Text className="text-primaryDark mb-4 text-center text-4xl font-bold">
               Preguntas Frecuentes
             </Text>
