@@ -9,6 +9,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Banner from '@/components/custom/banner/banner';
 import FeatureCard from '@/components/custom/featureCard';
+import Process from '@/components/custom/process/process';
 
 import Animated, {
   useAnimatedRef,
@@ -108,7 +109,17 @@ const nosotros = () => {
             
             <Separator className="m-10" />
 
-            {/* Preguntas frecuentes */}
+            <Text className="text-primaryDark mb-4 text-center text-4xl font-bold">
+              Nuestro proceso de purificación
+            </Text>
+            <Text className="text-primaryDark/75 mb-8 text-center text-xl">
+              Descubre cómo garantizamos la pureza y calidad en cada gota de agua que entregamos.
+            </Text>
+
+            <Process />
+
+            <Separator className="m-10" />
+
             <Text className="text-primaryDark mb-4 text-center text-4xl font-bold">
               Preguntas Frecuentes
             </Text>
