@@ -5,8 +5,15 @@ import { Link, Stack } from 'expo-router';
 import { MoonStarIcon, StarIcon, SunIcon } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Image, type ImageStyle, View } from 'react-native';
-import Banner from '@/components/custom/banner';
+import { Image, type ImageStyle, View, StyleSheet } from 'react-native';
+import Banner from '@/components/custom/banner/banner';
+
+
+import Animated, {
+  useAnimatedRef,
+  useScrollViewOffset,
+} from "react-native-reanimated";
+
 
 const LOGO = {
   light: require('@/assets/images/react-native-reusables-light.png'),
@@ -27,25 +34,44 @@ const IMAGE_STYLE: ImageStyle = {
 export default function Screen() {
   const { colorScheme } = useColorScheme();
 
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  const scrollOffset = useScrollViewOffset(scrollRef);
+  
   return (
-    <>
-      <Stack.Screen options={SCREEN_OPTIONS} />
-      <View className="flex-1 items-center justify-center gap-8 p-4">
-         
-        <Banner
-          size="small"
-          title="Pureza que Refresca tu Vida"
-          subtitle="Calidad y confianza en cada gota. Llevamos la frescura del agua y hielo Lorman directamente a tu hogar."
-          buttonText="Descubre nuestros productos"
-          imageSource={require('@/assets/images/agua.jpg')}
-          onButtonPress={() => {
-            console.log('Navegando a productos...');
-          }}
-        />
+    <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
+      <Banner
+        size="large"
+        title="Pureza que Refresca tu Vida"
+        subtitle="Calidad y confianza en cada gota. Llevamos la frescura del agua y hielo Lorman directamente a tu hogar."
+        buttonText="Descubre nuestros productos"
+        imageSource={require("@/assets/images/agua.jpg")}
+        scrollOffset={scrollOffset}
+        onButtonPress={() => {
+          console.log("Navegando a productos...");
+        }}
+      />
+
+      {/* Más contenido debajo */}
+      <View style={styles.content}>
+        <Text className="font-bold text-3xl text-center mt-20">
+          Welcome to Lorman App!
+        </Text>
+        <Text className="text-center mt-4 px-6">
+          Aquí puedes agregar todo tu contenido adicional
+        </Text>
       </View>
-    </>
+    </Animated.ScrollView>
   );
 }
+
+
+const styles = StyleSheet.create({
+  content: {
+    minHeight: 500,
+    backgroundColor: "#fff",
+    paddingVertical: 20,
+  },
+});
 
 const THEME_ICONS = {
   light: SunIcon,
