@@ -5,10 +5,10 @@ export const BANNER_CONFIG = {
     large: 700,
   },
   overlay: {
-    backgroundColor: "rgba(0, 40, 80, 0.6)", // Puedes cambiar el color aquí
+    backgroundColor: "rgba(0, 40, 80, 0.6)", 
   },
   button: {
-    backgroundColor: "#3b9fc9", // Color del botón
+    backgroundColor: "#3b9fc9",
     borderRadius: 8,
   },
   typography: {
