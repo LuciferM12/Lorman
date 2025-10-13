@@ -1,8 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
-import ProcessStepCard from './cardProcess'; // Asegúrate que la ruta sea correcta
+import ProcessStepCard from './cardProcess'; 
 
-// 1. Los datos del proceso
+
 const processSteps = [
   {
     step: 1,
@@ -26,40 +26,31 @@ const processSteps = [
   },
 ];
 
-// 2. El componente que renderiza la timeline
 const Process = () => {
   return (
-    // Contenedor principal para la timeline con padding horizontal
     <View className="px-5 mt-8 mb-10">
-      {/* La línea vertical central */}
       <View className="absolute left-1/2 top-0 h-full w-0.5 bg-gray-200" />
 
-      {/* Mapeamos los pasos */}
       {processSteps.map((item, index) => {
         const isRightSide = index % 2 === 0;
 
         return (
           <View key={item.step} className="flex-row items-center my-4">
             {isRightSide ? (
-              // Lado izquierdo vacío
               <View className="w-1/2" />
             ) : (
-              // Tarjeta en el lado izquierdo
               <View className="w-1/2 pr-4">
                 <ProcessStepCard {...item} />
               </View>
             )}
 
-            {/* Círculo en la línea central */}
             <View className="absolute left-1/2 -ml-2 h-4 w-4 rounded-full bg-blue-500 border-4 border-white dark:border-gray-800" />
 
             {isRightSide ? (
-              // Tarjeta en el lado derecho
               <View className="w-1/2 pl-4">
                 <ProcessStepCard {...item} />
               </View>
             ) : (
-              // Lado derecho vacío
               <View className="w-1/2" />
             )}
           </View>
