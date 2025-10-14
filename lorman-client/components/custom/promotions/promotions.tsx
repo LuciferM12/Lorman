@@ -63,7 +63,7 @@ const Promotions: React.FC = () => {
   const maxWidth = 1920;
   const constrainedWidth = Math.min(screenWidth, maxWidth);
   const itemWidth = Math.min(constrainedWidth - 64, 350);
-  const itemHeight = Math.max(180, screenHeight * 0.4);
+  const itemHeight = Math.max(180, screenHeight * 0.45);
   const itemMarginHorizontal = 12;
   const snapDistance = itemWidth + itemMarginHorizontal * 2;
 
