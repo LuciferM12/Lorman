@@ -13,6 +13,7 @@ import Animated, {
   useAnimatedRef,
   useScrollViewOffset,
 } from "react-native-reanimated";
+import Promotions from '@/components/custom/promotions/promotions';
 
 
 const LOGO = {
@@ -50,7 +51,7 @@ export default function Screen() {
           console.log("Navegando a productos...");
         }}
       />
-
+      <Promotions />
       
       <View style={styles.content}>
         <Text className="font-bold text-3xl text-center mt-20">
