@@ -10,7 +10,7 @@ import { Text, View } from 'react-native';
 import Banner from '@/components/custom/banner/banner';
 import FeatureCard from '@/components/custom/featureCard';
 import Process from '@/components/custom/process/process';
-
+import { Feather } from '@expo/vector-icons';
 import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
 
 const FAQ_DATA = [
@@ -41,7 +41,7 @@ const FAQ_DATA = [
   },
 ];
 
-import { Feather } from '@expo/vector-icons';
+
 
 const features: {
   iconName: keyof typeof Feather.glyphMap;
@@ -92,7 +92,7 @@ const nosotros = () => {
 
         <View className="flex items-center justify-center p-4 py-12">
           <View className="w-full max-w-[90%] items-center lg:w-[1920px]">
-            {/* Tarjetas de características */}
+            
             <View className="mb-8 w-full flex-row items-start justify-around">
               {features.map((feature, index) => (
                 <FeatureCard
