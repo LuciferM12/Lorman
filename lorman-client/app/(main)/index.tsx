@@ -9,6 +9,12 @@ import { Image, type ImageStyle, View, StyleSheet } from 'react-native';
 import Banner from '@/components/custom/banner/banner';
 
 
+import { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ReviewGrid } from '@/components/custom/reviews/reviewGrid';
+import { ReviewForm } from '@/components/custom/reviews/reviewForm';
+
+
 import Animated, {
   useAnimatedRef,
   useScrollViewOffset,
@@ -35,6 +41,8 @@ const IMAGE_STYLE: ImageStyle = {
 export default function Screen() {
   const { colorScheme } = useColorScheme();
 
+  const [value, setValue] = useState('reviews');
+
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
   
@@ -53,14 +61,36 @@ export default function Screen() {
       />
       <Promotions />
       
-      <View style={styles.content}>
-        <Text className="font-bold text-3xl text-center mt-20">
-          Welcome to Lorman App!
-        </Text>
-        <Text className="text-center mt-4 px-6">
-          Aqui falta agregar la info jeje, promos etc
-        </Text>
-      </View>
+
+        
+
+        <View className="flex-1 bg-background p-10">
+
+          <Text className="mb-4 text-center text-4xl font-bold text-primaryDark mt-9">
+            Reseñas y Opiniones
+          </Text>
+          <Text className="mb-8 text-center text-xl text-primaryDark/75">
+            Tu opinión es muy importante para nosotros. Lee lo que otros clientes dicen o deja tu propia reseña.
+          </Text>
+
+
+          <Tabs value={value} onValueChange={setValue} className="w-full">
+        <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsTrigger value="reviews">Ver Opiniones</TabsTrigger>
+          <TabsTrigger value="submit">Dejar Opinión</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="reviews" className="mt-6">
+          <ReviewGrid />
+        </TabsContent>
+
+        <TabsContent value="submit" className="mt-6">
+          <ReviewForm />
+        </TabsContent>
+      </Tabs>
+        </View>
+
+
     </Animated.ScrollView>
   );
 }
