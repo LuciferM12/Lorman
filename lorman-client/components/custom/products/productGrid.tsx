@@ -10,6 +10,7 @@ const PRODUCTS: Product[] = [
     title: 'Garrafón de Agua Purificada',
     description:
       'El agua más pura y fresca en nuestro práctico garrafón de 20 litros. Ideal para el hogar y la oficina.',
+    price: '$45 MXN',
     backgroundColor: '#2A9FD8',
   },
   {
@@ -17,6 +18,7 @@ const PRODUCTS: Product[] = [
     title: 'Hielo Cristalino en Bolsa',
     description:
       'Perfecto para tus bebidas, fiestas y eventos. Nuestro hielo garantiza máxima duración y pureza.',
+    price: '$35 MXN',
     backgroundColor: '#7DC8E8',
   },
   {
@@ -24,6 +26,7 @@ const PRODUCTS: Product[] = [
     title: 'Agua Embotellada',
     description:
       'Lleva la frescura de Lorman a donde vayas. Disponibles en presentaciones de 500ml y 1L.',
+    price: '$12 MXN',
     backgroundColor: '#E8F4F8',
     textColor: '#003B5C',
   },

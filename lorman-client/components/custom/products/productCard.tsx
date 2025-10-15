@@ -7,6 +7,7 @@ export type Product = {
   id: number;
   title: string;
   description: string;
+  price: string;
   backgroundColor: string;
   textColor?: string;
   imageSource?: any;
@@ -37,6 +38,16 @@ export const ProductCard = ({ product, onPress }: ProductCardProps) => {
         <Text style={[styles.title, isLightCard && { color: product.textColor }]}>
           {product.title}
         </Text>
+
+        <View style={styles.priceContainer}>
+          <Text style={[styles.priceLabel, isLightCard && { color: product.textColor }]}>
+            Desde
+          </Text>
+          <Text style={[styles.price, isLightCard && { color: product.textColor }]}>
+            {product.price}
+          </Text>
+        </View>
+
         <Text
           style={[
             styles.description,
@@ -63,6 +74,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 12,
     elevation: 5,
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: 12,
+    gap: 6,
+  },
+  priceLabel: {
+    fontSize: 14,
+    color: '#fff',
+    opacity: 0.9,
+    fontWeight: '500',
+  },
+  price: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
   },
   imageContainer: {
     width: '100%',
