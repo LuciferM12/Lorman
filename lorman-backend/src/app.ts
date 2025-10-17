@@ -1,6 +1,7 @@
 import express from "express";
 import { errorHandler } from "./middlewares/errorHandler";
 import { supabaseClient } from "./config/supabaseClient";
+import userRoutes from "./routes/users.routes";
 
 const app = express();
 
@@ -14,6 +15,8 @@ app.get("/ping", async (req, res) => {
     }
     return res.json({ message: "Connection successful", data });
 })
+
+app.use("/users", userRoutes)
 
 app.use(errorHandler);
 
