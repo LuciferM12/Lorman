@@ -12,7 +12,7 @@ export const registerUserSchema = z.object({
 export const UserSchema = registerUserSchema.extend({
     id_usuario: z.number(),
     dias_entrega_preferidos: z.string().optional(),
-    fecha_registro: z.date(),
+    fecha_registro: z.coerce.date(),
     rol: z.enum(["admin", "cliente"]).default("cliente"),
 })
 
