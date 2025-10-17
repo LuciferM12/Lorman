@@ -1,0 +1,23 @@
+import express from "express";
+import { errorHandler } from "./middlewares/errorHandler";
+import { supabaseClient } from "./config/supabaseClient";
+import userRoutes from "./routes/users.routes";
+
+const app = express();
+
+app.use(express.json());
+
+// TODO: Routes must be defined here 
+app.get("/ping", async (req, res) => {
+    const { data, error } = await supabaseClient.from("usuarios").select("*").limit(1);
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+    return res.json({ message: "Connection successful", data });
+})
+
+app.use("/users", userRoutes)
+
+app.use(errorHandler);
+
+export default app;
