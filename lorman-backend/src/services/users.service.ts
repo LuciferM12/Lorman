@@ -1,10 +1,10 @@
-import { RegisterUserDTO, UserDTO } from "../interfaces/users.interface";
+import { RegisterUserDTO, UserDTO, UserResponseDTO, UserResponseSchema } from "../interfaces/users.interface";
 import UserRepository from "../repositories/users.repository";
 import { comparePasswords, hashPassword } from "../utils/encryption";
 import { generateToken } from "../utils/jwt";
 
 const UserService = {
-    async registerUser(data: RegisterUserDTO): Promise<UserDTO> {
+    async registerUser(data: RegisterUserDTO): Promise<UserResponseDTO> {
         const existing = await UserRepository.findByEmail(data.email);
         if (existing) {
             throw new Error("Email already in use");
@@ -18,7 +18,7 @@ const UserService = {
         return newUser;
     },
 
-    async login(email: string, password: string) {
+    async login(email: string, password: string): Promise<{ token: string; user: UserResponseDTO }> {
         const user = await UserRepository.findByEmail(email);
         if (!user) {
             throw new Error("Invalid email or password");
@@ -29,8 +29,10 @@ const UserService = {
             throw new Error("Invalid email or password");
         }
 
+        const userWithoutPassword = UserResponseSchema.parse(user);
+
         const token = generateToken({ id_usuario: user.id_usuario, email: user.email, rol: user.rol });
-        return { token, user };
+        return { token, user: userWithoutPassword };
     }
 }
 

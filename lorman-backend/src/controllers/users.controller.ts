@@ -9,8 +9,8 @@ const UsersController = {
             if (!parsed.success) {
                 return res.status(400).json({ error: "Invalid request data", details: parsed.error.flatten().fieldErrors })
             }
-            
-            const newUser = await UserService.registerUser(req.body)
+
+            const newUser = await UserService.registerUser(parsed.data)
             res.status(201).json({ message: "User registered successfully", user: newUser });
 
         } catch (error: any) {

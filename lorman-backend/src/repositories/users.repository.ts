@@ -1,15 +1,16 @@
 import { supabaseClient } from "../config/supabaseClient";
-import { RegisterUserDTO, UserDTO } from "../interfaces/users.interface";
+import { RegisterUserDTO, UserDTO, UserResponseDTO, UserResponseSchema } from "../interfaces/users.interface";
 
 const TABLE = "usuarios";
 
 const UserRepository = {
-    async create(data: RegisterUserDTO): Promise<UserDTO> {
+    async create(data: RegisterUserDTO): Promise<UserResponseDTO> {
         const { data: result, error } = await supabaseClient.from(TABLE).insert([data]).select('*').single();
         if (error) {
             throw new Error(`Error creating user: ${error.message}`);
         }
-        return result as UserDTO;
+        const userWithoutPassword = UserResponseSchema.parse(result);
+        return userWithoutPassword;
     },
 
     async findById(id: number): Promise<UserDTO | null> {
@@ -42,12 +43,12 @@ const UserRepository = {
         return data as UserDTO[];
     },
 
-    async update(id: number, data: Partial<RegisterUserDTO>): Promise<UserDTO> {
+    async update(id: number, data: Partial<RegisterUserDTO>): Promise<UserResponseDTO> {
         const { data: result, error } = await supabaseClient.from(TABLE).update(data).eq('id_usuario', id).select('*').single();
         if (error) {
             throw new Error(`Error updating user: ${error.message}`);
         }
-        return result as UserDTO;
+        return result as UserResponseDTO;
     },
 
     async delete(id: number): Promise<void> {
