@@ -18,7 +18,7 @@ export async function loginUser(data: LoginInput) {
     } catch (error: any) {
         if (error.response) {
             throw new Error(
-                `Error en la respuesta del servidor: ${error.response.data && typeof error.response.data === 'object'
+                `${error.response.data && typeof error.response.data === 'object'
                     ? (error.response.data.message || JSON.stringify(error.response.data))
                     : error.response.data
                 }`
