@@ -12,6 +12,7 @@ import FeatureCard from '@/components/custom/featureCard';
 import Process from '@/components/custom/process/process';
 import { Feather } from '@expo/vector-icons';
 import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
+import LormanFooter from '@/components/custom/Footer';
 
 const FAQ_DATA = [
   {
@@ -140,6 +141,7 @@ const nosotros = () => {
             </Accordion>
           </View>
         </View>
+        <LormanFooter/>
       </Animated.ScrollView>
     </View>
   );

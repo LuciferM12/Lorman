@@ -1,6 +1,5 @@
 import Header from '@/components/custom/Header';
 import React from 'react';
-import { View } from 'react-native';
 import { Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
