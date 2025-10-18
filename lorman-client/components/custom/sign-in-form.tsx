@@ -39,7 +39,7 @@ export function SignInForm({ handleLogin }: SignInFormProps) {
       const result = await handleLogin(data);
       router.navigate('/');
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error('Error durante el inicio de sesión:', error);
     }
   };
 
