@@ -1,7 +1,11 @@
 import { LoginInput } from '@/interfaces/ILogin'
 import axios from 'axios'
 
-export const API_URL = process.env.EXPO_PUBLIC_API_URL_LOCAL;
+const apiUrl = process.env.EXPO_PUBLIC_API_URL_LOCAL;
+if (!apiUrl) {
+    throw new Error('API_URL is not defined. Please set EXPO_PUBLIC_API_URL_LOCAL in your environment variables.');
+}
+export const API_URL = apiUrl;
 
 export async function loginUser(data: LoginInput) {
     try {
