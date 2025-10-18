@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const registerUserSchema = z.object({
-    nombre_completo: z.string().min(1, "Name is required"),
-    email: z.string().email("Invalid email address"),
-    telefono: z.string().min(10, "Telephone number must be at least 10 digits").optional(),
-    password_hash: z.string().min(6, "Password must be at least 6 characters long"),
+    nombre_completo: z.string().min(1, "El nombre completo es requerido"),
+    email: z.string().email("Dirección de correo electrónico inválida"),
+    telefono: z.string().min(10, "El numero de teléfono debe tener 10 caracteres").optional(),
+    password_hash: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
     direccion: z.string().default("").nullable(),
 })
 

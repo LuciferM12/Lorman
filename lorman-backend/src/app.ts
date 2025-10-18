@@ -24,7 +24,7 @@ app.get("/ping", async (req, res) => {
     if (error) {
         return res.status(500).json({ error: error.message });
     }
-    return res.json({ message: "Connection successful", data });
+    return res.json({ message: "Conexión exitosa", data });
 })
 
 app.use("/users", userRoutes)
