@@ -37,7 +37,7 @@ const ProductController = {
             if (!parsed.success) {
                 return res.status(400).json({ error: "Solicitud de datos inválida", details: parsed.error.flatten().fieldErrors })
             }
-            const updatedProduct = await ProductService.updateProduct(productId, updatedData);
+            const updatedProduct = await ProductService.updateProduct(productId, parsed.data);
             res.status(200).json({ message: "Producto actualizado exitosamente", product: updatedProduct });
         } catch (error: any) {
             res.status(400).json({ message: error.message });
