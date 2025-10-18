@@ -5,6 +5,7 @@ import userRoutes from "./routes/users.routes";
 import cors from "cors";
 import productRoutes from "./routes/products.routes";
 import reviewRoutes from "./routes/reviews.routes";
+import faqRoutes from "./routes/faq.routes";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.get("/ping", async (req, res) => {
 app.use("/users", userRoutes)
 app.use("/products", productRoutes)
 app.use("/reviews", reviewRoutes)
+app.use("/faqs", faqRoutes)
 
 app.use(errorHandler);
 
