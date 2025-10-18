@@ -50,3 +50,5 @@ const ProductRepository = {
         }
     }
 };
+
+export default ProductRepository;
