@@ -33,9 +33,6 @@ const ReviewController = {
                 return res.status(400).json({ error: "El ID de la reseña debe ser un entero positivo" });
             }
             const review = await ReviewService.getReviewById(reviewId);
-            if (!review) {
-                return res.status(404).json({ message: "Reseña no encontrada" });
-            }
             res.status(200).json({ review });
         } catch (error: any) {
             res.status(400).json({ message: error.message });
