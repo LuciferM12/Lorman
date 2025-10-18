@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Pressable, type TextInput } from 'react-native';
+import { View, type TextInput } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,39 +7,47 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
 import { COLORS } from '../../constants/colors';
+import { registerSchema, RegisterType } from '@/interfaces/IRegister';
+import { useRouter } from 'expo-router';
 
-type SignUpData = {
-  fullName: string;
-  phone: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+interface SignInFormProps {
+  handleRegister: (data: RegisterType) => Promise<unknown>;
+}
 
-export function SignUpForm() {
+export function SignUpForm({ handleRegister }: SignInFormProps) {
   const phoneInputRef = React.useRef<TextInput>(null);
   const emailInputRef = React.useRef<TextInput>(null);
   const passwordInputRef = React.useRef<TextInput>(null);
   const confirmPasswordInputRef = React.useRef<TextInput>(null);
+  const router = useRouter();
 
   const {
     control,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<SignUpData>({
+  } = useForm<RegisterType>({
     defaultValues: {
-      fullName: '',
-      phone: '',
+      nombre: '',
+      telefono: '',
       email: '',
       password: '',
       confirmPassword: '',
     },
   });
 
-  const onSubmit = (data: SignUpData) => {
-    console.log('Datos del registro:', data);
-    // TODO: Lógica para registrar usuario y navegar
+  const onSubmit = async (data: RegisterType) => {
+    try {
+      const valid = registerSchema.safeParse(data);
+      if (!valid.success) {
+        console.error('Errores de validación:', valid.error.format());
+        return;
+      }
+      const result = await handleRegister(data);
+      router.navigate('/');
+    } catch (error) {
+      console.error('Error during registration:', error);
+    }
   };
 
   const password = watch('password');
@@ -60,10 +68,10 @@ export function SignUpForm() {
           <View style={{ flexDirection: 'row', gap: 24 }}>
             <View style={{ flex: 1, gap: 12 }}>
               <View className="gap-1.5">
-                <Label htmlFor="fullName">Nombre completo</Label>
+                <Label htmlFor="nombre">Nombre completo</Label>
                 <Controller
                   control={control}
-                  name="fullName"
+                  name="nombre"
                   rules={{
                     required: 'El nombre completo es obligatorio',
                     minLength: { value: 3, message: 'Nombre demasiado corto' },
@@ -80,16 +88,16 @@ export function SignUpForm() {
                     />
                   )}
                 />
-                {errors.fullName && (
-                  <Text className="mt-1 text-sm text-red-500">{errors.fullName.message}</Text>
+                {errors.nombre && (
+                  <Text className="mt-1 text-sm text-red-500">{errors.nombre.message}</Text>
                 )}
               </View>
 
               <View className="gap-1.5">
-                <Label htmlFor="phone">Teléfono</Label>
+                <Label htmlFor="telefono">Teléfono</Label>
                 <Controller
                   control={control}
-                  name="phone"
+                  name="telefono"
                   rules={{
                     required: 'El teléfono es obligatorio',
                     pattern: {
@@ -100,7 +108,7 @@ export function SignUpForm() {
                   render={({ field: { onChange, value } }) => (
                     <Input
                       ref={phoneInputRef}
-                      id="phone"
+                      id="telefono"
                       placeholder="Tu teléfono"
                       keyboardType="phone-pad"
                       returnKeyType="next"
@@ -110,8 +118,8 @@ export function SignUpForm() {
                     />
                   )}
                 />
-                {errors.phone && (
-                  <Text className="mt-1 text-sm text-red-500">{errors.phone.message}</Text>
+                {errors.telefono && (
+                  <Text className="mt-1 text-sm text-red-500">{errors.telefono.message}</Text>
                 )}
               </View>
 
