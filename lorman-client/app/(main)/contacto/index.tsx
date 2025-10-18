@@ -7,7 +7,6 @@ import ContactForm from '@/components/custom/contact/contactForm';
 import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
 import Banner from '@/components/custom/banner/banner';
 import LormanFooter from '@/components/custom/Footer';
-import { WebView } from 'react-native-webview';
 
 export default function ContactScreen() {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
