@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, useWindowDimensions } from 'react-native';
 import Animated, { useAnimatedStyle, interpolate, SharedValue } from 'react-native-reanimated';
 import { Button } from '@/components/ui/button';
 import { Text as UIText } from '@/components/ui/text';
@@ -27,6 +27,11 @@ const Banner = ({
 }: BannerProps) => {
   const { titleSize, subtitleSize, buttonPadding, imageHeight } = getBannerSizes(size);
 
+  // Responsive width
+  const { width: windowWidth } = useWindowDimensions();
+  const MAX_WIDTH = 3000; // ajusta si quieres otro máximo en pantallas grandes
+  const containerWidth = Math.min(windowWidth, MAX_WIDTH);
+
   const imageAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -51,10 +56,15 @@ const Banner = ({
   });
 
   return (
-    <View style={[bannerStyles.imageContainer, { height: imageHeight }]}>
+    <View
+      style={[
+        bannerStyles.imageContainer,
+        { height: imageHeight, width: containerWidth, alignSelf: 'center' },
+      ]}>
       <Animated.Image
         source={imageSource}
-        style={[bannerStyles.image, { height: imageHeight }, imageAnimatedStyle]}
+        style={[bannerStyles.image, { height: imageHeight, width: '100%' }, imageAnimatedStyle]}
+        resizeMode="cover"
       />
 
       <View style={bannerStyles.overlay} />

@@ -1,4 +1,3 @@
-// components/admin/AdminSidebar.tsx
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
 import { View, Pressable } from 'react-native';
@@ -9,25 +8,24 @@ import {
   FileText,
   Palette,
 } from 'lucide-react-native';
+import { Link, usePathname } from 'expo-router';
 
 type MenuItem = {
   id: string;
   label: string;
   icon: any;
+  route: string;
 };
 
-type AdminSidebarProps = {
-  selectedSection: string;
-  onSectionChange: (section: string) => void;
-};
+export default function AdminSidebar() {
+  const pathname = usePathname();
 
-export default function AdminSidebar({ selectedSection, onSectionChange }: AdminSidebarProps) {
   const menuItems: MenuItem[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'usuarios', label: 'Gestión de Usuarios', icon: Users },
-    { id: 'productos', label: 'Gestión de Productos', icon: Package },
-    { id: 'pedidos', label: 'Pedidos', icon: FileText },
-    { id: 'personalizacion', label: 'Personalización', icon: Palette },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, route: '/admin' },
+    { id: 'usuarios', label: 'Gestión de Usuarios', icon: Users, route: '/admin/usuarios' },
+    { id: 'productos', label: 'Gestión de Productos', icon: Package, route: '/admin/productos' },
+    { id: 'pedidos', label: 'Pedidos', icon: FileText, route: '/admin/pedidos' },
+    { id: 'personalizacion', label: 'Personalización', icon: Palette, route: '/admin/personalizacion' },
   ];
 
   return (
@@ -44,18 +42,25 @@ export default function AdminSidebar({ selectedSection, onSectionChange }: Admin
       <View className="flex-1 gap-2">
         {menuItems.map((item) => {
           const Icon = item.icon;
-          const isSelected = selectedSection === item.id;
+          const isSelected = pathname === item.route;
 
           return (
-            <Pressable
-              key={item.id}
-              onPress={() => onSectionChange(item.id)}
-              className={`flex-row items-center gap-3 rounded-lg p-3 ${
-                isSelected ? 'bg-white/20' : ''
-              }`}>
-              <Icon size={20} color="#fff" />
-              <Text className="text-sm text-white">{item.label}</Text>
-            </Pressable>
+            <Link href={item.route as any} key={item.id} asChild>
+              <Pressable
+                className={`flex-row items-center gap-3 rounded-lg p-3 ${
+                  isSelected ? 'bg-white/20' : ''
+                }`}
+              >
+                <Icon size={20} color="#fff" />
+                <Text
+                  className={`text-lg font-semibold ${
+                    isSelected ? 'text-white' : 'text-white/90'
+                  }`}
+                >
+                  {item.label}
+                </Text>
+              </Pressable>
+            </Link>
           );
         })}
       </View>
