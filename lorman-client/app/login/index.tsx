@@ -1,4 +1,4 @@
-import { loginUser } from '@/api/login';
+import { loginUser } from '@/api/users';
 import { SignInForm } from '@/components/custom/sign-in-form';
 import { ScrollView, View, ImageBackground } from 'react-native';
 

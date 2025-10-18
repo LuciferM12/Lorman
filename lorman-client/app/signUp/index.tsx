@@ -1,3 +1,4 @@
+import { register } from '@/api/users';
 import { SignUpForm } from '@/components/custom/sign-up-form';
 import { ScrollView, View, ImageBackground } from 'react-native';
 
@@ -13,7 +14,7 @@ export default function SignInScreen() {
         contentContainerClassName="sm:flex-1 items-center justify-center p-4 py-8 sm:py-4 sm:p-6 mt-safe"
         keyboardDismissMode="interactive">
         <View className="w-full max-w-sm">
-          <SignUpForm />
+          <SignUpForm handleRegister={register}/>
         </View>
       </ScrollView>
     </ImageBackground>
