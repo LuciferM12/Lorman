@@ -1,4 +1,3 @@
-// screens/ShoppingCartScreen.tsx
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
 import { View, ScrollView } from 'react-native';
