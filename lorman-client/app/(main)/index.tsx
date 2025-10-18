@@ -68,10 +68,10 @@ export default function Screen() {
         <Tabs value={value} onValueChange={setValue} className="w-full">
           <TabsList className="grid w-full max-w-md grid-cols-2">
             <TabsTrigger value="reviews">
-              <Text className='text-slate-800'>Ver Opiniones</Text>
+              <Text className="text-slate-800">Ver Opiniones</Text>
             </TabsTrigger>
             <TabsTrigger value="submit">
-              <Text className='text-slate-800'>Dejar Opinión</Text>
+              <Text className="text-slate-800">Dejar Opinión</Text>
             </TabsTrigger>
           </TabsList>
 
@@ -84,6 +84,7 @@ export default function Screen() {
           </TabsContent>
         </Tabs>
       </View>
+
       <LormanFooter />
     </Animated.ScrollView>
   );

@@ -13,6 +13,7 @@ import Process from '@/components/custom/process/process';
 import { Feather } from '@expo/vector-icons';
 import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
 import LormanFooter from '@/components/custom/Footer';
+import FeedbackForm from '@/components/custom/feedback/feedbackForm';
 
 const FAQ_DATA = [
   {
@@ -141,7 +142,11 @@ const nosotros = () => {
             </Accordion>
           </View>
         </View>
-        <LormanFooter/>
+
+        <Separator className="m-10" />
+        <FeedbackForm />
+
+        <LormanFooter />
       </Animated.ScrollView>
     </View>
   );
