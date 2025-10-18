@@ -8,6 +8,7 @@ import { Pressable, type TextInput, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { COLORS } from '../../constants/colors';
 import { LoginInput, loginSchema } from '@/interfaces/ILogin';
+import { useRouter } from 'expo-router';
 
 interface SignInFormProps {
   handleLogin: (data: LoginInput) => void;
@@ -15,6 +16,7 @@ interface SignInFormProps {
 
 export function SignInForm({ handleLogin }: SignInFormProps) {
   const passwordInputRef = React.useRef<TextInput>(null);
+  const router = useRouter();
 
   const {
     control,
@@ -28,13 +30,17 @@ export function SignInForm({ handleLogin }: SignInFormProps) {
   });
 
   const onSubmit = async (data: LoginInput) => {
-    const valid = loginSchema.safeParse(data);
-    if (!valid.success) {
-      console.error('Errores de validación:', valid.error.format());
-      return;
+    try {
+      const valid = loginSchema.safeParse(data);
+      if (!valid.success) {
+        console.error('Errores de validación:', valid.error.format());
+        return;
+      }
+      const result = await handleLogin(data);
+      router.navigate('/');
+    } catch (error) {
+      console.error('Error during login:', error);
     }
-    const result = await handleLogin(data);
-    console.log('Resultado del inicio de sesion', result);
   };
 
   return (
