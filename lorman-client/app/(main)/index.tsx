@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
-import { MoonStarIcon, StarIcon, SunIcon } from 'lucide-react-native';
+import { MoonStarIcon, SunIcon } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Image, type ImageStyle, View, StyleSheet } from 'react-native';
+import { type ImageStyle, View, StyleSheet } from 'react-native';
 import Banner from '@/components/custom/banner/banner';
 
 import { useState } from 'react';
