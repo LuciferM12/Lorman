@@ -2,13 +2,7 @@ import React from 'react';
 import { View, Pressable, type TextInput } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
@@ -53,9 +47,8 @@ export function SignUpForm() {
   return (
     <View className="gap-6">
       <Card
-        className="border-border/0 sm:border-border shadow-none sm:shadow-sm sm:shadow-black/5"
-        style={{ width: 700, alignSelf: 'center' }}
-      >
+        className="border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5"
+        style={{ width: 700, alignSelf: 'center' }}>
         <CardHeader>
           <CardTitle className="text-center text-xl sm:text-left">Registrarse</CardTitle>
           <CardDescription className="text-center sm:text-left">
@@ -65,9 +58,7 @@ export function SignUpForm() {
 
         <CardContent className="gap-6">
           <View style={{ flexDirection: 'row', gap: 24 }}>
-           
             <View style={{ flex: 1, gap: 12 }}>
-              
               <View className="gap-1.5">
                 <Label htmlFor="fullName">Nombre completo</Label>
                 <Controller
@@ -90,11 +81,10 @@ export function SignUpForm() {
                   )}
                 />
                 {errors.fullName && (
-                  <Text className="text-red-500 text-sm mt-1">{errors.fullName.message}</Text>
+                  <Text className="mt-1 text-sm text-red-500">{errors.fullName.message}</Text>
                 )}
               </View>
 
-              
               <View className="gap-1.5">
                 <Label htmlFor="phone">Teléfono</Label>
                 <Controller
@@ -121,11 +111,10 @@ export function SignUpForm() {
                   )}
                 />
                 {errors.phone && (
-                  <Text className="text-red-500 text-sm mt-1">{errors.phone.message}</Text>
+                  <Text className="mt-1 text-sm text-red-500">{errors.phone.message}</Text>
                 )}
               </View>
 
-              
               <View className="gap-1.5">
                 <Label htmlFor="password">Contraseña</Label>
                 <Controller
@@ -152,14 +141,12 @@ export function SignUpForm() {
                   )}
                 />
                 {errors.password && (
-                  <Text className="text-red-500 text-sm mt-1">{errors.password.message}</Text>
+                  <Text className="mt-1 text-sm text-red-500">{errors.password.message}</Text>
                 )}
               </View>
             </View>
 
-            
             <View style={{ flex: 1, gap: 12 }}>
-             
               <View className="gap-1.5">
                 <Label htmlFor="email">Correo electrónico</Label>
                 <Controller
@@ -187,11 +174,10 @@ export function SignUpForm() {
                   )}
                 />
                 {errors.email && (
-                  <Text className="text-red-500 text-sm mt-1">{errors.email.message}</Text>
+                  <Text className="mt-1 text-sm text-red-500">{errors.email.message}</Text>
                 )}
               </View>
 
-             
               <View className="gap-1.5">
                 <Label htmlFor="confirmPassword">Confirmar contraseña</Label>
                 <Controller
@@ -199,8 +185,7 @@ export function SignUpForm() {
                   name="confirmPassword"
                   rules={{
                     required: 'Debes confirmar tu contraseña',
-                    validate: (value) =>
-                      value === password || 'Las contraseñas no coinciden',
+                    validate: (value) => value === password || 'Las contraseñas no coinciden',
                   }}
                   render={({ field: { onChange, value } }) => (
                     <Input
@@ -216,7 +201,7 @@ export function SignUpForm() {
                   )}
                 />
                 {errors.confirmPassword && (
-                  <Text className="text-red-500 text-sm mt-1">
+                  <Text className="mt-1 text-sm text-red-500">
                     {errors.confirmPassword.message}
                   </Text>
                 )}
@@ -224,12 +209,10 @@ export function SignUpForm() {
             </View>
           </View>
 
-        
           <Button
-            className="w-full mt-6"
+            className="mt-6 w-full"
             style={{ backgroundColor: COLORS.primaryDark }}
-            onPress={handleSubmit(onSubmit)}
-          >
+            onPress={handleSubmit(onSubmit)}>
             <Text className="text-white">Registrar</Text>
           </Button>
         </CardContent>

@@ -1,14 +1,10 @@
-import { View, Text } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  interpolate,
-  SharedValue,
-} from "react-native-reanimated";
-import { Button } from "@/components/ui/button";
-import { Text as UIText } from "@/components/ui/text";
-import { bannerStyles, getBannerSizes } from "./bannerStyles";
+import { View, Text } from 'react-native';
+import Animated, { useAnimatedStyle, interpolate, SharedValue } from 'react-native-reanimated';
+import { Button } from '@/components/ui/button';
+import { Text as UIText } from '@/components/ui/text';
+import { bannerStyles, getBannerSizes } from './bannerStyles';
 
-type BannerSize = "small" | "medium" | "large";
+type BannerSize = 'small' | 'medium' | 'large';
 
 type BannerProps = {
   size?: BannerSize;
@@ -21,7 +17,7 @@ type BannerProps = {
 };
 
 const Banner = ({
-  size = "large",
+  size = 'large',
   title,
   subtitle,
   buttonText,
@@ -42,11 +38,7 @@ const Banner = ({
           ),
         },
         {
-          scale: interpolate(
-            scrollOffset.value,
-            [-imageHeight, 0, imageHeight],
-            [2, 1, 1]
-          ),
+          scale: interpolate(scrollOffset.value, [-imageHeight, 0, imageHeight], [2, 1, 1]),
         },
       ],
     };
@@ -62,26 +54,17 @@ const Banner = ({
     <View style={[bannerStyles.imageContainer, { height: imageHeight }]}>
       <Animated.Image
         source={imageSource}
-        style={[
-          bannerStyles.image,
-          { height: imageHeight },
-          imageAnimatedStyle,
-        ]}
+        style={[bannerStyles.image, { height: imageHeight }, imageAnimatedStyle]}
       />
 
       <View style={bannerStyles.overlay} />
 
       <Animated.View style={[bannerStyles.contentOverlay, overlayAnimatedStyle]}>
-        <Text style={[bannerStyles.title, { fontSize: titleSize }]}>
-          {title}
-        </Text>
-        <Text style={[bannerStyles.subtitle, { fontSize: subtitleSize }]}>
-          {subtitle}
-        </Text>
+        <Text style={[bannerStyles.title, { fontSize: titleSize }]}>{title}</Text>
+        <Text style={[bannerStyles.subtitle, { fontSize: subtitleSize }]}>{subtitle}</Text>
         <Button
           style={[bannerStyles.button, { paddingVertical: buttonPadding }]}
-          onPress={onButtonPress}
-        >
+          onPress={onButtonPress}>
           <UIText style={bannerStyles.buttonText}>{buttonText}</UIText>
         </Button>
       </Animated.View>

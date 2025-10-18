@@ -1,11 +1,5 @@
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
@@ -40,7 +34,7 @@ export function SignInForm() {
 
   return (
     <View className="gap-6">
-      <Card className="border-border/0 sm:border-border shadow-none sm:shadow-sm sm:shadow-black/5">
+      <Card className="border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5">
         <CardHeader>
           <CardTitle className="text-center text-xl sm:text-left">Inicio de sesión</CardTitle>
           <CardDescription className="text-center sm:text-left">
@@ -49,7 +43,6 @@ export function SignInForm() {
         </CardHeader>
         <CardContent className="gap-6">
           <View className="gap-6">
-            
             <View className="gap-1.5">
               <Label htmlFor="email">Correo electrónico</Label>
               <Controller
@@ -77,18 +70,17 @@ export function SignInForm() {
                 )}
               />
               {errors.email && (
-                <Text className="text-red-500 text-sm mt-1">{errors.email.message}</Text>
+                <Text className="mt-1 text-sm text-red-500">{errors.email.message}</Text>
               )}
             </View>
 
-            
             <View className="gap-1.5">
               <View className="flex-row items-center">
                 <Label htmlFor="password">Contraseña</Label>
                 <Button
                   variant="link"
                   size="sm"
-                  className="web:h-fit ml-auto h-4 px-1 py-0 sm:h-4"
+                  className="ml-auto h-4 px-1 py-0 web:h-fit sm:h-4"
                   onPress={() => {
                     // TODO: Navigate to forgot password screen
                   }}>
@@ -119,15 +111,14 @@ export function SignInForm() {
                 )}
               />
               {errors.password && (
-                <Text className="text-red-500 text-sm mt-1">{errors.password.message}</Text>
+                <Text className="mt-1 text-sm text-red-500">{errors.password.message}</Text>
               )}
             </View>
 
-            <Button 
-              className="w-full" 
-              style={{ backgroundColor: COLORS.primaryDark }} 
-              onPress={handleSubmit(onSubmit)}
-            >
+            <Button
+              className="w-full"
+              style={{ backgroundColor: COLORS.primaryDark }}
+              onPress={handleSubmit(onSubmit)}>
               <Text className="text-white">Ingresar</Text>
             </Button>
           </View>

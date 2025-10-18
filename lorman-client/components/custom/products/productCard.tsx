@@ -24,16 +24,13 @@ export const ProductCard = ({ product, onPress }: ProductCardProps) => {
   return (
     <Pressable
       style={[styles.card, { backgroundColor: product.backgroundColor }]}
-      onPress={onPress}
-    >
-      
+      onPress={onPress}>
       <View style={styles.imageContainer}>
         <Text style={[styles.imageText, isLightCard && { color: product.textColor }]}>
           {product.title.split(' ')[0]}
         </Text>
       </View>
 
-      
       <View style={styles.content}>
         <Text style={[styles.title, isLightCard && { color: product.textColor }]}>
           {product.title}
@@ -49,16 +46,10 @@ export const ProductCard = ({ product, onPress }: ProductCardProps) => {
         </View>
 
         <Text
-          style={[
-            styles.description,
-            isLightCard && { color: product.textColor, opacity: 0.8 },
-          ]}
-        >
+          style={[styles.description, isLightCard && { color: product.textColor, opacity: 0.8 }]}>
           {product.description}
         </Text>
-        <Text style={[styles.link, isLightCard && { color: '#2A9FD8' }]}>
-          Ver más detalles →
-        </Text>
+        <Text style={[styles.link, isLightCard && { color: '#2A9FD8' }]}>Ver más detalles →</Text>
       </View>
     </Pressable>
   );

@@ -18,7 +18,7 @@ const Header = () => {
 
   return (
     <View className="absolute left-0 right-0 top-0 z-50 h-20 items-center justify-center bg-white">
-      <View className="flex w-full flex-row items-center justify-between gap-2 p-4 max-w-[1920px]">
+      <View className="flex w-full max-w-[1920px] flex-row items-center justify-between gap-2 p-4">
         <Link href={'./'}>
           <Pressable>
             <View className="flex flex-row items-center justify-center gap-1">
