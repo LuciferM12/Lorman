@@ -18,7 +18,7 @@ const ProductService = {
     async listProducts(limit = 100, offset = 0): Promise<ProductDTO[]> {
         const products = await ProductRepository.list(limit, offset);
         if (!products || products.length === 0) {
-            throw new Error("No se encontraron productos");
+            return [];
         }
         return products;
     },

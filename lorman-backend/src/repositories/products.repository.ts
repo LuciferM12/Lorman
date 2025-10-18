@@ -30,7 +30,7 @@ const ProductRepository = {
         if (error) {
             throw new Error(`Error listando productos: ${error.message}`);
         }
-        return data as ProductDTO[];
+        return ProductSchema.array().parse(data);
     },
 
     async update(id: number, data: Partial<ProductDTO>): Promise<ProductDTO> {
