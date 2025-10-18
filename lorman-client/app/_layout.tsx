@@ -8,6 +8,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'nativewind';
 import { View } from 'react-native';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -27,6 +28,11 @@ export default function RootLayout() {
           <PortalHost />
         </View>
       </View>
+
+      <Toast position="bottom"/>
     </ThemeProvider>
   );
 }
+
+
+

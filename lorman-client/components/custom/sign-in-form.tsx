@@ -9,6 +9,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { COLORS } from '../../constants/colors';
 import { LoginInput, loginSchema } from '@/interfaces/ILogin';
 import { useRouter } from 'expo-router';
+import Toast from 'react-native-toast-message';
+import { Link } from 'expo-router';
 
 interface SignInFormProps {
   handleLogin: (data: LoginInput) => Promise<unknown>;
@@ -34,12 +36,33 @@ export function SignInForm({ handleLogin }: SignInFormProps) {
       const valid = loginSchema.safeParse(data);
       if (!valid.success) {
         console.error('Errores de validación:', valid.error.format());
+
+        const firstError = valid.error.errors[0]?.message || 'Datos inválidos.';
+        Toast.show({
+          type: 'error',
+          text1: 'Error de validación',
+          text2: firstError,
+        });
         return;
       }
+
       const result = await handleLogin(data);
+
+      Toast.show({
+        type: 'success',
+        text1: '¡Bienvenido!',
+        text2: 'Inicio de sesión exitoso.',
+      });
+
       router.navigate('/');
-    } catch (error) {
-      console.error('Error durante el inicio de sesión:', error);
+    } catch (error: any) {
+      console.error('Error during login:', error);
+
+      Toast.show({
+        type: 'error',
+        text1: 'Error al iniciar sesión',
+        text2: error.message || 'Ocurrió un error inesperado.',
+      });
     }
   };
 
@@ -92,9 +115,7 @@ export function SignInForm({ handleLogin }: SignInFormProps) {
                   variant="link"
                   size="sm"
                   className="ml-auto h-4 px-1 py-0 web:h-fit sm:h-4"
-                  onPress={() => {
-                    // TODO: Navigate to forgot password screen
-                  }}>
+                  onPress={() => {}}>
                   <Text className="font-normal leading-4">¿Olvidaste tu contraseña?</Text>
                 </Button>
               </View>
@@ -136,12 +157,11 @@ export function SignInForm({ handleLogin }: SignInFormProps) {
 
           <Text className="text-center text-sm">
             ¿No tienes cuenta?{' '}
-            <Pressable
-              onPress={() => {
-                // TODO: Navigate to sign up screen
-              }}>
-              <Text className="text-sm underline underline-offset-4">Registrarse</Text>
-            </Pressable>
+            <Link href={'./signUp'}>
+              <Pressable onPress={() => {}}>
+                <Text className="text-sm underline underline-offset-4">Registrarse</Text>
+              </Pressable>
+            </Link>
           </Text>
         </CardContent>
       </Card>
