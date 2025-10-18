@@ -9,6 +9,7 @@ import { Text } from '@/components/ui/text';
 import { COLORS } from '../../constants/colors';
 import { registerSchema, RegisterType } from '@/interfaces/IRegister';
 import { useRouter } from 'expo-router';
+import Toast from 'react-native-toast-message'; 
 
 interface SignInFormProps {
   handleRegister: (data: RegisterType) => Promise<unknown>;
@@ -41,12 +42,33 @@ export function SignUpForm({ handleRegister }: SignInFormProps) {
       const valid = registerSchema.safeParse(data);
       if (!valid.success) {
         console.error('Errores de validación:', valid.error.format());
+
+        const firstError = valid.error.errors[0]?.message || 'Datos inválidos.';
+        Toast.show({
+          type: 'error',
+          text1: 'Error en el formulario',
+          text2: firstError,
+        });
         return;
       }
+
       const result = await handleRegister(data);
+
+      Toast.show({
+        type: 'success',
+        text1: '¡Registro exitoso!',
+        text2: 'Tu cuenta ha sido creada.',
+      });
+
       router.navigate('/');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error during registration:', error);
+
+      Toast.show({
+        type: 'error',
+        text1: 'Error en el registro',
+        text2: error.message || 'Ocurrió un error inesperado.',
+      });
     }
   };
 
@@ -78,7 +100,7 @@ export function SignUpForm({ handleRegister }: SignInFormProps) {
                   }}
                   render={({ field: { onChange, value } }) => (
                     <Input
-                      id="fullName"
+                      id="fullName" // Corregido: 'id' en lugar de 'htmlFor'
                       placeholder="Tu nombre"
                       autoCapitalize="words"
                       returnKeyType="next"
