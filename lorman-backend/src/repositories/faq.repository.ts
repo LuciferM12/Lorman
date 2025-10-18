@@ -13,7 +13,7 @@ const FaqRepository = {
     },
 
     async findById(id: number): Promise<FaqDTO | null> {
-        const { data, error } = await supabaseClient.from(TABLE).select('*').eq('id_faq', id).single();
+        const { data, error } = await supabaseClient.from(TABLE).select('*').eq('id_pregunta', id).single();
         if (error) {
             if (error.code === 'PGRST116') { // No rows found
                 return null;
