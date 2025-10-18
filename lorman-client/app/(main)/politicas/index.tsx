@@ -8,9 +8,9 @@ import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import { Text, View } from 'react-native';
 import Banner from '@/components/custom/banner/banner';
-import { Feather } from '@expo/vector-icons';
 import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
 import AccountDeletionForm from '@/components/custom/policyForm/policyForm';
+import LormanFooter from '@/components/custom/Footer';
 
 const POLICIES = [
   {
@@ -85,6 +85,8 @@ const politicas = () => {
             <AccountDeletionForm />
           </View>
         </View>
+
+        <LormanFooter />
       </Animated.ScrollView>
     </View>
   );

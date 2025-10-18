@@ -6,6 +6,7 @@ import { ProductGrid } from '@/components/custom/products/productGrid';
 import { Product } from '@/components/custom/products/productCard';
 import FeatureCard from '@/components/custom/featureCard';
 import { Feather } from '@expo/vector-icons';
+import LormanFooter from '@/components/custom/Footer';
 
 const handleProductPressed = (product: Product) => {
   console.log('Producto presionado:', product);
@@ -78,6 +79,7 @@ const productos = () => {
             />
           ))}
         </View>
+        <LormanFooter/>
       </Animated.ScrollView>
     </View>
   );

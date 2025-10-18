@@ -16,6 +16,8 @@ import { ReviewForm } from '@/components/custom/reviews/reviewForm';
 import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
 import Promotions from '@/components/custom/promotions/promotions';
 
+import LormanFooter from '@/components/custom/Footer';
+
 const LOGO = {
   light: require('@/assets/images/react-native-reusables-light.png'),
   dark: require('@/assets/images/react-native-reusables-dark.png'),
@@ -79,6 +81,7 @@ export default function Screen() {
           </TabsContent>
         </Tabs>
       </View>
+      <LormanFooter />
     </Animated.ScrollView>
   );
 }
