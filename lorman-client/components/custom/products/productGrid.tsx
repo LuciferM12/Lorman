@@ -39,16 +39,14 @@ type ProductGridProps = {
 export const ProductGrid = ({ onProductPress }: ProductGridProps) => {
   return (
     <View style={styles.container}>
-      
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Nuestros Productos</Text>
         <Text style={styles.headerSubtitle}>
-          Ofrecemos agua purificada y hielo de la más alta calidad, perfectos para tu
-          familia y negocio.
+          Ofrecemos agua purificada y hielo de la más alta calidad, perfectos para tu familia y
+          negocio.
         </Text>
       </View>
 
-      
       <View style={styles.grid}>
         {PRODUCTS.map((product) => (
           <ProductCard

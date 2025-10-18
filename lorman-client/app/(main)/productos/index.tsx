@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import React from 'react';
+import { View, Text } from 'react-native';
 import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
 import Banner from '@/components/custom/banner/banner';
 import { ProductGrid } from '@/components/custom/products/productGrid';
@@ -9,8 +9,7 @@ import { Feather } from '@expo/vector-icons';
 
 const handleProductPressed = (product: Product) => {
   console.log('Producto presionado:', product);
-}
-
+};
 
 const features: {
   iconName: keyof typeof Feather.glyphMap;
@@ -37,18 +36,16 @@ const features: {
   },
 ];
 
-
 const productos = () => {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
 
   return (
-    <View className='flex-1 bg-white'>
+    <View className="flex-1 bg-white">
       <Animated.ScrollView
         ref={scrollRef}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}>
-
         <Banner
           size="small"
           title="Conoce nuestros Productos"
@@ -61,29 +58,29 @@ const productos = () => {
           }}
         />
 
-          <ProductGrid onProductPress={handleProductPressed}/>
+        <ProductGrid onProductPress={handleProductPressed} />
 
-          <Text className="mb-4 text-center text-4xl font-bold text-primaryDark mt-9">
-            Calidad en la que Puedes Confiar
-          </Text>
-          <Text className="mb-8 text-center text-xl text-primaryDark/75">
-            Nuestro compromiso es con tu bienestar, por eso seguimos los más altos estándares de calidad.
-          </Text>
+        <Text className="mb-4 mt-9 text-center text-4xl font-bold text-primaryDark">
+          Calidad en la que Puedes Confiar
+        </Text>
+        <Text className="mb-8 text-center text-xl text-primaryDark/75">
+          Nuestro compromiso es con tu bienestar, por eso seguimos los más altos estándares de
+          calidad.
+        </Text>
 
-          <View className="mb-8 w-full flex-row items-start justify-around mt-9">
-              {features.map((feature, index) => (
-                <FeatureCard
-                  key={index}
-                  iconName={feature.iconName}
-                  title={feature.title}
-                  description={feature.description}
-                />
-              ))}
-            </View>
-
+        <View className="mb-8 mt-9 w-full flex-row items-start justify-around">
+          {features.map((feature, index) => (
+            <FeatureCard
+              key={index}
+              iconName={feature.iconName}
+              title={feature.title}
+              description={feature.description}
+            />
+          ))}
+        </View>
       </Animated.ScrollView>
     </View>
-  )
-}
+  );
+};
 
-export default productos
+export default productos;

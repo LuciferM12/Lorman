@@ -21,11 +21,9 @@ export function ReviewForm() {
   const handleSubmit = () => {
     // Validar sesión
     if (!checkUserSession()) {
-      Alert.alert(
-        'Sesión requerida',
-        'Debes iniciar sesión para dejar una opinión',
-        [{ text: 'OK' }]
-      );
+      Alert.alert('Sesión requerida', 'Debes iniciar sesión para dejar una opinión', [
+        { text: 'OK' },
+      ]);
       return;
     }
 
@@ -43,7 +41,7 @@ export function ReviewForm() {
     // Aquí iría la lógica para enviar la reseña
     console.log('[v0] Enviando reseña:', { rating, comment });
     Alert.alert('Éxito', 'Tu opinión ha sido enviada correctamente');
-    
+
     // Limpiar formulario
     setRating(0);
     setComment('');
@@ -57,11 +55,7 @@ export function ReviewForm() {
         </Label>
         <View className="flex-row gap-2">
           {[1, 2, 3, 4, 5].map((star) => (
-            <TouchableOpacity
-              key={star}
-              onPress={() => setRating(star)}
-              activeOpacity={0.7}
-            >
+            <TouchableOpacity key={star} onPress={() => setRating(star)} activeOpacity={0.7}>
               <Star
                 size={32}
                 fill={star <= (hoveredStar || rating) ? '#facc15' : 'transparent'}
@@ -87,9 +81,7 @@ export function ReviewForm() {
       </View>
 
       <Button onPress={handleSubmit} className="w-full">
-        <Text className="text-primary-foreground font-semibold">
-          Enviar Opinión
-        </Text>
+        <Text className="font-semibold text-primary-foreground">Enviar Opinión</Text>
       </Button>
     </View>
   );

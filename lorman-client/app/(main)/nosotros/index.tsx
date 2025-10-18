@@ -41,8 +41,6 @@ const FAQ_DATA = [
   },
 ];
 
-
-
 const features: {
   iconName: keyof typeof Feather.glyphMap;
   title: string;
@@ -92,7 +90,6 @@ const nosotros = () => {
 
         <View className="flex items-center justify-center p-4 py-12">
           <View className="w-full max-w-[90%] items-center lg:w-[1920px]">
-            
             <View className="mb-8 w-full flex-row items-start justify-around">
               {features.map((feature, index) => (
                 <FeatureCard
