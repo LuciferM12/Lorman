@@ -1,4 +1,4 @@
-import { RegisterUserDTO, UserDTO, UserResponseDTO, UserResponseSchema } from "../interfaces/users.interface";
+import { RegisterUserDTO, UserResponseDTO, UserResponseSchema } from "../interfaces/users.interface";
 import UserRepository from "../repositories/users.repository";
 import { comparePasswords, hashPassword } from "../utils/encryption";
 import { generateToken } from "../utils/jwt";
