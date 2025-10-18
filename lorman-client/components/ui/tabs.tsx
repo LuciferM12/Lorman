@@ -46,7 +46,7 @@ function TabsTrigger({
           }),
           props.disabled && 'opacity-50',
           props.value === value &&
-            `bg-[#0d4477] font-semibold text-white dark:border-foreground/10 dark:bg-input/30`,
+            `bg-[#71ace2] font-semibold text-white dark:border-foreground/10 dark:bg-input/30`,
           className
         )}
         {...props}

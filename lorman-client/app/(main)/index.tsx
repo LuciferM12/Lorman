@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
-import { Link, Stack } from 'expo-router';
 import { MoonStarIcon, StarIcon, SunIcon } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -68,8 +67,12 @@ export default function Screen() {
 
         <Tabs value={value} onValueChange={setValue} className="w-full">
           <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger value="reviews">Ver Opiniones</TabsTrigger>
-            <TabsTrigger value="submit">Dejar Opinión</TabsTrigger>
+            <TabsTrigger value="reviews">
+              <Text className='text-slate-800'>Ver Opiniones</Text>
+            </TabsTrigger>
+            <TabsTrigger value="submit">
+              <Text className='text-slate-800'>Dejar Opinión</Text>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="reviews" className="mt-6">
