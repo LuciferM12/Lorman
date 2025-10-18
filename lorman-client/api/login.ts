@@ -16,7 +16,13 @@ export async function loginUser(data: LoginInput) {
         return response.data
     } catch (error: any) {
         if (error.response) {
-            throw new Error(`Error en la respuesta del servidor: ${error.response.data}`);
+            throw new Error(
+                `Error en la respuesta del servidor: ${
+                    error.response.data && typeof error.response.data === 'object'
+                        ? (error.response.data.message || JSON.stringify(error.response.data))
+                        : error.response.data
+                }`
+            );
         } else {
             throw new Error(`Error en la solicitud: ${error.message}`);
         }
