@@ -24,8 +24,15 @@ const FaqRepository = {
         return faqSchema.parse(data);
     },
 
-    async listFAQs(limit = 100, offset = 0): Promise<FaqDTO[]> {
-        const { data, error } = await supabaseClient.from(TABLE).select('*').range(offset, offset + limit - 1);
+    async listFAQs(onlyVisible = true, limit = 100, offset = 0): Promise<FaqDTO[]> {
+        let query = supabaseClient.from(TABLE).select('*').range(offset, offset + limit - 1);
+
+        if (onlyVisible) {
+            query = query.eq('visible_publicamente', true);
+        }
+        
+        const { data, error } = await query;
+
         if (error) {
             throw new Error(`Error listando las FAQs: ${error.message}`);
         }
