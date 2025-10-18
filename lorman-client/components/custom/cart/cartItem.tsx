@@ -1,4 +1,3 @@
-// components/cart/CartItem.tsx
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
 import { View, Pressable } from 'react-native';
