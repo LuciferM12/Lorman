@@ -11,7 +11,7 @@ import { LoginInput, loginSchema } from '@/interfaces/ILogin';
 import { useRouter } from 'expo-router';
 
 interface SignInFormProps {
-  handleLogin: (data: LoginInput) => void;
+  handleLogin: (data: LoginInput) => Promise<unknown>;
 }
 
 export function SignInForm({ handleLogin }: SignInFormProps) {
