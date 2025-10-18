@@ -4,6 +4,7 @@ import { supabaseClient } from "./config/supabaseClient";
 import userRoutes from "./routes/users.routes";
 import cors from "cors";
 import productRoutes from "./routes/products.routes";
+import reviewRoutes from "./routes/reviews.routes";
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.get("/ping", async (req, res) => {
 
 app.use("/users", userRoutes)
 app.use("/products", productRoutes)
+app.use("/reviews", reviewRoutes)
 
 app.use(errorHandler);
 
