@@ -1,4 +1,3 @@
-import { set } from "zod";
 import { supabaseClient } from "../config/supabaseClient";
 import { FaqDTO, FaqRegisterDTO, faqSchema } from "../interfaces/faq.interface";
 
@@ -30,7 +29,7 @@ const FaqRepository = {
         if (onlyVisible) {
             query = query.eq('visible_publicamente', true);
         }
-        
+
         const { data, error } = await query;
 
         if (error) {
