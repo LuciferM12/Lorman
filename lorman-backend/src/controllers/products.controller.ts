@@ -32,7 +32,7 @@ const ProductController = {
                 return res.status(400).json({ error: "El ID del producto es requerido" });
             }
             const productId = parseInt(req.params.id_producto, 10);
-            const updatedData = req.body;
+            const updatedData = {...req.body, id_producto: productId }; 
             const parsed = ProductSchema.safeParse(updatedData);
             if (!parsed.success) {
                 return res.status(400).json({ error: "Solicitud de datos inválida", details: parsed.error.flatten().fieldErrors })
