@@ -25,7 +25,6 @@ const UsersController = {
             if (!email || !password) {
                 return res.status(400).json({ error: "Email and password are required" });
             }
-
             const { token, user } = await UserService.login(email, password);
             res.status(200).json({ message: "Login successful", token, user });
         } catch (error: any) {

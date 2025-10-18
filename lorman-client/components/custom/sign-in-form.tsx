@@ -7,29 +7,40 @@ import * as React from 'react';
 import { Pressable, type TextInput, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { COLORS } from '../../constants/colors';
+import { LoginInput, loginSchema } from '@/interfaces/ILogin';
+import { useRouter } from 'expo-router';
 
-type SignInData = {
-  email: string;
-  password: string;
-};
+interface SignInFormProps {
+  handleLogin: (data: LoginInput) => Promise<unknown>;
+}
 
-export function SignInForm() {
+export function SignInForm({ handleLogin }: SignInFormProps) {
   const passwordInputRef = React.useRef<TextInput>(null);
+  const router = useRouter();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInData>({
+  } = useForm<LoginInput>({
     defaultValues: {
       email: '',
       password: '',
     },
   });
 
-  const onSubmit = (data: SignInData) => {
-    console.log('Datos del inicio de sesión:', data);
-    // TODO: Submit form and navigate to protected screen if successful
+  const onSubmit = async (data: LoginInput) => {
+    try {
+      const valid = loginSchema.safeParse(data);
+      if (!valid.success) {
+        console.error('Errores de validación:', valid.error.format());
+        return;
+      }
+      const result = await handleLogin(data);
+      router.navigate('/');
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
   };
 
   return (
