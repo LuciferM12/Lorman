@@ -1,4 +1,3 @@
-// app/(admin)/_layout.tsx
 import AdminSidebar from '@/components/custom/admin/Sidebar';
 import AdminHeader from '@/components/custom/admin/header';
 import React, { useState } from 'react';

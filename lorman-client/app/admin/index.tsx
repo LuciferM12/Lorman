@@ -1,4 +1,3 @@
-// app/(admin)/dashboard.tsx
 import { Text } from '@/components/ui/text';
 import { Card, CardContent } from '@/components/ui/card';
 import * as React from 'react';
