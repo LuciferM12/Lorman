@@ -1,4 +1,3 @@
-// components/cart/CartProductsList.tsx
 import { Card, CardContent } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
