@@ -1,4 +1,3 @@
-// app/(admin)/pedidos.tsx
 import { Text } from '@/components/ui/text';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
