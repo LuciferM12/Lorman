@@ -8,7 +8,7 @@ import {
 } from "../interfaces/car.interface";
 
 const TABLE_CART = "carrito";
-const TABLE_DETAILS = "detalle_carrito";
+const TABLE_DETAILS = "detalles_carrito";
 
 const CarritoRepository = {
 
@@ -102,6 +102,25 @@ const CarritoRepository = {
 
         if (error) {
             throw new Error(`Error vaciando el carrito: ${error.message}`);
+        }
+    },
+
+    async clearCarritoByCliente(id_cliente: number): Promise<void> {
+        const { data, error } = await supabaseClient
+            .from(TABLE_CART)
+            .select("id_carrito")
+            .eq("id_usuario", id_cliente);
+
+        const id_carrito = data && data.length > 0 ? data[0].id_carrito : null;
+        if (!id_carrito) {
+            throw new Error(`Carrito no encontrado para el cliente con ID ${id_cliente}`);
+        }
+        const { error: deleteError } = await supabaseClient
+            .from(TABLE_DETAILS)
+            .delete()
+            .eq("id_carrito", id_carrito);
+        if (deleteError) {
+            throw new Error(`Error vaciando el carrito: ${deleteError.message}`);
         }
     },
 };
