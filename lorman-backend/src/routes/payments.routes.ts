@@ -8,8 +8,6 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || ''
 
 const paymentsRoutes = Router();
 
-paymentsRoutes.get("/create-checkout-session", createCheckoutSession);
-
 paymentsRoutes.post("/webhook",express.raw({type: 'application/json'}), (request, response) => {
     let event = request.body;
     if (endpointSecret) {

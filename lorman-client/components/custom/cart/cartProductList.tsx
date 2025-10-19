@@ -2,22 +2,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
 import { View, Pressable } from 'react-native';
+import { CartItem as ICartItem } from '@/interfaces/ICart';
 import CartItem from './cartItem';
 
-type CartItem = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  image: any;
-};
 
 type CartProductsListProps = {
-  items: CartItem[];
-  onIncrement: (id: string) => void;
-  onDecrement: (id: string) => void;
-  onRemove: (id: string) => void;
+  items: ICartItem[];
+  onIncrement: (id: number) => void;
+  onDecrement: (id: number) => void;
+  onRemove: (id: number) => void;
   onContinueShopping: () => void;
 };
 
@@ -48,10 +41,11 @@ export default function CartProductsList({
               <CartItem
                 key={item.id}
                 id={item.id}
+                image={item.imagen}
                 name={item.name}
-                description={item.description}
-                price={item.price}
-                quantity={item.quantity}
+                description={item.descripcion}
+                price={item.precio}
+                quantity={item.cantidad}
                 onIncrement={onIncrement}
                 onDecrement={onDecrement}
                 onRemove={onRemove}

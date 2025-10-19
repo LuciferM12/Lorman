@@ -1,23 +1,25 @@
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
-import { View, Pressable } from 'react-native';
+import { View, Pressable, Image } from 'react-native';
 import { Minus, Plus } from 'lucide-react-native';
 
 type CartItemProps = {
-  id: string;
+  id: number;
   name: string;
-  description: string;
+  image?: string;
+  description: string | undefined; 
   price: number;
   quantity: number;
-  onIncrement: (id: string) => void;
-  onDecrement: (id: string) => void;
-  onRemove: (id: string) => void;
+  onIncrement: (id: number) => void;
+  onDecrement: (id: number) => void;
+  onRemove: (id: number) => void;
 };
 
 export default function CartItem({
   id,
   name,
   description,
+  image,
   price,
   quantity,
   onIncrement,
@@ -29,11 +31,15 @@ export default function CartItem({
   return (
     <View className="flex-row gap-4 border-b border-gray-200 pb-4 last:border-b-0">
       {/* Imagen del producto */}
-      <View className="h-20 w-20 items-center justify-center rounded-lg bg-[#17a2b8]">
-        <Text className="text-center text-sm font-bold text-white">
-          {name.split(' ')[0]}
-        </Text>
-      </View>
+      {image ? (
+        <Image source={{ uri: image }} className="h-20 w-20 rounded-lg" />
+      ) : (
+        <View className="h-20 w-20 items-center justify-center rounded-lg bg-[#17a2b8]">
+          <Text className="text-center text-sm font-bold text-white">
+            {name.split(' ')[0]}
+          </Text>
+        </View>
+      )}
 
       {/* Información del producto */}
       <View className="flex-1 justify-between">

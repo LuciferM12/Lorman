@@ -8,6 +8,7 @@ import reviewRoutes from "./routes/reviews.routes";
 import faqRoutes from "./routes/faq.routes";
 import cartRoutes from "./routes/cart.routes";
 import paymentsRoutes from "./routes/payments.routes";
+import { createCheckoutSession } from "./controllers/payment.controller";
 
 const app = express();
 
@@ -21,8 +22,11 @@ app.use(cors({
   credentials: true, // si envías cookies o headers personalizados
 }));
 
+
 app.use("/payments", paymentsRoutes);
 app.use(express.json());
+
+app.post("/create-checkout-session", createCheckoutSession);
 
 // TODO: Routes must be defined here 
 app.get("/ping", async (req, res) => {
