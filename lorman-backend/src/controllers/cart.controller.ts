@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 import {
     carritoSchema,
-    carDetailSchema
+    carDetailSchemaWithUser,
+    carritoSchemaWithoutId
 } from "../interfaces/car.interface";
 import CarritoService from "../services/car.service";
 
 const CartController = {
     async createCart(req: Request, res: Response) {
         try {
-            const parsed = carritoSchema.safeParse(req.body);
+            const parsed = carritoSchemaWithoutId.safeParse(req.body);
             if (!parsed.success) {
                 return res.status(400).json({
                     error: "Solicitud de datos inválida",
@@ -28,17 +29,21 @@ const CartController = {
 
     async getCartByCliente(req: Request, res: Response) {
         try {
-            if (!req.params.id_cliente) {
-                return res.status(400).json({ error: "ID de cliente no proporcionado" });
+            if (!req.params.id_usuario) {
+                return res.status(400).json({ error: "ID de usuario no proporcionado" });
             }
 
-            const idCliente = parseInt(req.params.id_cliente, 10);
-            if (isNaN(idCliente) || idCliente <= 0) {
-                return res.status(400).json({ error: "El ID del cliente debe ser un entero positivo" });
+            const idUsuario = parseInt(req.params.id_usuario, 10);
+            if (isNaN(idUsuario) || idUsuario <= 0) {
+                return res.status(400).json({ error: "El ID del usuario debe ser un entero positivo" });
             }
 
-            const cart = await CarritoService.getCarritoByCliente(idCliente);
-            res.status(200).json({ cart });
+            const cart = await CarritoService.getCarritoByCliente(idUsuario);
+            if (!cart) {
+                return res.status(404).json({ message: "Carrito no encontrado para el usuario proporcionado" });
+            }
+            const details = await CarritoService.listCarritoDetails(idUsuario);
+            res.status(200).json({ details });
         } catch (error: any) {
             res.status(400).json({ message: error.message });
         }
@@ -64,15 +69,34 @@ const CartController = {
 
     async addProduct(req: Request, res: Response) {
         try {
-            const parsed = carDetailSchema.safeParse(req.body);
+            const parsed = carDetailSchemaWithUser.safeParse(req.body);
             if (!parsed.success) {
                 return res.status(400).json({
                     error: "Solicitud de datos inválida",
                     details: parsed.error.flatten().fieldErrors
                 });
             }
+            const id_usuario = parsed.data.id_usuario;
+            const carrito = await CarritoService.getCarritoByCliente(id_usuario);
+            let newDetail
+            if (!carrito) {
+                const newCarrito = await CarritoService.createCarrito({ id_usuario });
+                const dataWithCarritoId = {
+                    id_carrito: newCarrito.id_carrito,
+                    id_producto: parsed.data.id_producto,
+                    cantidad: parsed.data.cantidad
+                };
+                newDetail = await CarritoService.addProductToCarrito(dataWithCarritoId);
+            } else {
+                const dataWithCarritoId = {
+                    id_carrito: carrito.id_carrito,
+                    id_producto: parsed.data.id_producto,
+                    cantidad: parsed.data.cantidad
+                };
 
-            const newDetail = await CarritoService.addProductToCarrito(parsed.data);
+                newDetail = await CarritoService.addProductToCarrito(dataWithCarritoId);
+            }
+
             res.status(201).json({
                 message: "Producto agregado exitosamente al carrito",
                 detalle: newDetail

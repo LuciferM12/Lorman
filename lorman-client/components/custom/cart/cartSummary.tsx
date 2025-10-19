@@ -6,7 +6,7 @@ import { View } from 'react-native';
 
 type CartSummaryProps = {
   subtotal: number;
-  shippingCost: number;
+  //shippingCost: number;
   total: number;
   onCheckout: () => void;
   isDisabled?: boolean;
@@ -14,7 +14,7 @@ type CartSummaryProps = {
 
 export default function CartSummary({
   subtotal,
-  shippingCost,
+  //shippingCost,
   total,
   onCheckout,
   isDisabled = false,
@@ -33,7 +33,8 @@ export default function CartSummary({
         {/* Costo de Envío */}
         <View className="mb-4 flex-row items-center justify-between border-b border-gray-200 pb-4">
           <Text className="text-sm text-gray-600">Costo de Envío</Text>
-          <Text className="text-base font-semibold text-gray-800">${shippingCost.toFixed(2)}</Text>
+          {/*<Text className="text-base font-semibold text-gray-800">${shippingCost.toFixed(2)}</Text>*/}
+          <Text className="text-base font-semibold text-gray-800">Gratis</Text>
         </View>
 
         {/* Total */}

@@ -8,10 +8,11 @@ import CartItem from './cartItem';
 
 type CartProductsListProps = {
   items: ICartItem[];
-  onIncrement: (id: number) => void;
-  onDecrement: (id: number) => void;
+  onIncrement: (id_producto: number, id_detalle_carrito: number) => void;
+  onDecrement: (id_producto: number, id_detalle_carrito: number) => void;
   onRemove: (id: number) => void;
   onContinueShopping: () => void;
+  loading?: boolean;
 };
 
 export default function CartProductsList({
@@ -20,6 +21,7 @@ export default function CartProductsList({
   onDecrement,
   onRemove,
   onContinueShopping,
+  loading,
 }: CartProductsListProps) {
   return (
     <Card>
@@ -40,9 +42,11 @@ export default function CartProductsList({
             {items.map((item) => (
               <CartItem
                 key={item.id}
+                id_detalle_carrito={item.id_detalle_carrito}
                 id={item.id}
                 image={item.imagen}
                 name={item.name}
+                loading={loading}
                 description={item.descripcion}
                 price={item.precio}
                 quantity={item.cantidad}

@@ -6,8 +6,8 @@ const cartRoutes = Router();
 // Crear un carrito (o crear uno nuevo para un cliente)
 cartRoutes.post("/", CartController.createCart);
 
-// Obtener carrito por ID de cliente
-cartRoutes.get("/cliente/:id_cliente", CartController.getCartByCliente);
+// Obtener carrito por ID de usuario
+cartRoutes.get("/usuario/:id_usuario", CartController.getCartByCliente);
 
 // Listar detalles del carrito por ID de carrito
 cartRoutes.get("/:id_carrito/details", CartController.listCartDetails);

@@ -5,6 +5,8 @@ import {
     CarritoDTO,
     CarDetailDTO,
     CarDetailWithIdDTO,
+    carDetailUpdateSchemaWithoutProductos,
+    CarDetailUpdateWithoutProductosDTO,
 } from "../interfaces/car.interface";
 
 const TABLE_CART = "carrito";
@@ -26,26 +28,64 @@ const CarritoRepository = {
         return carritoSchema.parse(result);
     },
 
-    async findByCliente(id_cliente: number): Promise<CarritoDTO | null> {
+    async findByCarrito(id_carrito: number): Promise<CarritoDTO | null> {
         const { data, error } = await supabaseClient
             .from(TABLE_CART)
             .select("*")
-            .eq("id_cliente", id_cliente)
+            .eq("id_carrito", id_carrito)
+            .single();
+        if (error) {
+            if (error.code === "PGRST116") return null;
+            throw new Error(`Error buscando el carrito: ${error.message}`);
+        }
+        return carritoSchema.parse(data);
+    },
+
+    async findByCliente(id_cliente: number): Promise<{ id_carrito: number } | null> {
+        const { data, error } = await supabaseClient
+            .from(TABLE_CART)
+            .select("id_carrito")
+            .eq("id_usuario", id_cliente)
             .single();
 
         if (error) {
             if (error.code === "PGRST116") return null; // No existe
-            throw new Error(`Error buscando el carrito del cliente: ${error.message}`);
+            throw new Error(`Error buscando el carrito del usuario: ${error.message}`);
         }
 
-        return carritoSchema.parse(data);
+        return data;
+    },
+
+    async findByProductInCarrito(id_carrito: number, id_producto: number): Promise<CarDetailWithIdDTO | null> {
+        const { data, error } = await supabaseClient
+            .from(TABLE_DETAILS)
+            .select("*")
+            .eq("id_carrito", id_carrito)
+            .eq("id_producto", id_producto)
+            .single();
+
+        if (error) {
+            if (error.code === "PGRST116") return null;
+            throw new Error(`Error buscando el producto en el carrito: ${error.message}`);
+        }
+
+        return carDetailSchemaWithId.parse(data);
     },
 
     async listDetails(id_carrito: number): Promise<CarDetailWithIdDTO[]> {
         const { data, error } = await supabaseClient
             .from(TABLE_DETAILS)
-            .select("*")
-            .eq("id_carrito", id_carrito);
+            .select(`
+                *,
+                productos (
+                id_producto,
+                nombre_producto,
+                precio_unitario,
+                descripcion
+                )
+            `)
+            .eq("id_carrito", id_carrito)
+            .order("id_producto", { ascending: true });
 
         if (error) {
             throw new Error(`Error listando los detalles del carrito: ${error.message}`);
@@ -68,7 +108,7 @@ const CarritoRepository = {
         return carDetailSchemaWithId.parse(result);
     },
 
-    async updateDetail(id_detalle_carrito: number, cantidad: number): Promise<CarDetailWithIdDTO> {
+    async updateDetail(id_detalle_carrito: number, cantidad: number): Promise<CarDetailUpdateWithoutProductosDTO> {
         const { data: result, error } = await supabaseClient
             .from(TABLE_DETAILS)
             .update({ cantidad })
@@ -80,7 +120,7 @@ const CarritoRepository = {
             throw new Error(`Error actualizando la cantidad: ${error.message}`);
         }
 
-        return carDetailSchemaWithId.parse(result);
+        return carDetailUpdateSchemaWithoutProductos.parse(result);
     },
 
     async deleteDetail(id_detalle_carrito: number): Promise<void> {

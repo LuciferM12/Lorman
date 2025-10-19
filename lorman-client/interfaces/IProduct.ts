@@ -9,13 +9,16 @@ export const productRegisterSchema = z.object({
 
 export const productCart = productRegisterSchema.omit({ stock: true }).extend({
     id_producto: z.number().min(1, "El ID del producto es requerido"),
+    image: z.string().url("La imagen debe ser una URL válida").optional().nullable(),
 });
 
-export const ProductSchema = productRegisterSchema.extend({
-    id_producto: z.number(),
-    disponible: z.boolean().default(true),
+export const productUpdatedSchema = z.object({
+    id_producto: z.number().min(1, "El ID del producto es requerido"),
+    id_carrito: z.number().min(1, "El ID del carrito es requerido"),
+    cantidad: z.coerce.number().min(1, "La cantidad mínima es 1"),
+    id_detalle_carrito: z.number().min(1, "El ID del detalle del carrito es requerido"),
 })
 
 export type ProductRegisterDTO = z.infer<typeof productRegisterSchema>;
-export type ProductDTO = z.infer<typeof ProductSchema>;
 export type ProductInCartDTO = z.infer<typeof productCart>;
+export type ProductQuantityUpdatedDTO = z.infer<typeof productUpdatedSchema>;

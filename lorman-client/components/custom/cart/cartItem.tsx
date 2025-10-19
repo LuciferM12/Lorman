@@ -6,21 +6,25 @@ import { Minus, Plus } from 'lucide-react-native';
 type CartItemProps = {
   id: number;
   name: string;
+  id_detalle_carrito: number;
   image?: string;
   description: string | undefined; 
   price: number;
   quantity: number;
-  onIncrement: (id: number) => void;
-  onDecrement: (id: number) => void;
+  loading?: boolean;
+  onIncrement: (id_producto: number, id_detalle_carrito: number) => void;
+  onDecrement: (id_producto: number, id_detalle_carrito: number) => void;
   onRemove: (id: number) => void;
 };
 
 export default function CartItem({
   id,
   name,
+  id_detalle_carrito,
   description,
   image,
   price,
+  loading,
   quantity,
   onIncrement,
   onDecrement,
@@ -53,7 +57,8 @@ export default function CartItem({
           {/* Controles de cantidad */}
           <View className="flex-row items-center gap-2">
             <Pressable
-              onPress={() => onDecrement(id)}
+              onPress={() => onDecrement(id, id_detalle_carrito)}
+              disabled={quantity <= 1 || loading}
               className="h-8 w-8 items-center justify-center rounded border border-gray-300 bg-white">
               <Minus size={16} color="#666" />
             </Pressable>
@@ -63,7 +68,8 @@ export default function CartItem({
             </Text>
 
             <Pressable
-              onPress={() => onIncrement(id)}
+              onPress={() => onIncrement(id, id_detalle_carrito)}
+              disabled={loading}
               className="h-8 w-8 items-center justify-center rounded border border-gray-300 bg-white">
               <Plus size={16} color="#666" />
             </Pressable>
@@ -77,7 +83,7 @@ export default function CartItem({
       </View>
 
       {/* Botón Eliminar */}
-      <Pressable onPress={() => onRemove(id)} className="items-center justify-center">
+      <Pressable onPress={() => onRemove(id_detalle_carrito)} className="items-center justify-center">
         <Text className="text-xs text-red-500 underline">Eliminar</Text>
       </Pressable>
     </View>
