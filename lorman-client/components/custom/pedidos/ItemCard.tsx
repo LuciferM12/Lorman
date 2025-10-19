@@ -35,10 +35,9 @@ const STATUSES = {
 interface OrderItemCardProps {
   order: Order;
   onViewDetails: (order: Order) => void;
-  onTrackShipment: (order: Order) => void;
 }
 
-export const OrderItemCard = ({ order, onViewDetails, onTrackShipment }: OrderItemCardProps) => {
+export const OrderItemCard = ({ order, onViewDetails }: OrderItemCardProps) => {
   const statusInfo = STATUSES[order.estado_entrega];
 
   const formattedDate = new Date(order.fecha_pedido).toLocaleDateString('es-MX', {
@@ -72,15 +71,9 @@ export const OrderItemCard = ({ order, onViewDetails, onTrackShipment }: OrderIt
 
         
         <View className="items-end">
-          {order.estado_entrega === 'en_camino' ? (
-            <Pressable onPress={() => onTrackShipment(order)}>
-              <Text className="text-sm font-semibold text-[#17a2b8]">Rastrear Envío</Text>
-            </Pressable>
-          ) : (
             <Pressable onPress={() => onViewDetails(order)}>
               <Text className="text-sm font-semibold text-[#17a2b8]">Ver Detalles</Text>
             </Pressable>
-          )}
         </View>
       </CardContent>
     </Card>
