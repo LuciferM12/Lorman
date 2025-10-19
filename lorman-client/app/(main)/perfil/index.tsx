@@ -1,15 +1,8 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import { Text, View } from 'react-native';
 import Banner from '@/components/custom/banner/banner';
 import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
-import AccountDeletionForm from '@/components/custom/policyForm/policyForm';
 import LormanFooter from '@/components/custom/Footer';
 import { ProfileCard } from '@/components/custom/profile/ProfileForm';
 
