@@ -24,8 +24,8 @@ const AdminLayout = () => {
       <View className="flex-1 flex-row">
         {/* Sidebar */}
         <AdminSidebar
-          selectedSection={selectedSection}
-          onSectionChange={handleSectionChange}
+          //selectedSection={selectedSection}
+          //onSectionChange={handleSectionChange}
         />
 
         {/* Main Content Area */}

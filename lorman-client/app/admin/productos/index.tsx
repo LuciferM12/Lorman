@@ -1,10 +1,11 @@
+import * as React from 'react';
+import { View, ScrollView, Pressable, Alert, Image } from 'react-native';
 import { Text } from '@/components/ui/text';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import * as React from 'react';
-import { View, ScrollView, Pressable, Alert } from 'react-native';
 import { Plus, Pencil, Trash2, Search, ChevronLeft, ChevronRight } from 'lucide-react-native';
+import AddProductDialog from '@/components/custom/customize/ProductDialog';
 
 type Producto = {
   id_producto: number;
@@ -13,270 +14,212 @@ type Producto = {
   precio_unitario: number;
   stock: number;
   disponible: boolean;
+  imagen?: string | undefined;
+};
+
+type ProductFormData = {
+  nombre_producto: string;
+  descripcion: string;
+  precio_unitario: string;
+  stock: string;
+  disponible: boolean;
+  imagen?: string;
 };
 
 const ITEMS_PER_PAGE = 5;
 
 export default function ProductosScreen() {
   const [productos, setProductos] = React.useState<Producto[]>([
-    {
-      id_producto: 1,
-      nombre_producto: 'Garrafón de Agua Purificada',
-      descripcion: '20 Litros',
-      precio_unitario: 80.0,
-      stock: 150,
-      disponible: true,
-    },
-    {
-      id_producto: 2,
-      nombre_producto: 'Hielo Cristalino en Bolsa',
-      descripcion: '5 kg',
-      precio_unitario: 25.0,
-      stock: 200,
-      disponible: true,
-    },
-    {
-      id_producto: 3,
-      nombre_producto: 'Botella de Agua 1L',
-      descripcion: '1 Litro - Pack de 12',
-      precio_unitario: 45.0,
-      stock: 0,
-      disponible: false,
-    },
-    {
-      id_producto: 4,
-      nombre_producto: 'Botella de Agua 500ml',
-      descripcion: '500ml - Pack de 24',
-      precio_unitario: 60.0,
-      stock: 80,
-      disponible: true,
-    },
-    {
-      id_producto: 5,
-      nombre_producto: 'Garrafón Retornable',
-      descripcion: '20 Litros - Envase retornable',
-      precio_unitario: 50.0,
-      stock: 100,
-      disponible: true,
-    },
-    {
-      id_producto: 6,
-      nombre_producto: 'Hielo en Cubos Premium',
-      descripcion: '10 kg - Bolsa grande',
-      precio_unitario: 45.0,
-      stock: 50,
-      disponible: true,
-    },
+    { id_producto: 1, nombre_producto: 'Garrafón de Agua Purificada', descripcion: '20 Litros', precio_unitario: 80.0, stock: 150, disponible: true, imagen: undefined },
+    { id_producto: 2, nombre_producto: 'Hielo Cristalino en Bolsa', descripcion: '5 kg', precio_unitario: 25.0, stock: 200, disponible: true, imagen: undefined },
+    { id_producto: 3, nombre_producto: 'Botella de Agua 1L', descripcion: '1 Litro - Pack de 12', precio_unitario: 45.0, stock: 0, disponible: false, imagen: undefined },
+    { id_producto: 4, nombre_producto: 'Botella de Agua 500ml', descripcion: '500ml - Pack de 24', precio_unitario: 60.0, stock: 80, disponible: true, imagen: undefined },
+    { id_producto: 5, nombre_producto: 'Garrafón Retornable', descripcion: '20 Litros - Envase retornable', precio_unitario: 50.0, stock: 100, disponible: true, imagen: undefined },
+    { id_producto: 6, nombre_producto: 'Hielo en Cubos Premium', descripcion: '10 kg - Bolsa grande', precio_unitario: 45.0, stock: 50, disponible: true, imagen: undefined },
   ]);
 
   const [searchQuery, setSearchQuery] = React.useState('');
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [dialogVisible, setDialogVisible] = React.useState(false);
+  const [editingProduct, setEditingProduct] = React.useState<Producto | null>(null);
 
   const handleAddProduct = () => {
-    console.log('Agregar nuevo producto');
+    setEditingProduct(null);
+    setDialogVisible(true);
   };
 
   const handleEditProduct = (id: number) => {
-    console.log('Editar producto:', id);
+    const producto = productos.find((p) => p.id_producto === id);
+    if (producto) {
+      setEditingProduct(producto);
+      setDialogVisible(true);
+    }
   };
 
   const handleDeleteProduct = (id: number, nombre: string) => {
     Alert.alert('Eliminar Producto', `¿Estás seguro de eliminar "${nombre}"?`, [
       { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Eliminar',
-        style: 'destructive',
-        onPress: () => {
-          setProductos(productos.filter((p) => p.id_producto !== id));
-        },
-      },
+      { text: 'Eliminar', style: 'destructive', onPress: () => setProductos((prev) => prev.filter((p) => p.id_producto !== id)) },
     ]);
   };
 
   const handleToggleDisponible = (id: number) => {
-    setProductos(productos.map((p) => (p.id_producto === id ? { ...p, disponible: !p.disponible } : p)));
+    setProductos((prev) => prev.map((p) => (p.id_producto === id ? { ...p, disponible: !p.disponible } : p)));
   };
 
-  // Filtrar productos
-  const filteredProductos = productos.filter((p) =>
-    p.nombre_producto.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleSubmitProduct = (data: ProductFormData & { id_producto?: number }) => {
+    const productoAGuardar: Producto = {
+      id_producto: data.id_producto ?? Date.now(),
+      nombre_producto: data.nombre_producto,
+      descripcion: data.descripcion,
+      precio_unitario: parseFloat(data.precio_unitario) || 0,
+      stock: parseInt(data.stock || '0', 10) || 0,
+      disponible: !!data.disponible,
+      imagen: data.imagen,
+    };
 
-  // Calcular paginación
-  const totalPages = Math.ceil(filteredProductos.length / ITEMS_PER_PAGE);
+    if (data.id_producto) {
+      setProductos((prev) => prev.map((p) => (p.id_producto === productoAGuardar.id_producto ? productoAGuardar : p)));
+      Alert.alert('Éxito', 'Producto actualizado correctamente');
+    } else {
+      setProductos((prev) => [productoAGuardar, ...prev]);
+      Alert.alert('Éxito', 'Producto agregado correctamente');
+    }
+
+    setDialogVisible(false);
+    setEditingProduct(null);
+  };
+
+  // Filtering & pagination
+  const filteredProductos = productos.filter((p) => p.nombre_producto.toLowerCase().includes(searchQuery.toLowerCase()));
+  const totalPages = Math.max(1, Math.ceil(filteredProductos.length / ITEMS_PER_PAGE));
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentProductos = filteredProductos.slice(startIndex, endIndex);
 
-  // Reset page when search changes
   React.useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
 
+  const initialProductData = editingProduct
+    ? {
+        id_producto: editingProduct.id_producto,
+        nombre_producto: editingProduct.nombre_producto,
+        descripcion: editingProduct.descripcion,
+        precio_unitario: editingProduct.precio_unitario.toFixed(2),
+        stock: editingProduct.stock.toString(),
+        disponible: editingProduct.disponible,
+        imagen: editingProduct.imagen,
+      }
+    : undefined;
+
   return (
-    <ScrollView className="flex-1 bg-gray-50">
-      <View className="p-8">
-        {/* Header */}
-        <View className="mb-6 flex-row items-center justify-between">
-          <View>
-            <Text className="text-2xl font-bold text-gray-800">Gestión de Productos</Text>
-            <Text className="text-sm text-gray-600">
-              {filteredProductos.length} productos en total
-            </Text>
+    <>
+      <ScrollView className="flex-1 bg-gray-50">
+        <View className="p-6">
+          {/* Header */}
+          <View className="mb-6 flex-row items-center justify-between">
+            <View>
+              <Text className="text-2xl font-bold text-gray-800">Gestión de Productos</Text>
+              <Text className="text-sm text-gray-600">{filteredProductos.length} productos</Text>
+            </View>
+
+            <Button onPress={handleAddProduct} className="flex-row gap-2 bg-[#17a2b8]">
+              <Plus size={18} color="#fff" />
+              <Text className="font-semibold text-white">Nuevo Producto</Text>
+            </Button>
           </View>
-          <Button onPress={handleAddProduct} className="flex-row gap-2 bg-[#17a2b8]">
-            <Plus size={20} color="#fff" />
-            <Text className="font-semibold text-white">Nuevo Producto</Text>
-          </Button>
-        </View>
 
-        {/* Search Bar */}
-        <Card className="mb-6">
-          <CardContent className="p-4">
-            <View className="flex-row items-center gap-2">
-              <Search size={20} color="#666" />
-              <Input
-                placeholder="Buscar productos..."
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-                className="flex-1"
-              />
-            </View>
-          </CardContent>
-        </Card>
+          {/* Search */}
+          <Card className="mb-6">
+            <CardContent className="p-4">
+              <View className="flex-row items-center gap-3">
+                <Search size={18} color="#666" />
+                <Input placeholder="Buscar productos..." value={searchQuery} onChangeText={setSearchQuery} className="flex-1" />
+              </View>
+            </CardContent>
+          </Card>
 
-        {/* Products Table */}
-        <Card>
-          <CardContent className="p-0">
-            {/* Table Header */}
-            <View className="flex-row border-b border-gray-200 bg-gray-50 px-6 py-4">
-              <Text className="w-12 text-sm font-semibold text-gray-700">ID</Text>
-              <Text className="flex-1 text-sm font-semibold text-gray-700">Nombre</Text>
-              <Text className="w-48 text-sm font-semibold text-gray-700">Descripción</Text>
-              <Text className="w-24 text-sm font-semibold text-gray-700">Precio</Text>
-              <Text className="w-20 text-sm font-semibold text-gray-700">Stock</Text>
-              <Text className="w-28 text-sm font-semibold text-gray-700">Disponible</Text>
-              <Text className="w-32 text-sm font-semibold text-gray-700">Acciones</Text>
-            </View>
-
-            {/* Table Body */}
+          {/* Product list (cards) */}
+          <View className="space-y-4">
             {currentProductos.map((producto) => (
-              <View
-                key={producto.id_producto}
-                className="flex-row items-center border-b border-gray-100 px-6 py-4">
-                <Text className="w-12 text-sm text-gray-800">{producto.id_producto}</Text>
-                <Text className="flex-1 text-sm font-medium text-gray-800">
-                  {producto.nombre_producto}
-                </Text>
-                <Text className="w-48 text-sm text-gray-600">{producto.descripcion}</Text>
-                <Text className="w-24 text-sm font-semibold text-gray-800">
-                  ${producto.precio_unitario.toFixed(2)}
-                </Text>
-                <Text
-                  className={`w-20 text-sm font-medium ${
-                    producto.stock === 0 ? 'text-red-500' : 'text-gray-800'
-                  }`}>
-                  {producto.stock}
-                </Text>
-                <View className="w-28">
-                  <Pressable
-                    onPress={() => handleToggleDisponible(producto.id_producto)}
-                    className={`rounded-full px-3 py-1 ${
-                      producto.disponible ? 'bg-green-100' : 'bg-red-100'
-                    }`}>
-                    <Text
-                      className={`text-center text-xs font-semibold ${
-                        producto.disponible ? 'text-green-700' : 'text-red-700'
-                      }`}>
-                      {producto.disponible ? 'Activo' : 'Inactivo'}
-                    </Text>
-                  </Pressable>
-                </View>
-                <View className="w-32 flex-row gap-2">
-                  <Pressable
-                    onPress={() => handleEditProduct(producto.id_producto)}
-                    className="rounded bg-blue-100 p-2">
-                    <Pencil size={16} color="#2563eb" />
-                  </Pressable>
-                  <Pressable
-                    onPress={() =>
-                      handleDeleteProduct(producto.id_producto, producto.nombre_producto)
-                    }
-                    className="rounded bg-red-100 p-2">
-                    <Trash2 size={16} color="#dc2626" />
-                  </Pressable>
-                </View>
-              </View>
+              <Card key={producto.id_producto}>
+                <CardContent className="p-4">
+                  <View className="flex-row items-center gap-4">
+                    <View className="h-20 w-20 overflow-hidden rounded-lg bg-gray-100 items-center justify-center">
+                      {producto.imagen ? (
+                        <Image source={{ uri: producto.imagen }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+                      ) : (
+                        <Text className="text-sm text-gray-500">Sin imagen</Text>
+                      )}
+                    </View>
+
+                    <View className="flex-1">
+                      <Text className="text-lg font-bold text-gray-800">{producto.nombre_producto}</Text>
+                      <Text className="text-sm text-gray-600 my-1">{producto.descripcion}</Text>
+
+                      <View className="flex-row items-center gap-3">
+                        <Text className="text-sm font-semibold text-gray-800">${producto.precio_unitario.toFixed(2)}</Text>
+                        <Text className={`text-sm ${producto.stock === 0 ? 'text-red-500' : 'text-gray-600'}`}>Stock: {producto.stock}</Text>
+                        <Pressable onPress={() => handleToggleDisponible(producto.id_producto)} className={`px-2 py-1 rounded ${producto.disponible ? 'bg-green-100' : 'bg-red-100'}`}>
+                          <Text className={`text-xs font-semibold ${producto.disponible ? 'text-green-700' : 'text-red-700'}`}>{producto.disponible ? 'Activo' : 'Inactivo'}</Text>
+                        </Pressable>
+                      </View>
+                    </View>
+
+                    <View className="flex-col items-end gap-2">
+                      <Pressable onPress={() => handleEditProduct(producto.id_producto)} className="rounded bg-blue-100 p-2">
+                        <Pencil size={16} color="#2563eb" />
+                      </Pressable>
+                      <Pressable onPress={() => handleDeleteProduct(producto.id_producto, producto.nombre_producto)} className="rounded bg-red-100 p-2">
+                        <Trash2 size={16} color="#dc2626" />
+                      </Pressable>
+                    </View>
+                  </View>
+                </CardContent>
+              </Card>
             ))}
-          </CardContent>
-        </Card>
-
-        {filteredProductos.length === 0 && (
-          <View className="py-8">
-            <Text className="text-center text-gray-500">No se encontraron productos</Text>
           </View>
-        )}
 
-        {/* Pagination */}
-        {filteredProductos.length > 0 && (
-          <View className="mt-6 flex-row items-center justify-between">
-            <Text className="text-sm text-gray-600">
-              Mostrando {startIndex + 1} - {Math.min(endIndex, filteredProductos.length)} de{' '}
-              {filteredProductos.length} productos
-            </Text>
-
-            <View className="flex-row items-center gap-2">
-              <Pressable
-                onPress={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className={`flex-row items-center gap-1 rounded-lg px-3 py-2 ${
-                  currentPage === 1 ? 'bg-gray-100' : 'bg-white border border-gray-300'
-                }`}>
-                <ChevronLeft size={16} color={currentPage === 1 ? '#ccc' : '#666'} />
-                <Text className={`text-sm ${currentPage === 1 ? 'text-gray-400' : 'text-gray-700'}`}>
-                  Anterior
-                </Text>
-              </Pressable>
-
-              <View className="flex-row gap-1">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <Pressable
-                    key={page}
-                    onPress={() => setCurrentPage(page)}
-                    className={`h-10 w-10 items-center justify-center rounded-lg ${
-                      currentPage === page ? 'bg-[#17a2b8]' : 'bg-white border border-gray-300'
-                    }`}>
-                    <Text
-                      className={`text-sm font-semibold ${
-                        currentPage === page ? 'text-white' : 'text-gray-700'
-                      }`}>
-                      {page}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-
-              <Pressable
-                onPress={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                className={`flex-row items-center gap-1 rounded-lg px-3 py-2 ${
-                  currentPage === totalPages ? 'bg-gray-100' : 'bg-white border border-gray-300'
-                }`}>
-                <Text
-                  className={`text-sm ${
-                    currentPage === totalPages ? 'text-gray-400' : 'text-gray-700'
-                  }`}>
-                  Siguiente
-                </Text>
-                <ChevronRight
-                  size={16}
-                  color={currentPage === totalPages ? '#ccc' : '#666'}
-                />
-              </Pressable>
+          {/* Empty state */}
+          {filteredProductos.length === 0 && (
+            <View className="py-8">
+              <Text className="text-center text-gray-500">No se encontraron productos</Text>
             </View>
-          </View>
-        )}
-      </View>
-    </ScrollView>
+          )}
+
+          {/* Pagination */}
+          {filteredProductos.length > 0 && (
+            <View className="mt-6 flex-row items-center justify-between">
+              <Text className="text-sm text-gray-600">
+                Mostrando {startIndex + 1} - {Math.min(endIndex, filteredProductos.length)} de {filteredProductos.length}
+              </Text>
+
+              <View className="flex-row items-center gap-2">
+                <Pressable onPress={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1} className={`flex-row items-center gap-2 rounded-lg px-3 py-2 ${currentPage === 1 ? 'bg-gray-100' : 'bg-white border border-gray-300'}`}>
+                  <ChevronLeft size={16} color={currentPage === 1 ? '#ccc' : '#666'} />
+                  <Text className={`text-sm ${currentPage === 1 ? 'text-gray-400' : 'text-gray-700'}`}>Anterior</Text>
+                </Pressable>
+
+                <View className="flex-row gap-2">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <Pressable key={page} onPress={() => setCurrentPage(page)} className={`h-10 w-10 items-center justify-center rounded-lg ${currentPage === page ? 'bg-[#17a2b8]' : 'border border-gray-300 bg-white'}`}>
+                      <Text className={`text-sm font-semibold ${currentPage === page ? 'text-white' : 'text-gray-700'}`}>{page}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+
+                <Pressable onPress={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className={`flex-row items-center gap-2 rounded-lg px-3 py-2 ${currentPage === totalPages ? 'bg-gray-100' : 'bg-white border border-gray-300'}`}>
+                  <Text className={`text-sm ${currentPage === totalPages ? 'text-gray-400' : 'text-gray-700'}`}>Siguiente</Text>
+                  <ChevronRight size={16} color={currentPage === totalPages ? '#ccc' : '#666'} />
+                </Pressable>
+              </View>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+
+      <AddProductDialog visible={dialogVisible} onClose={() => { setDialogVisible(false); setEditingProduct(null); }} onSubmit={handleSubmitProduct} initialData={initialProductData} />
+    </>
   );
 }
