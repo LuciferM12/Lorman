@@ -4,6 +4,7 @@ export const userSchema = z.object({
     email: z.string().email(),
     rol: z.enum(['admin', 'user']),
     nombre_completo: z.string(),
+    id_usuario: z.number(),
 });
 
 export const sessionUserSchema = z.object({

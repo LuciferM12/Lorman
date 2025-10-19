@@ -26,19 +26,48 @@ const CarritoRepository = {
         return carritoSchema.parse(result);
     },
 
-    async findByCliente(id_cliente: number): Promise<CarritoDTO | null> {
+    async findByCarrito(id_carrito: number): Promise<CarritoDTO | null> {
         const { data, error } = await supabaseClient
             .from(TABLE_CART)
             .select("*")
-            .eq("id_cliente", id_cliente)
+            .eq("id_carrito", id_carrito)
+            .single();
+        if (error) {
+            if (error.code === "PGRST116") return null;
+            throw new Error(`Error buscando el carrito: ${error.message}`);
+        }
+        return carritoSchema.parse(data);
+    },
+
+    async findByCliente(id_cliente: number): Promise<{ id_carrito: number } | null> {
+        const { data, error } = await supabaseClient
+            .from(TABLE_CART)
+            .select("id_carrito")
+            .eq("id_usuario", id_cliente)
             .single();
 
         if (error) {
             if (error.code === "PGRST116") return null; // No existe
-            throw new Error(`Error buscando el carrito del cliente: ${error.message}`);
+            throw new Error(`Error buscando el carrito del usuario: ${error.message}`);
         }
 
-        return carritoSchema.parse(data);
+        return data;
+    },
+
+    async findByProductInCarrito(id_carrito: number, id_producto: number): Promise<CarDetailWithIdDTO | null> {
+        const { data, error } = await supabaseClient
+            .from(TABLE_DETAILS)
+            .select("*")
+            .eq("id_carrito", id_carrito)
+            .eq("id_producto", id_producto)
+            .single();
+
+        if (error) {
+            if (error.code === "PGRST116") return null;
+            throw new Error(`Error buscando el producto en el carrito: ${error.message}`);
+        }
+
+        return carDetailSchemaWithId.parse(data);
     },
 
     async listDetails(id_carrito: number): Promise<CarDetailWithIdDTO[]> {

@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { createCheckoutSession } from "../controllers/payment.controller";
 import Stripe from "stripe";
 import express from "express";
 import UserRepository from "../repositories/users.repository";
