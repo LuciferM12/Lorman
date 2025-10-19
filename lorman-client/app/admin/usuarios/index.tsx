@@ -133,7 +133,7 @@ export default function UsuariosScreen() {
         id_usuario: newId,
         nombre_completo: data.nombre,
         email: data.email,
-        password_hash: data.password ? '***' : '***',
+        password_hash: '***',
         direccion: data.direccion,
         telefono: data.telefono,
         dias_entrega_preferidos: '',
