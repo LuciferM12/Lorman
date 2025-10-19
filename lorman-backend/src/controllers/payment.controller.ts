@@ -3,9 +3,9 @@ import Stripe from "stripe";
 import { CartItem } from "../interfaces/items.interface";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '')
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:8081';
 
 export const createCheckoutSession = async (req: Request, res: Response) => {
-    console.log('Creating checkout session with items:', req.body);
     const session = await stripe.checkout.sessions.create({
         line_items: req.body.items.map((item: CartItem) => ({
             price_data: {
@@ -23,8 +23,8 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
         metadata: {
             items: JSON.stringify(req.body.items),
         },
-        success_url: 'http://localhost:8081/payments/success',
-        cancel_url: 'http://localhost:8081/payments/cancel',
+        success_url: `${CORS_ORIGIN}/payments/success`,
+        cancel_url: `${CORS_ORIGIN}/payments/cancel`,
     })
     return res.json(session)
 }
