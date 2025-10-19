@@ -2,13 +2,15 @@ import { Router } from "express";
 import { createCheckoutSession } from "../controllers/payment.controller";
 import Stripe from "stripe";
 import express from "express";
+import UserRepository from "../repositories/users.repository";
+import CarritoRepository from "../repositories/car.repository";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '')
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || ''
 
 const paymentsRoutes = Router();
 
-paymentsRoutes.post("/webhook",express.raw({type: 'application/json'}), (request, response) => {
+paymentsRoutes.post("/webhook", express.raw({ type: 'application/json' }), async (request, response) => {
     let event = request.body;
     if (endpointSecret) {
         // Get the signature sent by Stripe
@@ -19,7 +21,7 @@ paymentsRoutes.post("/webhook",express.raw({type: 'application/json'}), (request
                 signature,
                 endpointSecret
             );
-            
+
         } catch (err: any) {
             console.log(`⚠️  Webhook signature verification failed.`, err.message);
             return response.sendStatus(400);
@@ -37,7 +39,14 @@ paymentsRoutes.post("/webhook",express.raw({type: 'application/json'}), (request
         case 'checkout.session.completed':
             const session = event.data.object;
             console.log(`Checkout session for ${session.amount_total} was successful!`);
-            console.log('Webhook event data:', session.customer_details.email, session.amount_total, session.metadata);
+            console.log('Webhook event data:', session.customer_details.email, session.amount_total, session.metadata.user);
+            try {
+                const userEmail = session.metadata.user;
+                const user = await UserRepository.findByEmail(userEmail);
+                await CarritoRepository.clearCarritoByCliente(user?.id_usuario || 0)
+            } catch (error) {
+                console.error('Error clearing carrito after successful payment:', error);
+            }
             break;
         case 'payment_method.attached':
             const paymentMethod = event.data.object;

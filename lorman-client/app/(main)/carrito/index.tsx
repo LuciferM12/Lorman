@@ -7,10 +7,12 @@ import LormanFooter from '@/components/custom/Footer';
 import { CartItem } from '@/interfaces/ICart';
 import { createCheckoutSession } from '@/api/cart';
 import { useRouter } from 'expo-router';
+import { useAuth } from '@/context/AuthContext';
 
 
 export default function ShoppingCartScreen() {
   const router = useRouter();
+  const { user } = useAuth();
   const shippingCost = 15.0;
 
   const [cartItems, setCartItems] = React.useState<CartItem[]>([
@@ -68,7 +70,7 @@ export default function ShoppingCartScreen() {
   };
 
   const handleCheckout = async () => {
-    const response = await createCheckoutSession(cartItems);
+    const response = await createCheckoutSession(cartItems, user?.email || '');
     response.url && router.push(response.url);
 
   };

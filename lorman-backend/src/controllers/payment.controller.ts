@@ -21,7 +21,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
         })),
         mode: 'payment',
         metadata: {
-            items: JSON.stringify(req.body.items),
+            user: req.body.user || '',
         },
         success_url: `${CORS_ORIGIN}/payments/success`,
         cancel_url: `${CORS_ORIGIN}/payments/cancel`,

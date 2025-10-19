@@ -3,11 +3,11 @@ import { API_URL } from "../users";
 import axios from "axios";
 
 
-export async function createCheckoutSession(cartItems: CartItem[]) {
-    console.log("Creating checkout session with items:", cartItems);
+export async function createCheckoutSession(cartItems: CartItem[], user: string) {
     try {
         const response = await axios.post(`${API_URL}/create-checkout-session`, {
             items: cartItems,
+            user
         });
         return response.data;
     } catch (error) {
