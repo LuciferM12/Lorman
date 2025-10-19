@@ -74,7 +74,7 @@ export default function FAQForm({ onSubmit }: FAQFormProps) {
                 multiline
                 numberOfLines={3}
                 style={{ height: 80, textAlignVertical: 'top' }}
-                aria-labelledby="respuesta"
+                accessibilityLabelledBy="respuesta"
               />
             )}
           />
