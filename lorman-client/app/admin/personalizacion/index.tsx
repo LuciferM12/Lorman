@@ -1,3 +1,4 @@
+// app/(admin)/dashboard.tsx
 import { Text } from '@/components/ui/text';
 import { Card, CardContent } from '@/components/ui/card';
 import * as React from 'react';
@@ -8,6 +9,8 @@ import {
   UserCheck,
   TrendingUp,
 } from 'lucide-react-native';
+import TopProductsChart from '@/components/custom/dashboard/TopProductsChart';
+import OrdersByMonthChart from '@/components/custom/dashboard/OrdersByMonthChart';
 
 type StatCardProps = {
   icon: React.ReactNode;
@@ -65,26 +68,14 @@ export default function DashboardScreen() {
           />
         </View>
 
-        {/* Welcome Card */}
-        <Card>
-          <CardContent className="p-6">
-            <Text className="mb-3 text-lg font-bold text-gray-800">
-              Bienvenido al Panel de AAAAAAAAA
-            </Text>
-            <Text className="mb-6 text-sm text-gray-600">
-              Desde el menú de la izquierda puedes empezar a gestionar los diferentes aspectos
-              de tu tienda. Esta área principal cambiará para mostrarte las herramientas de la
-              sección que elijas.
-            </Text>
+        {/* Charts Section */}
+        <View className="gap-6">
+          {/* Pedidos por Mes */}
+          <OrdersByMonthChart />
 
-            {/* Placeholder Content */}
-            <View className="items-center justify-center rounded-lg bg-gray-100 py-20">
-              <Text className="text-gray-500">
-                Aquí se mostrará el contenido de la sección seleccionada
-              </Text>
-            </View>
-          </CardContent>
-        </Card>
+          {/* Productos Más Vendidos */}
+          <TopProductsChart />
+        </View>
       </View>
     </ScrollView>
   );
