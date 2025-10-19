@@ -7,6 +7,7 @@ import productRoutes from "./routes/products.routes";
 import reviewRoutes from "./routes/reviews.routes";
 import faqRoutes from "./routes/faq.routes";
 import cartRoutes from "./routes/cart.routes";
+import paymentsRoutes from "./routes/payments.routes";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cors({
   credentials: true, // si envías cookies o headers personalizados
 }));
 
+app.use("/payments", paymentsRoutes);
 app.use(express.json());
 
 // TODO: Routes must be defined here 
@@ -36,6 +38,7 @@ app.use("/products", productRoutes)
 app.use("/reviews", reviewRoutes)
 app.use("/faqs", faqRoutes)
 app.use("/cart", cartRoutes)
+
 
 app.use(errorHandler);
 
