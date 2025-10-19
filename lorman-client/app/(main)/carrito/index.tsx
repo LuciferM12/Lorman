@@ -74,7 +74,7 @@ export default function ShoppingCartScreen() {
       await updateCartItemQuantity(id_detalle_carrito, newQuantity);
       await fetchCartDetails();
     } catch (error) {
-      console.error('Error incrementing quantity:', error);
+      console.error('Error decrementing quantity:', error);
     } finally {
       setLoading(false);
     }
