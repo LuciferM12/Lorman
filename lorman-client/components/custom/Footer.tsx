@@ -31,7 +31,9 @@ export default function LormanFooter() {
           <Text className="mb-2 text-lg font-bold text-white">Lorman</Text>
           <Text className="mb-4 text-sm text-white/90">Pureza que Refresca tu Vida.</Text>
           <Image
-            source={{uri: 'https://res.cloudinary.com/dhvb4jesa/image/upload/lorman-logo_qm40ot.png'}}
+            source={{
+              uri: 'https://res.cloudinary.com/dhvb4jesa/image/upload/lorman-logo_qm40ot.png',
+            }}
             style={{ width: 85, height: 85 }}
             resizeMode="contain"
           />
