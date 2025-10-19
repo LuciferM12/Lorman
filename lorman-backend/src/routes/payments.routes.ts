@@ -5,8 +5,14 @@ import express from "express";
 import UserRepository from "../repositories/users.repository";
 import CarritoRepository from "../repositories/car.repository";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '')
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || ''
+if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("Missing required environment variable: STRIPE_SECRET_KEY");
+}
+if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    throw new Error("Missing required environment variable: STRIPE_WEBHOOK_SECRET");
+}
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 const paymentsRoutes = Router();
 
