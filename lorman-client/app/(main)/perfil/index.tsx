@@ -1,0 +1,59 @@
+import { Separator } from '@/components/ui/separator';
+import React from 'react';
+import { Text, View } from 'react-native';
+import Banner from '@/components/custom/banner/banner';
+import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
+import LormanFooter from '@/components/custom/Footer';
+import { ProfileCard } from '@/components/custom/profile/ProfileForm';
+
+const POLICIES = [
+  {
+    policy: 'Aviso de privacidad',
+    content:
+      'En Lorman, nos comprometemos a proteger tu privacidad. Nuestro Aviso de Privacidad completo detalla qué información recopilamos, cómo la usamos y las medidas que tomamos para protegerla. [Aquí puedes añadir un enlace al documento completo o detallarlo].',
+  },
+  {
+    policy: 'Términos de uso',
+    content:
+      'Al utilizar nuestro sitio web y aplicación, aceptas nuestros Términos de Uso. Este documento rige tu uso de nuestros servicios, tus responsabilidades como usuario y nuestras responsabilidades como proveedor. [Aquí puedes añadir un enlace al documento completo o detallarlo].',
+  },
+  {
+    policy: 'Políticas de Devolución, Entregas y Reembolsos',
+    content:
+      'Buscamos tu completa satisfacción. Nuestras políticas detallan los procedimientos para devoluciones de productos, los tiempos y condiciones de entrega, y el proceso para solicitar reembolsos en caso de ser aplicable. [Aquí puedes añadir un enlace al documento completo o detallarlo].',
+  },
+];
+
+const politicas = () => {
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  const scrollOffset = useScrollViewOffset(scrollRef);
+
+  return (
+    <View className="flex-1 bg-white">
+      <Animated.ScrollView
+        ref={scrollRef}
+        scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}>
+        <Banner
+          size="small"
+          title="Mi perfil"
+          subtitle="Consulta y gestiona tu información personal."
+          buttonText="Inicio"
+          imageSource={require('@/assets/images/agua.jpg')}
+          scrollOffset={scrollOffset}
+          onButtonPress={() => {
+            console.log('Navegando a productos...');
+          }}
+        />
+
+        <View className="flex items-center justify-center p-4 py-12">
+          <ProfileCard />
+        </View>
+
+        <LormanFooter />
+      </Animated.ScrollView>
+    </View>
+  );
+};
+
+export default politicas;
