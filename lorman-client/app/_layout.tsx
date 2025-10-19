@@ -1,4 +1,5 @@
 import Header from '@/components/custom/Header';
+import { AuthProvider } from '@/context/AuthContext';
 import '@/global.css';
 
 import { NAV_THEME } from '@/lib/theme';
@@ -21,18 +22,15 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-
-      <View className="flex h-screen w-screen items-center justify-center">
-        <View style={{ flex: 1 }} className="w-full">
-          <Stack screenOptions={{ headerShown: false }} />
-          <PortalHost />
+      <AuthProvider>
+        <View className="flex h-screen w-screen items-center justify-center">
+          <View style={{ flex: 1 }} className="w-full">
+            <Stack screenOptions={{ headerShown: false }} />
+            <PortalHost />
+          </View>
         </View>
-      </View>
-
-      <Toast position="bottom"/>
+      </AuthProvider>
+      <Toast position="bottom" />
     </ThemeProvider>
   );
 }
-
-
-
