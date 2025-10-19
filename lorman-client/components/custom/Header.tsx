@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
 import { Text, View, Image, Pressable } from 'react-native';
 import { Button } from '../ui/button';
-import { COLORS } from '@/constants/colors';
 import { Link, useRouter, usePathname } from 'expo-router';
 
 // ✅ Importar el asset de forma estática (más rápido que require)
 // @ts-ignore: module declaration for PNG assets is not present in this project
 import LOGO_IMAGE from '@/assets/images/lorman-logo.png';
+import { useAuth } from '@/context/AuthContext';
 
 const NAV_ITEMS = [
   { id: 1, title: 'Inicio', route: '/' },
@@ -18,6 +18,7 @@ const NAV_ITEMS = [
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname(); // ✅ Detectar ruta actual para resaltar enlace activo
+  const { isAuthenticated, logoutAuth } = useAuth();
 
   return (
     <View className="absolute left-0 right-0 top-0 z-50 h-20 items-center justify-center bg-white shadow-sm">
@@ -25,10 +26,7 @@ const Header = () => {
         {/* ✅ Link usando asChild evita Pressable doble */}
         <Link href="/" asChild>
           <Pressable className="flex-row items-center gap-1 active:opacity-80">
-            <Image
-              source={LOGO_IMAGE}
-              style={{ width: 70, height: 70, resizeMode: 'contain' }}
-            />
+            <Image source={LOGO_IMAGE} style={{ width: 70, height: 70, resizeMode: 'contain' }} />
             <Text className="text-3xl font-semibold text-blue-900">Lorman</Text>
           </Pressable>
         </Link>
@@ -43,8 +41,7 @@ const Header = () => {
                   <Text
                     className={`text-lg font-semibold transition-colors ${
                       isActive ? 'text-blue-700' : 'text-zinc-600 hover:text-blue-700'
-                    }`}
-                  >
+                    }`}>
                     {item.title}
                   </Text>
                 </Pressable>
@@ -54,16 +51,14 @@ const Header = () => {
         </View>
 
         {/* ✅ Botón simple sin inline style */}
-        <Button
-          onPress={() => router.push('/login')}
-          className="bg-[#1e56a0] px-4 py-2 rounded-lg"
-        >
-          <Text className="text-lg font-bold text-white">Log In</Text>
+        <Button onPress={isAuthenticated ? logoutAuth : () => router.push('/login')} className="rounded-lg bg-[#1e56a0] px-4 py-2">
+          <Text className="text-lg font-bold text-white">
+            {isAuthenticated ? 'Cerrar sesión' : 'Iniciar sesión'}
+          </Text>
         </Button>
       </View>
     </View>
   );
 };
 
-// ✅ memo mantiene el componente estable si no cambian rutas
 export default memo(Header);
