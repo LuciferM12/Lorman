@@ -9,6 +9,7 @@ import { Controller, useForm } from 'react-hook-form';
 type PromocionFormData = {
   titulo: string;
   descripcion: string;
+  codigo: string;
 };
 
 type PromocionFormProps = {
@@ -25,6 +26,7 @@ export default function PromocionForm({ onSubmit }: PromocionFormProps) {
     defaultValues: {
       titulo: '',
       descripcion: '',
+      codigo: '',
     },
   });
 
@@ -49,7 +51,7 @@ export default function PromocionForm({ onSubmit }: PromocionFormProps) {
               rules={{ required: 'El título es obligatorio' }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  placeholder="Título de la promoción"
+                  placeholder="Ej: Combo Familiar"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -63,25 +65,70 @@ export default function PromocionForm({ onSubmit }: PromocionFormProps) {
           </View>
 
           <View className="flex-1 gap-2">
-            <Label nativeID="descripcion">Descripción corta</Label>
+            <Label nativeID="codigo">Código promocional</Label>
             <Controller
               control={control}
-              name="descripcion"
-              rules={{ required: 'La descripción es obligatoria' }}
+              name="codigo"
+              rules={{
+                required: 'El código es obligatorio',
+                pattern: {
+                  value: /^[A-Z0-9]+$/,
+                  message: 'Solo letras mayúsculas y números',
+                },
+                minLength: {
+                  value: 4,
+                  message: 'Mínimo 4 caracteres',
+                },
+                maxLength: {
+                  value: 15,
+                  message: 'Máximo 15 caracteres',
+                },
+              }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  placeholder="Descripción corta"
+                  placeholder="Ej: FAMILIA2024"
                   value={value}
-                  onChangeText={onChange}
+                  onChangeText={(text) => onChange(text.toUpperCase())}
                   onBlur={onBlur}
-                  aria-labelledby="descripcion"
+                  autoCapitalize="characters"
+                  aria-labelledby="codigo"
                 />
               )}
             />
-            {errors.descripcion && (
-              <Text className="text-sm text-destructive">{errors.descripcion.message}</Text>
+            {errors.codigo && (
+              <Text className="text-sm text-destructive">{errors.codigo.message}</Text>
             )}
           </View>
+        </View>
+
+        <View className="gap-2">
+          <Label nativeID="descripcion">Descripción de la promoción</Label>
+          <Controller
+            control={control}
+            name="descripcion"
+            rules={{
+              required: 'La descripción es obligatoria',
+              minLength: {
+                value: 10,
+                message: 'Mínimo 10 caracteres',
+              },
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                placeholder="Ej: Llévate 2 garrafones de 20L y te regalamos una bolsa de hielo"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                multiline
+                numberOfLines={3}
+                style={{ height: 80, textAlignVertical: 'top' }}
+                aria-labelledby="descripcion"
+              />
+            )}
+          />
+          {errors.descripcion && (
+            <Text className="text-sm text-destructive">{errors.descripcion.message}</Text>
+          )}
         </View>
 
         <Button onPress={handleSubmit(handleFormSubmit)} className="self-start bg-green-600">

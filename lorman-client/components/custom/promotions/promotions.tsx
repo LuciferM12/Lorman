@@ -17,7 +17,7 @@ interface Promotion {
   subtitle: string;
   description: string;
   bgColor: string;
-  badge: string;
+  promoCode: string;
 }
 
 const Promotions: React.FC = () => {
@@ -34,7 +34,7 @@ const Promotions: React.FC = () => {
       description:
         'Llévate 2 garrafones de 20L y te regalamos una bolsa de hielo. ¡Perfecto para la familia!',
       bgColor: '#2B9FD9',
-      badge: 'COMBO',
+      promoCode: 'FAMILIA2024',
     },
     {
       id: '2',
@@ -43,7 +43,7 @@ const Promotions: React.FC = () => {
       description:
         '¿Eres cliente nuevo? Recibe un 20% de descuento en tu primer pedido. ¡Pruébanos!',
       bgColor: '#1E3A5F',
-      badge: '20% OFF',
+      promoCode: 'NUEVO20',
     },
     {
       id: '3',
@@ -51,7 +51,7 @@ const Promotions: React.FC = () => {
       subtitle: '¡Prepara la Fiesta!',
       description: 'En la compra de 3 bolsas de hielo llévate la cuarta ¡totalmente GRATIS!',
       bgColor: '#A8D8F0',
-      badge: 'GRATIS',
+      promoCode: 'HIELO3X4',
     },
   ];
 
@@ -172,7 +172,7 @@ const Promotions: React.FC = () => {
         backgroundColor: 'white',
       }}
       className="shadow">
-      {/* Top colored section */}
+      {/* Top colored section with promo code */}
       <View
         style={{
           backgroundColor: item.bgColor,
@@ -180,22 +180,8 @@ const Promotions: React.FC = () => {
           justifyContent: 'center',
           alignItems: 'center',
           position: 'relative',
+          paddingHorizontal: 20,
         }}>
-        {/* Badge in top right corner */}
-        <View
-          style={{
-            position: 'absolute',
-            top: 16,
-            right: 16,
-            backgroundColor: '#F5A623',
-            paddingHorizontal: 16,
-            paddingVertical: 8,
-            borderRadius: 20,
-          }}
-          className="shadow">
-          <Text style={{ color: 'white', fontWeight: '700', fontSize: 12 }}>{item.badge}</Text>
-        </View>
-
         {/* Main title centered */}
         <Text
           style={{
@@ -203,10 +189,44 @@ const Promotions: React.FC = () => {
             fontWeight: '700',
             color: item.bgColor === '#A8D8F0' ? '#1E3A5F' : 'white',
             textAlign: 'center',
-            paddingHorizontal: 20,
+            marginBottom: 16,
           }}>
           {item.title}
         </Text>
+
+        {/* Promo Code Badge */}
+        <View
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            borderWidth: 2,
+            borderColor: 'white',
+            borderStyle: 'dashed',
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            borderRadius: 8,
+          }}>
+          <Text
+            style={{
+              fontSize: 10,
+              fontWeight: '600',
+              color: 'white',
+              textAlign: 'center',
+              marginBottom: 4,
+              opacity: 0.9,
+            }}>
+            CÓDIGO PROMOCIONAL
+          </Text>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: '700',
+              color: 'white',
+              textAlign: 'center',
+              letterSpacing: 2,
+            }}>
+            {item.promoCode}
+          </Text>
+        </View>
       </View>
 
       {/* Bottom white section */}
