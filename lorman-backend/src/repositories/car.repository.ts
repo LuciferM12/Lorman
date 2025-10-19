@@ -73,7 +73,15 @@ const CarritoRepository = {
     async listDetails(id_carrito: number): Promise<CarDetailWithIdDTO[]> {
         const { data, error } = await supabaseClient
             .from(TABLE_DETAILS)
-            .select("*")
+            .select(`
+                *,
+                productos (
+                id_producto,
+                nombre_producto,
+                precio_unitario,
+                descripcion
+                )
+            `)
             .eq("id_carrito", id_carrito);
 
         if (error) {

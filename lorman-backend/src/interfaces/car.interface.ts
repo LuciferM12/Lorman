@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { productCart } from './products.interface';
 
 export const carDetailSchema = z.object({
     id_carrito: z.coerce.number().min(1, "El ID del carrito es requerido"),
@@ -16,6 +17,7 @@ export const carDetailUpdateSchema = z.object({
 
 export const carDetailSchemaWithId = carDetailSchema.extend({
     id_detalle_carrito: z.coerce.number().min(1, "El ID del detalle del carrito es requerido"),
+    productos: productCart,
 })
 
 export const carDetailSchemaWithUser = carDetailSchemaWithoutCarrito.extend({

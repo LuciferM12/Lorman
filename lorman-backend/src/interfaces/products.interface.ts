@@ -7,6 +7,10 @@ export const productRegisterSchema = z.object({
     stock: z.coerce.number().min(0, "El stock debe ser un número positivo"),
 })
 
+export const productCart = productRegisterSchema.omit({ stock: true }).extend({
+    id_producto: z.number().min(1, "El ID del producto es requerido"),
+});
+
 export const ProductSchema = productRegisterSchema.extend({
     id_producto: z.number(),
     disponible: z.boolean().default(true),
@@ -14,3 +18,4 @@ export const ProductSchema = productRegisterSchema.extend({
 
 export type ProductRegisterDTO = z.infer<typeof productRegisterSchema>;
 export type ProductDTO = z.infer<typeof ProductSchema>;
+export type ProductInCartDTO = z.infer<typeof productCart>;
