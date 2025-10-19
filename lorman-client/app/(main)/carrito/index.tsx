@@ -70,6 +70,7 @@ export default function ShoppingCartScreen() {
       (i) => i.id === id_producto && i.id_detalle_carrito === id_detalle_carrito
     );
     const newQuantity = item ? item.cantidad - 1 : 0;
+    setLoading(true);
     try {
       await updateCartItemQuantity(id_detalle_carrito, newQuantity);
       await fetchCartDetails();
