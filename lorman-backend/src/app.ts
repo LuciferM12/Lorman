@@ -6,6 +6,7 @@ import cors from "cors";
 import productRoutes from "./routes/products.routes";
 import reviewRoutes from "./routes/reviews.routes";
 import faqRoutes from "./routes/faq.routes";
+import cartRoutes from "./routes/cart.routes";
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use("/users", userRoutes)
 app.use("/products", productRoutes)
 app.use("/reviews", reviewRoutes)
 app.use("/faqs", faqRoutes)
+app.use("/cart", cartRoutes)
 
 app.use(errorHandler);
 
