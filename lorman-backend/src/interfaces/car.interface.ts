@@ -20,6 +20,8 @@ export const carDetailSchemaWithId = carDetailSchema.extend({
     productos: productCart,
 })
 
+export const carDetailUpdateSchemaWithoutProductos = carDetailSchemaWithId.omit({ productos: true });
+
 export const carDetailSchemaWithUser = carDetailSchemaWithoutCarrito.extend({
     id_usuario: z.coerce.number().min(1, "El ID del usuario es requerido"),
 })
@@ -38,3 +40,4 @@ export type CarritoDTO = z.infer<typeof carritoSchema>;
 export type CarDetailUpdateDTO = z.infer<typeof carDetailUpdateSchema>;
 export type CarDetailWithUserDTO = z.infer<typeof carDetailSchemaWithUser>;
 export type CarritoWithoutIdDTO = z.infer<typeof carritoSchemaWithoutId>;
+export type CarDetailUpdateWithoutProductosDTO = z.infer<typeof carDetailUpdateSchemaWithoutProductos>;

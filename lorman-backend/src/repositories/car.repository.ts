@@ -5,6 +5,8 @@ import {
     CarritoDTO,
     CarDetailDTO,
     CarDetailWithIdDTO,
+    carDetailUpdateSchemaWithoutProductos,
+    CarDetailUpdateWithoutProductosDTO,
 } from "../interfaces/car.interface";
 
 const TABLE_CART = "carrito";
@@ -82,7 +84,8 @@ const CarritoRepository = {
                 descripcion
                 )
             `)
-            .eq("id_carrito", id_carrito);
+            .eq("id_carrito", id_carrito)
+            .order("id_producto", { ascending: true });
 
         if (error) {
             throw new Error(`Error listando los detalles del carrito: ${error.message}`);
@@ -105,7 +108,7 @@ const CarritoRepository = {
         return carDetailSchemaWithId.parse(result);
     },
 
-    async updateDetail(id_detalle_carrito: number, cantidad: number): Promise<CarDetailWithIdDTO> {
+    async updateDetail(id_detalle_carrito: number, cantidad: number): Promise<CarDetailUpdateWithoutProductosDTO> {
         const { data: result, error } = await supabaseClient
             .from(TABLE_DETAILS)
             .update({ cantidad })
@@ -117,7 +120,7 @@ const CarritoRepository = {
             throw new Error(`Error actualizando la cantidad: ${error.message}`);
         }
 
-        return carDetailSchemaWithId.parse(result);
+        return carDetailUpdateSchemaWithoutProductos.parse(result);
     },
 
     async deleteDetail(id_detalle_carrito: number): Promise<void> {

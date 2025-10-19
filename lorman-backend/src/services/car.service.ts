@@ -2,7 +2,8 @@ import CarritoRepository from "../repositories/car.repository";
 import {
     CarritoDTO,
     CarDetailDTO,
-    CarDetailWithIdDTO
+    CarDetailWithIdDTO,
+    CarDetailUpdateWithoutProductosDTO
 } from "../interfaces/car.interface";
 
 const CarritoService = {
@@ -52,7 +53,7 @@ const CarritoService = {
         return newDetail;
     },
 
-    async updateProductQuantity(id_detalle_carrito: number, cantidad: number): Promise<CarDetailWithIdDTO> {
+    async updateProductQuantity(id_detalle_carrito: number, cantidad: number): Promise<CarDetailUpdateWithoutProductosDTO> {
         const updated = await CarritoRepository.updateDetail(id_detalle_carrito, cantidad);
         if (!updated) {
             throw new Error(`Detalle de carrito no encontrado`);
