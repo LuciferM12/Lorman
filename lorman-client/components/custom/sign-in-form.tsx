@@ -11,14 +11,17 @@ import { LoginInput, loginSchema } from '@/interfaces/ILogin';
 import { useRouter } from 'expo-router';
 import Toast from 'react-native-toast-message';
 import { Link } from 'expo-router';
+import { useAuth } from '@/context/AuthContext';
+import { SessionUserType, UserType } from '@/interfaces/IUser';
 
 interface SignInFormProps {
-  handleLogin: (data: LoginInput) => Promise<unknown>;
+  handleLogin: (data: LoginInput) => Promise<SessionUserType>;
 }
 
 export function SignInForm({ handleLogin }: SignInFormProps) {
   const passwordInputRef = React.useRef<TextInput>(null);
   const router = useRouter();
+  const { loginAuth } = useAuth();
 
   const {
     control,
@@ -35,8 +38,6 @@ export function SignInForm({ handleLogin }: SignInFormProps) {
     try {
       const valid = loginSchema.safeParse(data);
       if (!valid.success) {
-        console.error('Errores de validación:', valid.error.format());
-
         const firstError = valid.error.errors[0]?.message || 'Datos inválidos.';
         Toast.show({
           type: 'error',
@@ -46,7 +47,9 @@ export function SignInForm({ handleLogin }: SignInFormProps) {
         return;
       }
 
-      const result = await handleLogin(data);
+      const result: SessionUserType = await handleLogin(data);
+
+      await loginAuth(result.user, result.token);
 
       Toast.show({
         type: 'success',
