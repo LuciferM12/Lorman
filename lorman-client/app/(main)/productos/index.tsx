@@ -52,7 +52,7 @@ const productos = () => {
           title="Conoce nuestros Productos"
           subtitle="Aqui podras encontrar lo que buscas sobre nuestros productos."
           buttonText="Promociones activas"
-          imageSource={require('@/assets/images/agua.jpg')}
+          imageSource={{uri: 'https://res.cloudinary.com/dhvb4jesa/image/upload/agua_g5dp4e.jpg'}}
           scrollOffset={scrollOffset}
           onButtonPress={() => {
             console.log('Navegando a productos...');

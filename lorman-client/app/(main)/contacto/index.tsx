@@ -30,7 +30,7 @@ export default function ContactScreen() {
           title="Contacto"
           subtitle="Descubre las diferentes formas de ponerte en contacto con nosotros. Estamos aquí para ayudarte y responder a todas tus preguntas."
           buttonText="Ver Ubicación"
-          imageSource={require('@/assets/images/agua.jpg')}
+          imageSource={{uri: 'https://res.cloudinary.com/dhvb4jesa/image/upload/agua_g5dp4e.jpg'}}
           scrollOffset={scrollOffset}
           onButtonPress={() => {
             console.log('Navegando a productos...');

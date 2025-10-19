@@ -3,9 +3,6 @@ import { Text, View, Image, Pressable } from 'react-native';
 import { Button } from '../ui/button';
 import { Link, useRouter, usePathname } from 'expo-router';
 
-// ✅ Importar el asset de forma estática (más rápido que require)
-// @ts-ignore: module declaration for PNG assets is not present in this project
-import LOGO_IMAGE from '@/assets/images/lorman-logo.png';
 import { useAuth } from '@/context/AuthContext';
 
 const NAV_ITEMS = [
@@ -26,7 +23,7 @@ const Header = () => {
         {/* ✅ Link usando asChild evita Pressable doble */}
         <Link href="/" asChild>
           <Pressable className="flex-row items-center gap-1 active:opacity-80">
-            <Image source={LOGO_IMAGE} style={{ width: 70, height: 70, resizeMode: 'contain' }} />
+            <Image source={{uri: 'https://res.cloudinary.com/dhvb4jesa/image/upload/lorman-logo_qm40ot.png'}} style={{ width: 70, height: 70, resizeMode: 'contain' }} />
             <Text className="text-3xl font-semibold text-blue-900">Lorman</Text>
           </Pressable>
         </Link>

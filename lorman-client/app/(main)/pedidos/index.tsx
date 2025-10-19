@@ -63,7 +63,7 @@ export default function MisPedidosScreen() {
           title="Pedidos"
           subtitle="Verifica el estado de tus pedidos recientes y realiza un seguimiento de tus entregas."
           buttonText="Inicio"
-          imageSource={require('@/assets/images/agua.jpg')}
+          imageSource={{uri: 'https://res.cloudinary.com/dhvb4jesa/image/upload/agua_g5dp4e.jpg'}}
           scrollOffset={scrollOffset}
           onButtonPress={() => {
             console.log('Navegando a productos...');

@@ -48,7 +48,7 @@ export default function Screen() {
         title="Pureza que Refresca tu Vida"
         subtitle="Calidad y confianza en cada gota. Llevamos la frescura del agua y hielo Lorman directamente a tu hogar."
         buttonText="Descubre nuestros productos"
-        imageSource={require('@/assets/images/agua.jpg')}
+        imageSource={{uri: 'https://res.cloudinary.com/dhvb4jesa/image/upload/agua_g5dp4e.jpg'}}
         scrollOffset={scrollOffset}
         onButtonPress={() => {
           console.log('Navegando a productos...');

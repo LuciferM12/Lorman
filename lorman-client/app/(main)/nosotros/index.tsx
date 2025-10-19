@@ -83,7 +83,7 @@ const nosotros = () => {
           title="Comprometidos con tu Bienestar"
           subtitle="Conoce la historia y los valores que hacen de Lorman tu mejor opción."
           buttonText="Preguntas Frecuentes"
-          imageSource={require('@/assets/images/agua.jpg')}
+          imageSource={{uri: 'https://res.cloudinary.com/dhvb4jesa/image/upload/agua_g5dp4e.jpg'}}
           scrollOffset={scrollOffset}
           onButtonPress={() => {
             console.log('Navegando a productos...');

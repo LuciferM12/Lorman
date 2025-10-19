@@ -5,7 +5,7 @@ import { ScrollView, View, ImageBackground } from 'react-native';
 export default function SignInScreen() {
   return (
     <ImageBackground
-      source={require('@/assets/images/bgImage.png')}
+      source={{ uri: 'https://res.cloudinary.com/dhvb4jesa/image/upload/bgImage_oc8czn.png' }}
       style={{ flex: 1, width: '100%', height: '100%' }}
       resizeMode="cover"
       className="h-full w-full flex-1">

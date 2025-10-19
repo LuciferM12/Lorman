@@ -45,7 +45,7 @@ const politicas = () => {
           title="Nuestras Políticas"
           subtitle="Transparencia y compromiso con nuestros clientes."
           buttonText="Ver mas..."
-          imageSource={require('@/assets/images/agua.jpg')}
+          imageSource={{uri: 'https://res.cloudinary.com/dhvb4jesa/image/upload/agua_g5dp4e.jpg'}}
           scrollOffset={scrollOffset}
           onButtonPress={() => {
             console.log('Navegando a productos...');
