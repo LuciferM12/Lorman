@@ -69,7 +69,7 @@ const productos = () => {
           calidad.
         </Text>
 
-        <View className="mb-8 mt-9 w-full flex-row items-start justify-around">
+        <View className="mb-16 mt-9 w-full flex-row items-start justify-around">
           {features.map((feature, index) => (
             <FeatureCard
               key={index}

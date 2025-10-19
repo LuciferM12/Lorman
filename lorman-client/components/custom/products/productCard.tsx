@@ -1,4 +1,5 @@
 import { View, Text, Pressable, StyleSheet, Dimensions } from 'react-native';
+import {Plus} from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 const isWeb = width > 768;
@@ -19,12 +20,11 @@ type ProductCardProps = {
 };
 
 export const ProductCard = ({ product, onPress }: ProductCardProps) => {
-  const isLightCard = product.id === 3;
+  const isLightCard = product.id%3 === 0;
 
   return (
-    <Pressable
-      style={[styles.card, { backgroundColor: product.backgroundColor }]}
-      onPress={onPress}>
+    <View
+      style={[styles.card, { backgroundColor: product.backgroundColor }]}>
       <View style={styles.imageContainer}>
         <Text style={[styles.imageText, isLightCard && { color: product.textColor }]}>
           {product.title.split(' ')[0]}
@@ -49,9 +49,25 @@ export const ProductCard = ({ product, onPress }: ProductCardProps) => {
           style={[styles.description, isLightCard && { color: product.textColor, opacity: 0.8 }]}>
           {product.description}
         </Text>
-        <Text style={[styles.link, isLightCard && { color: '#2A9FD8' }]}>Ver más detalles →</Text>
+        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <Pressable
+            onPress={onPress}
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 22,
+              backgroundColor: 'rgba(255,255,255,0.12)',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Plus color={isLightCard ? (product.textColor ?? '#2A9FD8') : '#fff'} size={20} />
+          </Pressable>
+
+          <Text style={[styles.link, isLightCard && { color: '#2A9FD8' }]}>Agregar al carrito</Text>
+        </View>
+        
       </View>
-    </Pressable>
+    </View>
   );
 };
 
