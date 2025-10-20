@@ -56,6 +56,21 @@ const CarritoRepository = {
         return data;
     },
 
+    // Nueva función para obtener carrito completo con detalles
+    async getCarritoByCliente(id_cliente: number): Promise<CarDetailWithIdDTO[]> {
+        // 1. Buscar el carrito del cliente
+        const carritoData = await this.findByCliente(id_cliente);
+        
+        if (!carritoData) {
+            return []; // No tiene carrito o está vacío
+        }
+
+        // 2. Obtener los detalles del carrito con productos
+        const items = await this.listDetails(carritoData.id_carrito);
+        
+        return items;
+    },
+
     async findByProductInCarrito(id_carrito: number, id_producto: number): Promise<CarDetailWithIdDTO | null> {
         const { data, error } = await supabaseClient
             .from(TABLE_DETAILS)
@@ -146,21 +161,19 @@ const CarritoRepository = {
     },
 
     async clearCarritoByCliente(id_cliente: number): Promise<void> {
-        const { data, error } = await supabaseClient
-            .from(TABLE_CART)
-            .select("id_carrito")
-            .eq("id_usuario", id_cliente);
-
-        const id_carrito = data && data.length > 0 ? data[0].id_carrito : null;
-        if (!id_carrito) {
+        const carritoData = await this.findByCliente(id_cliente);
+        
+        if (!carritoData) {
             throw new Error(`Carrito no encontrado para el cliente con ID ${id_cliente}`);
         }
-        const { error: deleteError } = await supabaseClient
+
+        const { error } = await supabaseClient
             .from(TABLE_DETAILS)
             .delete()
-            .eq("id_carrito", id_carrito);
-        if (deleteError) {
-            throw new Error(`Error vaciando el carrito: ${deleteError.message}`);
+            .eq("id_carrito", carritoData.id_carrito);
+
+        if (error) {
+            throw new Error(`Error vaciando el carrito: ${error.message}`);
         }
     },
 };
