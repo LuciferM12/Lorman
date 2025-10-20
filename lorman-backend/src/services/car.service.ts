@@ -43,7 +43,7 @@ const CarritoService = {
         return detalles;
     },
 
-    async addProductToCarrito(data: CarDetailDTO): Promise<CarDetailWithIdDTO> {
+    async addProductToCarrito(data: CarDetailDTO): Promise<CarDetailUpdateWithoutProductosDTO> {
         const carrito = await CarritoRepository.findByCarrito(data.id_carrito);
         if (!carrito) {
             throw new Error(`El carrito con ID ${data.id_carrito} no existe`);

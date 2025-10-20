@@ -94,7 +94,7 @@ const CarritoRepository = {
         return carDetailSchemaWithId.array().parse(data);
     },
 
-    async addDetail(data: CarDetailDTO): Promise<CarDetailWithIdDTO> {
+    async addDetail(data: CarDetailDTO): Promise<CarDetailUpdateWithoutProductosDTO> {
         const { data: result, error } = await supabaseClient
             .from(TABLE_DETAILS)
             .insert([data])
@@ -105,7 +105,7 @@ const CarritoRepository = {
             throw new Error(`Error agregando producto al carrito: ${error.message}`);
         }
 
-        return carDetailSchemaWithId.parse(result);
+        return carDetailUpdateSchemaWithoutProductos.parse(result);
     },
 
     async updateDetail(id_detalle_carrito: number, cantidad: number): Promise<CarDetailUpdateWithoutProductosDTO> {

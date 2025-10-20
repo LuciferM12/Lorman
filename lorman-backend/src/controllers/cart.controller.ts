@@ -102,6 +102,7 @@ const CartController = {
                 detalle: newDetail
             });
         } catch (error: any) {
+            console.log(error)
             res.status(400).json({ message: error.message });
         }
     },
