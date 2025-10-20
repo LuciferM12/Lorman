@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const userSchema = z.object({
     email: z.string().email(),
-    rol: z.enum(['admin', 'user']),
+    rol: z.enum(['admininistrador', 'cliente']),
     nombre_completo: z.string(),
     id_usuario: z.number(),
 });
@@ -13,4 +13,4 @@ export const sessionUserSchema = z.object({
 });
 
 export type UserType = z.infer<typeof userSchema>;
-export type SessionUserType = z.infer<typeof sessionUserSchema>;
+export type SessionUserType = z.infer<typeof sessionUserSchema>;    
