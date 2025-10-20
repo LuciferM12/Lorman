@@ -105,8 +105,11 @@ export default function ShoppingCartScreen() {
   };
 
   return (
-    <ScrollView className="mt-20 flex-1 bg-gray-50">
-      <View className="p-6">
+    <ScrollView 
+      className="mt-20 flex-1 bg-gray-50"
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <View className="flex-1 p-6">
         {/* Título */}
         <Text className="mb-6 text-3xl font-bold text-[#0d4682]">Carrito de Compras</Text>
 

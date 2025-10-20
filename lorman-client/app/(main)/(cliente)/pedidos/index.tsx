@@ -71,21 +71,26 @@ export default function MisPedidosScreen() {
 
   return (
     <>
-      <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
-        <Banner
-          size="small"
-          title="Pedidos"
-          subtitle="Verifica el estado de tus pedidos recientes y realiza un seguimiento de tus entregas."
-          buttonText="Inicio"
-          imageSource={require('@/assets/images/agua.jpg')}
-          scrollOffset={scrollOffset}
-          onButtonPress={() => {
-            console.log('Navegando a productos...');
-          }}
-        />
+      <Animated.ScrollView 
+        ref={scrollRef} 
+        scrollEventThrottle={16}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <View className="flex-1">
+          <Banner
+            size="small"
+            title="Pedidos"
+            subtitle="Verifica el estado de tus pedidos recientes y realiza un seguimiento de tus entregas."
+            buttonText="Inicio"
+            imageSource={require('@/assets/images/agua.jpg')}
+            scrollOffset={scrollOffset}
+            onButtonPress={() => {
+              console.log('Navegando a productos...');
+            }}
+          />
 
-        <View className="p-4 md:p-8">
-          <Text className="mb-6 mt-6 text-2xl font-bold text-gray-800">Mis Pedidos</Text>
+          <View className="flex-1 p-4 md:p-8">
+            <Text className="mb-6 mt-6 text-2xl font-bold text-gray-800">Mis Pedidos</Text>
 
           {orders.length > 0 ? (
             <View className="gap-4">
@@ -103,11 +108,12 @@ export default function MisPedidosScreen() {
             </View>
           )}
 
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </View>
         </View>
         <LormanFooter />
       </Animated.ScrollView>

@@ -26,7 +26,7 @@ export default function LormanFooter() {
   };
 
   return (
-    <View className="bg-[#0d4682] px-6 py-8">
+    <View className="mt-auto bg-[#0d4682] px-6 py-8">
       {/* Contenedor principal */}
       <View className="gap-8 pb-8 md:flex-row md:justify-between">
         {/* Columna Lorman */}
