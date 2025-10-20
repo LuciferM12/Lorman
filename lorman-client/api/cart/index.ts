@@ -1,7 +1,7 @@
 import { CartItem, DetailCartDTO, ResponseCartDetailDTO } from "@/interfaces/ICart";
 import { API_URL } from "../users";
 import axios from "axios";
-import { ProductQuantityUpdatedDTO, productUpdatedSchema } from "@/interfaces/IProduct";
+import { ProductAdditionDTO, ProductQuantityUpdatedDTO, productUpdatedSchema } from "@/interfaces/IProduct";
 
 
 export async function createCheckoutSession(cartItems: CartItem[], user: string) {
@@ -44,6 +44,15 @@ export async function removeCartItem(id_detalle_carrito: number): Promise<void> 
         await axios.delete(`${API_URL}/cart/detail/${id_detalle_carrito}`);
     } catch (error) {
         console.error("Error removing cart item:", error);
+        throw error;
+    }
+}
+
+export async function addItemToCart(detailCartDTO: ProductAdditionDTO): Promise<void> {
+    try {
+        await axios.post(`${API_URL}/cart/add`, detailCartDTO);
+    } catch (error) {
+        console.error("Error adding item to cart:", error);
         throw error;
     }
 }

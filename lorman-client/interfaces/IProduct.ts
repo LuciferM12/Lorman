@@ -19,6 +19,13 @@ export const productUpdatedSchema = z.object({
     id_detalle_carrito: z.number().min(1, "El ID del detalle del carrito es requerido"),
 })
 
+const productAdditionSchema = z.object({
+    id_usuario: z.coerce.number().min(1, "El ID del usuario es requerido"),
+    id_producto: z.coerce.number().min(1, "El ID del producto es requerido"),
+    cantidad: z.coerce.number().min(1, "La cantidad mínima es 1"),
+})
+
 export type ProductRegisterDTO = z.infer<typeof productRegisterSchema>;
 export type ProductInCartDTO = z.infer<typeof productCart>;
 export type ProductQuantityUpdatedDTO = z.infer<typeof productUpdatedSchema>;
+export type ProductAdditionDTO = z.infer<typeof productAdditionSchema>;

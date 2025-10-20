@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
 import Banner from '@/components/custom/banner/banner';
@@ -7,10 +7,8 @@ import { Product } from '@/components/custom/products/productCard';
 import FeatureCard from '@/components/custom/featureCard';
 import { Feather } from '@expo/vector-icons';
 import LormanFooter from '@/components/custom/Footer';
-
-const handleProductPressed = (product: Product) => {
-  console.log('Producto presionado:', product);
-};
+import { addItemToCart } from '@/api/cart';
+import { useAuth } from '@/context/AuthContext';
 
 const features: {
   iconName: keyof typeof Feather.glyphMap;
@@ -37,9 +35,33 @@ const features: {
   },
 ];
 
+const PRODUCTS: Product[] = [
+  { id: 1, title: 'Garrafón de Agua Purificada', description: 'El agua más pura y fresca en nuestro práctico garrafón de 20 litros. Ideal para el hogar y la oficina.', price: '$45 MXN', backgroundColor: '#2A9FD8' },
+  { id: 2, title: 'Hielo Cristalino en Bolsa', description: 'Perfecto para tus bebidas, fiestas y eventos. Nuestro hielo garantiza máxima duración y pureza.', price: '$35 MXN', backgroundColor: '#7DC8E8' },
+  { id: 3, title: 'Agua Embotellada', description: 'Lleva la frescura de Lorman a donde vayas. Disponibles en presentaciones de 500ml y 1L.', price: '$12 MXN', backgroundColor: '#E8F4F8', textColor: '#003B5C' },
+  { id: 4, title: 'Garrafón (2)', description: 'El agua más pura y fresca en nuestro práctico garrafón de 20 litros. Ideal para el hogar y la oficina.', price: '$45 MXN', backgroundColor: '#2A9FD8' },
+  { id: 5, title: 'Hielo (2)', description: 'Perfecto para tus bebidas, fiestas y eventos. Nuestro hielo garantiza máxima duración y pureza.', price: '$35 MXN', backgroundColor: '#7DC8E8' },
+  { id: 6, title: 'Agua Embotellada (2)', description: 'Lleva la frescura de Lorman a donde vayas. Disponibles en presentaciones de 500ml y 1L.', price: '$12 MXN', backgroundColor: '#E8F4F8', textColor: '#003B5C' },
+];
+
+
 const productos = () => {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    
+  })
+
+  const handleProductPressed = async (product: Product) => {
+    console.log('Producto presionado:', product);
+    await addItemToCart({
+      id_usuario: user?.id_usuario!,
+      id_producto: product.id,
+      cantidad: 1,
+    });
+  };
 
   return (
     <View className="flex-1 bg-white">
@@ -59,7 +81,7 @@ const productos = () => {
           }}
         />
 
-        <ProductGrid onProductPress={handleProductPressed} />
+        <ProductGrid onProductPress={handleProductPressed} products={PRODUCTS} />
 
         <Text className="mb-4 mt-9 text-center text-4xl font-bold text-primaryDark">
           Calidad en la que Puedes Confiar
@@ -79,7 +101,7 @@ const productos = () => {
             />
           ))}
         </View>
-        <LormanFooter/>
+        <LormanFooter />
       </Animated.ScrollView>
     </View>
   );
