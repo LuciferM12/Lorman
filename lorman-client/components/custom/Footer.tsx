@@ -2,6 +2,7 @@ import { Text } from '@/components/ui/text';
 import * as React from 'react';
 import { View, Image, Linking, Pressable } from 'react-native';
 import { Link } from 'expo-router';
+import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react-native';
 
 export default function LormanFooter() {
   const handleEmailPress = () => {
@@ -13,18 +14,20 @@ export default function LormanFooter() {
   };
 
   const handlePrivacyPress = () => {
-    // Navega a tu pantalla de privacidad
     console.log('Navegar a Aviso de Privacidad');
   };
 
   const handleTermsPress = () => {
-    // Navega a tu pantalla de términos
     console.log('Navegar a Términos y Condiciones');
+  };
+
+  const handleSocialPress = (url: string) => {
+    Linking.openURL(url);
   };
 
   return (
     <View className="bg-[#0d4682] px-6 py-8">
-      {/* Contenedor principal - Cambiado a columnas verticales para móvil */}
+      {/* Contenedor principal */}
       <View className="gap-8 pb-8 md:flex-row md:justify-between">
         {/* Columna Lorman */}
         <View className="md:flex-1">
@@ -60,6 +63,40 @@ export default function LormanFooter() {
                 Email: <Text className="font-normal text-white underline">contacto@lorman.com</Text>
               </Text>
             </Pressable>
+          </View>
+
+          {/* Redes Sociales */}
+          <View className="mt-4">
+            <Text className="mb-2 text-sm font-semibold text-white/90">Síguenos:</Text>
+            <View className="flex-row gap-4">
+              <Pressable 
+                onPress={() => handleSocialPress('https://facebook.com/lorman')}
+                className="rounded-full bg-white/10 p-2 active:bg-white/20"
+              >
+                <Facebook color="white" size={24} />
+              </Pressable>
+
+              <Pressable 
+                onPress={() => handleSocialPress('https://instagram.com/lorman')}
+                className="rounded-full bg-white/10 p-2 active:bg-white/20"
+              >
+                <Instagram color="white" size={24} />
+              </Pressable>
+
+              <Pressable 
+                onPress={() => handleSocialPress('https://twitter.com/lorman')}
+                className="rounded-full bg-white/10 p-2 active:bg-white/20"
+              >
+                <Twitter color="white" size={24} />
+              </Pressable>
+
+              <Pressable 
+                onPress={() => handleSocialPress('https://youtube.com/@lorman')}
+                className="rounded-full bg-white/10 p-2 active:bg-white/20"
+              >
+                <Youtube color="white" size={24} />
+              </Pressable>
+            </View>
           </View>
         </View>
 
