@@ -10,7 +10,7 @@ export type Order = {
   id_cliente: number;
   fecha_pedido: string;
   monto_total: number;
-  estado_entrega: 'entregado' | 'en_camino' | 'cancelado';
+  estado_entrega: 'entregado' | 'en_camino' | 'cancelado' | 'pendiente';
 };
 
 // Mapeo de estados para estilos y etiquetas, adaptado a la vista del cliente
@@ -29,6 +29,11 @@ const STATUSES = {
     label: 'Cancelado', 
     badgeClass: 'bg-red-100', 
     textClass: 'text-red-800' 
+  },
+  pendiente: { 
+    label: 'Pendiente', 
+    badgeClass: 'bg-blue-100', 
+    textClass: 'text-blue-800' 
   },
 };
 
