@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { View, type TextInput } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,8 @@ import { Text } from '@/components/ui/text';
 import { COLORS } from '../../constants/colors';
 import { registerSchema, RegisterType } from '@/interfaces/IRegister';
 import { useRouter } from 'expo-router';
-import Toast from 'react-native-toast-message'; 
+import Toast from 'react-native-toast-message';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 interface SignInFormProps {
   handleRegister: (data: RegisterType) => Promise<unknown>;
@@ -21,6 +22,9 @@ export function SignUpForm({ handleRegister }: SignInFormProps) {
   const passwordInputRef = React.useRef<TextInput>(null);
   const confirmPasswordInputRef = React.useRef<TextInput>(null);
   const router = useRouter();
+
+  const captcha = useRef<ReCAPTCHA>(null);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
 
   const {
     control,
@@ -37,8 +41,32 @@ export function SignUpForm({ handleRegister }: SignInFormProps) {
     },
   });
 
+  const onChange = (token: string | null) => {
+    if (captcha.current) {
+      const value = captcha.current.getValue();
+
+      if (value) {
+        console.log('✅ Captcha verificado');
+        setCaptchaVerified(true);
+      } else {
+        console.log('❌ Captcha no verificado');
+        setCaptchaVerified(false);
+      }
+    }
+  };
+
   const onSubmit = async (data: RegisterType) => {
     try {
+      // Verificar que el captcha fue completado
+      if (!captchaVerified) {
+        Toast.show({
+          type: 'error',
+          text1: 'Verificación requerida',
+          text2: 'Por favor, completa el captcha.',
+        });
+        return;
+      }
+
       const valid = registerSchema.safeParse(data);
       if (!valid.success) {
         console.error('Errores de validación:', valid.error.format());
@@ -69,6 +97,10 @@ export function SignUpForm({ handleRegister }: SignInFormProps) {
         text1: 'Error en el registro',
         text2: error.message || 'Ocurrió un error inesperado.',
       });
+
+      // Resetear captcha en caso de error
+      captcha.current?.reset();
+      setCaptchaVerified(false);
     }
   };
 
@@ -100,7 +132,7 @@ export function SignUpForm({ handleRegister }: SignInFormProps) {
                   }}
                   render={({ field: { onChange, value } }) => (
                     <Input
-                      id="fullName" // Corregido: 'id' en lugar de 'htmlFor'
+                      id="fullName"
                       placeholder="Tu nombre"
                       autoCapitalize="words"
                       returnKeyType="next"
@@ -239,10 +271,38 @@ export function SignUpForm({ handleRegister }: SignInFormProps) {
             </View>
           </View>
 
+          {/* reCAPTCHA */}
+          <View className="items-center justify-center">
+            <ReCAPTCHA
+              ref={captcha}
+              sitekey={process.env.EXPO_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+              onChange={onChange}
+              onExpired={() => {
+                console.log('Captcha expirado');
+                setCaptchaVerified(false);
+              }}
+              onErrored={() => {
+                console.log('Error en captcha');
+                setCaptchaVerified(false);
+              }}
+            />
+          </View>
+
+          {/* Indicador de verificación */}
+          {captchaVerified && (
+            <View className="flex-row items-center justify-center gap-2 rounded-lg bg-green-50 p-3">
+              <Text className="text-lg">✅</Text>
+              <Text className="text-sm font-medium text-green-700">
+                Verificación completada
+              </Text>
+            </View>
+          )}
+
           <Button
             className="mt-6 w-full"
             style={{ backgroundColor: COLORS.primaryDark }}
-            onPress={handleSubmit(onSubmit)}>
+            onPress={handleSubmit(onSubmit)}
+            disabled={!captchaVerified}>
             <Text className="text-white">Registrar</Text>
           </Button>
         </CardContent>

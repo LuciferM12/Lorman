@@ -1,5 +1,4 @@
-// app/(client)/mis-pedidos.tsx
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { View, Alert } from 'react-native';
 import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
 import { Text } from '@/components/ui/text';
@@ -9,37 +8,52 @@ import OrderDetailsDialog from '@/components/custom/pedidos/DialogPedidos';
 import type { Order } from '@/components/custom/pedidos/ItemCard';
 import Banner from '@/components/custom/banner/banner';
 import LormanFooter from '@/components/custom/Footer';
+import { getAllOrders } from '@/api/orders';
+import { useAuth } from '@/context/AuthContext';
 
 // Datos de ejemplo para simular la respuesta de una API
-const ALL_ORDERS_DATA: Order[] = [
-  { id_pedido: 'LOR-54321', id_cliente: 1, fecha_pedido: '2025-10-15', monto_total: 120.0, estado_entrega: 'entregado' },
-  { id_pedido: 'LOR-54119', id_cliente: 1, fecha_pedido: '2025-10-10', monto_total: 80.0, estado_entrega: 'en_camino' },
-  { id_pedido: 'LOR-53987', id_cliente: 1, fecha_pedido: '2025-10-05', monto_total: 25.0, estado_entrega: 'cancelado' },
-  { id_pedido: 'LOR-53986', id_cliente: 2, fecha_pedido: '2025-10-04', monto_total: 150.0, estado_entrega: 'entregado' },
-  { id_pedido: 'LOR-53985', id_cliente: 1, fecha_pedido: '2025-10-03', monto_total: 300.0, estado_entrega: 'entregado' },
-  { id_pedido: 'LOR-53984', id_cliente: 1, fecha_pedido: '2025-10-02', monto_total: 75.5, estado_entrega: 'cancelado' },
-  { id_pedido: 'LOR-53983', id_cliente: 1, fecha_pedido: '2025-10-01', monto_total: 99.99, estado_entrega: 'en_camino' },
-];
 
-const ITEMS_PER_PAGE = 5;
-const CURRENT_CLIENT_ID = 1;
+const ITEMS_PER_PAGE = 50;
 
 export default function MisPedidosScreen() {
+  const { user } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [orders, setOrders] = useState<Order[]>([]);
 
   // 1. Filtrar pedidos solo para el cliente actual
-  const clientOrders = useMemo(
-    () => ALL_ORDERS_DATA.filter((order) => order.id_cliente === CURRENT_CLIENT_ID),
-    []
-  );
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await getAllOrders(50, 0);
+        const mappedOrders: Order[] = response.orders.map((order: any) => ({
+          id_pedido: order.id_pedido.toString(), // Convertir a string
+          id_cliente: order.id_cliente,
+          fecha_pedido: order.fecha_pedido,
+          monto_total: order.monto_total,
+          estado_entrega: order.estado_entrega as 'entregado' | 'en_camino' | 'cancelado' | 'pendiente',
+        }));
+
+        // Filtrar solo los pedidos del cliente actual
+        const filteredOrders = mappedOrders.filter(
+          (order) => order.id_cliente === user?.id_usuario
+        );
+
+        setOrders(filteredOrders);
+      } catch (error) {
+        console.error('Error al obtener pedidos:', error);
+      }
+    };
+    fetchOrders();
+  }, []);
 
   // 2. Lógica de Paginación
-  const totalPages = Math.ceil(clientOrders.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(orders.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentPedidos = clientOrders.slice(startIndex, endIndex);
+  const currentPedidos = orders.slice(startIndex, endIndex);
 
   // 3. Handlers para las acciones de las tarjetas
   const handleViewDetails = (order: Order) => {
@@ -78,21 +92,21 @@ export default function MisPedidosScreen() {
           <View className="flex-1 p-4 md:p-8">
             <Text className="mb-6 mt-6 text-2xl font-bold text-gray-800">Mis Pedidos</Text>
 
-            {currentPedidos.length > 0 ? (
-              <View className="gap-4">
-                {currentPedidos.map((pedido) => (
-                  <OrderItemCard
-                    key={pedido.id_pedido}
-                    order={pedido}
-                    onViewDetails={handleViewDetails}
-                  />
-                ))}
-              </View>
-            ) : (
-              <View className="flex-1 items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white p-12">
-                <Text className="text-center text-gray-500">Aún no tienes pedidos.</Text>
-              </View>
-            )}
+          {orders.length > 0 ? (
+            <View className="gap-4">
+              {orders.map((pedido) => (
+                <OrderItemCard
+                  key={pedido.id_pedido}
+                  order={pedido}
+                  onViewDetails={handleViewDetails}
+                />
+              ))}
+            </View>
+          ) : (
+            <View className="flex-1 items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white p-12">
+              <Text className="text-center text-gray-500">Aún no tienes pedidos.</Text>
+            </View>
+          )}
 
             <Pagination
               currentPage={currentPage}
@@ -106,7 +120,7 @@ export default function MisPedidosScreen() {
 
       {/* Dialog de Detalles */}
       <OrderDetailsDialog
-        order={selectedOrder}
+        order={selectedOrder as any}
         visible={dialogVisible}
         onClose={handleCloseDialog}
       />
