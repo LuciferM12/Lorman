@@ -145,12 +145,79 @@ app.post("/test-email", async (req, res) => {
     }
 });
 
+// Endpoint de contacto
+app.post("/contactEmail", async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({ error: 'Todos los campos son requeridos' });
+    }
+
+    // Send email to admin
+    await sendEmail({
+      to: process.env.ADMIN_EMAIL || 'lormanslpce@gmail.com',
+      subject: `📧 Contacto: ${subject}`,
+      htmlContent: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #17a2b8; color: white; padding: 20px; text-align: center; }
+            .content { background-color: #f9f9f9; padding: 20px; margin-top: 20px; }
+            .field { margin-bottom: 15px; }
+            .label { font-weight: bold; color: #17a2b8; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>📧 Nuevo Mensaje de Contacto</h1>
+            </div>
+            <div class="content">
+              <div class="field">
+                <span class="label">Nombre:</span> ${name}
+              </div>
+              <div class="field">
+                <span class="label">Email:</span> ${email}
+              </div>
+              <div class="field">
+                <span class="label">Asunto:</span> ${subject}
+              </div>
+              <div class="field">
+                <span class="label">Mensaje:</span>
+                <p>${message}</p>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    });
+
+    return res.json({ 
+      success: true, 
+      message: 'Mensaje de contacto enviado correctamente' 
+    });
+  } catch (error) {
+    console.error('Error al enviar email de contacto:', error);
+    return res.status(500).json({ 
+      error: 'Error al enviar mensaje de contacto',
+      details: error instanceof Error ? error.message : 'Error desconocido'
+    });
+  }
+});
+
+// API Routes
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
 app.use("/reviews", reviewRoutes);
 app.use("/faqs", faqRoutes);
 app.use("/cart", cartRoutes);
 
+// Error handler
 app.use(errorHandler);
 
 export default app;
