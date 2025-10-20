@@ -4,38 +4,11 @@ import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-rean
 import Banner from '@/components/custom/banner/banner';
 import { ProductGrid } from '@/components/custom/products/productGrid';
 import { Product } from '@/components/custom/products/productCard';
-import FeatureCard from '@/components/custom/featureCard';
-import { Feather } from '@expo/vector-icons';
 import LormanFooter from '@/components/custom/Footer';
 import { addItemToCart } from '@/api/cart';
 import { useAuth } from '@/context/AuthContext';
 import { getProducts } from '@/api/products';
 import { ProductReturnDTO } from '@/interfaces/IProduct';
-
-const features: {
-  iconName: keyof typeof Feather.glyphMap;
-  title: string;
-  description: string;
-}[] = [
-  {
-    iconName: 'target',
-    title: 'Maxima pureza',
-    description:
-      'Procesos de purificación avanzados que eliminan impurezas y garantizan un sabor perfecto.',
-  },
-  {
-    iconName: 'eye',
-    title: 'Calidad Certificada',
-    description:
-      'Cumplimos con todas las normativas de salud para ofrecerte un producto seguro y confiable.',
-  },
-  {
-    iconName: 'heart',
-    title: 'Entrega a Domicilio',
-    description:
-      'Recibe tus productos directamente en la puerta de tu casa o negocio. ¡Fácil, rápido y seguro!',
-  },
-];
 
 const productos = () => {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -106,16 +79,7 @@ const productos = () => {
           calidad.
         </Text>
 
-        <View className="mb-16 mt-9 w-full flex-row items-start justify-around">
-          {features.map((feature, index) => (
-            <FeatureCard
-              key={index}
-              iconName={feature.iconName}
-              title={feature.title}
-              description={feature.description}
-            />
-          ))}
-        </View>
+        
         <LormanFooter />
       </Animated.ScrollView>
     </View>
