@@ -70,28 +70,28 @@ export default function LormanFooter() {
             <Text className="mb-2 text-sm font-semibold text-white/90">Síguenos:</Text>
             <View className="flex-row gap-4">
               <Pressable 
-                onPress={() => handleSocialPress('https://facebook.com/lorman')}
+                onPress={() => handleSocialPress('https://www.facebook.com/LormanAgua/?locale=es_LA')}
                 className="rounded-full bg-white/10 p-2 active:bg-white/20"
               >
                 <Facebook color="white" size={24} />
               </Pressable>
 
               <Pressable 
-                onPress={() => handleSocialPress('https://instagram.com/lorman')}
+                onPress={() => handleSocialPress('https://www.instagram.com/agualorman/')}
                 className="rounded-full bg-white/10 p-2 active:bg-white/20"
               >
                 <Instagram color="white" size={24} />
               </Pressable>
 
               <Pressable 
-                onPress={() => handleSocialPress('https://twitter.com/lorman')}
+                onPress={() => handleSocialPress('https://x.com/lormanslp?lang=ar-x-fm')}
                 className="rounded-full bg-white/10 p-2 active:bg-white/20"
               >
                 <Twitter color="white" size={24} />
               </Pressable>
 
               <Pressable 
-                onPress={() => handleSocialPress('https://youtube.com/@lorman')}
+                onPress={() => handleSocialPress('https://www.youtube.com/@LormanSLP?app=desktop')}
                 className="rounded-full bg-white/10 p-2 active:bg-white/20"
               >
                 <Youtube color="white" size={24} />
