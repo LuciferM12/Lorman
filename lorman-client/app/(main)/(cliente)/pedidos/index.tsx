@@ -57,43 +57,49 @@ export default function MisPedidosScreen() {
 
   return (
     <>
-      <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
-        <Banner
-          size="small"
-          title="Pedidos"
-          subtitle="Verifica el estado de tus pedidos recientes y realiza un seguimiento de tus entregas."
-          buttonText="Inicio"
-          imageSource={require('@/assets/images/agua.jpg')}
-          scrollOffset={scrollOffset}
-          onButtonPress={() => {
-            console.log('Navegando a productos...');
-          }}
-        />
-
-        <View className="p-4 md:p-8">
-          <Text className="mb-6 mt-6 text-2xl font-bold text-gray-800">Mis Pedidos</Text>
-
-          {currentPedidos.length > 0 ? (
-            <View className="gap-4">
-              {currentPedidos.map((pedido) => (
-                <OrderItemCard
-                  key={pedido.id_pedido}
-                  order={pedido}
-                  onViewDetails={handleViewDetails}
-                />
-              ))}
-            </View>
-          ) : (
-            <View className="flex-1 items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white p-12">
-              <Text className="text-center text-gray-500">Aún no tienes pedidos.</Text>
-            </View>
-          )}
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
+      <Animated.ScrollView 
+        ref={scrollRef} 
+        scrollEventThrottle={16}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <View className="flex-1">
+          <Banner
+            size="small"
+            title="Pedidos"
+            subtitle="Verifica el estado de tus pedidos recientes y realiza un seguimiento de tus entregas."
+            buttonText="Inicio"
+            imageSource={require('@/assets/images/agua.jpg')}
+            scrollOffset={scrollOffset}
+            onButtonPress={() => {
+              console.log('Navegando a productos...');
+            }}
           />
+
+          <View className="flex-1 p-4 md:p-8">
+            <Text className="mb-6 mt-6 text-2xl font-bold text-gray-800">Mis Pedidos</Text>
+
+            {currentPedidos.length > 0 ? (
+              <View className="gap-4">
+                {currentPedidos.map((pedido) => (
+                  <OrderItemCard
+                    key={pedido.id_pedido}
+                    order={pedido}
+                    onViewDetails={handleViewDetails}
+                  />
+                ))}
+              </View>
+            ) : (
+              <View className="flex-1 items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white p-12">
+                <Text className="text-center text-gray-500">Aún no tienes pedidos.</Text>
+              </View>
+            )}
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </View>
         </View>
         <LormanFooter />
       </Animated.ScrollView>
