@@ -23,10 +23,7 @@ const AdminLayout = () => {
     <SafeAreaView className="flex-1 bg-gray-50">
       <View className="flex-1 flex-row">
         {/* Sidebar */}
-        <AdminSidebar
-          //selectedSection={selectedSection}
-          //onSectionChange={handleSectionChange}
-        />
+        <AdminSidebar />
 
         {/* Main Content Area */}
         <View className="flex-1">
