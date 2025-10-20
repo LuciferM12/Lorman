@@ -5,8 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
-import { View, Alert } from 'react-native';
+import { View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
+import Toast from 'react-native-toast-message';
+import axios from 'axios';
 
 type ContactFormData = {
   name: string;
@@ -36,23 +38,32 @@ export default function ContactForm() {
     setIsSubmitting(true);
 
     try {
-      // Aquí va tu lógica de envío
-      console.log('Mensaje enviado:', data);
+      const API_URL = process.env.EXPO_PUBLIC_API_URL_LOCAL || 'http://localhost:8080';
       
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await axios.post(`${API_URL}/contactEmail`, {
+        name: data.name,
+        email: data.email,
+        subject: data.subject,
+        message: data.message,
+      });
 
-      Alert.alert(
-        'Mensaje Enviado',
-        'Tu mensaje ha sido enviado exitosamente. Te contactaremos pronto.',
-        [
-          {
-            text: 'OK',
-            onPress: () => reset(),
-          },
-        ]
-      );
-    } catch (error) {
-      Alert.alert('Error', 'Hubo un problema al enviar tu mensaje.');
+      if (response.data.success) {
+        Toast.show({
+          type: 'success',
+          text1: 'Mensaje Enviado',
+          text2: 'Tu mensaje ha sido enviado exitosamente. Te contactaremos pronto.',
+        });
+
+        reset();
+      }
+    } catch (error: any) {
+      console.error('Error al enviar mensaje:', error);
+      
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.response?.data?.error || 'Hubo un problema al enviar tu mensaje. Intenta de nuevo.',
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -74,6 +85,10 @@ export default function ContactForm() {
               name="name"
               rules={{
                 required: 'El nombre es obligatorio',
+                minLength: {
+                  value: 3,
+                  message: 'El nombre debe tener al menos 3 caracteres',
+                },
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
@@ -132,6 +147,10 @@ export default function ContactForm() {
               name="subject"
               rules={{
                 required: 'El asunto es obligatorio',
+                minLength: {
+                  value: 5,
+                  message: 'El asunto debe tener al menos 5 caracteres',
+                },
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input

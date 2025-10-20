@@ -22,7 +22,7 @@ type ProductCardProps = {
 
 export const ProductCard = ({ product, onPress }: ProductCardProps) => {
   const { isAuthenticated } = useAuth();
-  const isLightCard = product.id % 3 === 0;
+  const isLightCard = false
 
   return (
     <View style={[styles.card, { backgroundColor: product.backgroundColor }]}>

@@ -7,6 +7,9 @@ import * as React from 'react';
 import { type ImageStyle, View, StyleSheet } from 'react-native';
 import Banner from '@/components/custom/banner/banner';
 
+import FeatureCard from '@/components/custom/featureCard';
+import { Feather } from '@expo/vector-icons';
+
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReviewGrid } from '@/components/custom/reviews/reviewGrid';
@@ -32,6 +35,31 @@ const IMAGE_STYLE: ImageStyle = {
   height: 76,
   width: 76,
 };
+
+const features: {
+  iconName: keyof typeof Feather.glyphMap;
+  title: string;
+  description: string;
+}[] = [
+  {
+    iconName: 'target',
+    title: 'Maxima pureza',
+    description:
+      'Procesos de purificación avanzados que eliminan impurezas y garantizan un sabor perfecto.',
+  },
+  {
+    iconName: 'eye',
+    title: 'Calidad Certificada',
+    description:
+      'Cumplimos con todas las normativas de salud para ofrecerte un producto seguro y confiable.',
+  },
+  {
+    iconName: 'heart',
+    title: 'Entrega a Domicilio',
+    description:
+      'Recibe tus productos directamente en la puerta de tu casa o negocio. ¡Fácil, rápido y seguro!',
+  },
+];
 
 export default function Screen() {
   const { colorScheme } = useColorScheme();
@@ -84,6 +112,31 @@ export default function Screen() {
           </TabsContent>
         </Tabs>
       </View>
+      <View className="items-center justify-center bg-background px-4 py-10">
+        <View className="w-full max-w-3xl overflow-hidden rounded-lg shadow-lg">
+          <iframe 
+        width="100%" 
+        height="315" 
+        src="https://www.youtube.com/embed/hKC4St-viX8?si=G8Qn3cZXOfDwTPuV" 
+        title="YouTube video player" 
+        frameBorder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        referrerPolicy="strict-origin-when-cross-origin" 
+        allowFullScreen
+          />
+        </View>
+      </View>
+
+      <View className="mb-16 mt-9 w-full flex-row items-start justify-around">
+          {features.map((feature, index) => (
+            <FeatureCard
+              key={index}
+              iconName={feature.iconName}
+              title={feature.title}
+              description={feature.description}
+            />
+          ))}
+        </View>
 
       <LormanFooter />
     </Animated.ScrollView>
@@ -116,3 +169,5 @@ function ThemeToggle() {
     </Button>
   );
 }
+
+
