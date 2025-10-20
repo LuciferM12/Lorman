@@ -24,7 +24,7 @@ export const ProductGrid = ({ onProductPress, products }: ProductGridProps) => {
     return products.filter((product) =>
       product.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+  }, [searchQuery, products]);
 
   return (
     <View style={styles.container}>

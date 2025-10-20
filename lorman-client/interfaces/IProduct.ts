@@ -25,7 +25,18 @@ const productAdditionSchema = z.object({
     cantidad: z.coerce.number().min(1, "La cantidad mínima es 1"),
 })
 
+const productSchemaReturn = z.object({
+    nombre_producto: z.string().min(1, "El nombre del producto es requerido"),
+    descripcion: z.string().optional(),
+    id_producto: z.number().min(1, "El ID del producto es requerido"),
+    precio_unitario: z.coerce.number().min(0, "El precio unitario debe ser un número positivo"),
+    image: z.string().url("La imagen debe ser una URL válida").optional().nullable(),
+    stock: z.coerce.number().min(0, "El stock debe ser un número positivo"),
+    disponible: z.coerce.boolean()
+}) 
+
 export type ProductRegisterDTO = z.infer<typeof productRegisterSchema>;
 export type ProductInCartDTO = z.infer<typeof productCart>;
 export type ProductQuantityUpdatedDTO = z.infer<typeof productUpdatedSchema>;
 export type ProductAdditionDTO = z.infer<typeof productAdditionSchema>;
+export type ProductReturnDTO = z.infer<typeof productSchemaReturn>;

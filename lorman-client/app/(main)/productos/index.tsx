@@ -9,6 +9,8 @@ import { Feather } from '@expo/vector-icons';
 import LormanFooter from '@/components/custom/Footer';
 import { addItemToCart } from '@/api/cart';
 import { useAuth } from '@/context/AuthContext';
+import { getProducts } from '@/api/products';
+import { ProductReturnDTO } from '@/interfaces/IProduct';
 
 const features: {
   iconName: keyof typeof Feather.glyphMap;
@@ -35,32 +37,45 @@ const features: {
   },
 ];
 
-const PRODUCTS: Product[] = [
-  { id: 1, title: 'Garrafón de Agua Purificada', description: 'El agua más pura y fresca en nuestro práctico garrafón de 20 litros. Ideal para el hogar y la oficina.', price: '$45 MXN', backgroundColor: '#2A9FD8' },
-  { id: 2, title: 'Hielo Cristalino en Bolsa', description: 'Perfecto para tus bebidas, fiestas y eventos. Nuestro hielo garantiza máxima duración y pureza.', price: '$35 MXN', backgroundColor: '#7DC8E8' },
-  { id: 3, title: 'Agua Embotellada', description: 'Lleva la frescura de Lorman a donde vayas. Disponibles en presentaciones de 500ml y 1L.', price: '$12 MXN', backgroundColor: '#E8F4F8', textColor: '#003B5C' },
-  { id: 4, title: 'Garrafón (2)', description: 'El agua más pura y fresca en nuestro práctico garrafón de 20 litros. Ideal para el hogar y la oficina.', price: '$45 MXN', backgroundColor: '#2A9FD8' },
-  { id: 5, title: 'Hielo (2)', description: 'Perfecto para tus bebidas, fiestas y eventos. Nuestro hielo garantiza máxima duración y pureza.', price: '$35 MXN', backgroundColor: '#7DC8E8' },
-  { id: 6, title: 'Agua Embotellada (2)', description: 'Lleva la frescura de Lorman a donde vayas. Disponibles en presentaciones de 500ml y 1L.', price: '$12 MXN', backgroundColor: '#E8F4F8', textColor: '#003B5C' },
-];
-
-
 const productos = () => {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
   const { user } = useAuth();
+  const [products, setProducts] = React.useState<Product[]>([]);
 
   useEffect(() => {
-    
-  })
+    async function fetchProducts() {
+      try {
+        const products = await getProducts();
+        const setproducts = products.map((prod: ProductReturnDTO) => ({
+          id: prod.id_producto,
+          title: prod.nombre_producto,
+          description: prod.descripcion,
+          price: `$${prod.precio_unitario} MXN`,
+          backgroundColor: '#2A9FD8', // Puedes asignar colores dinámicamente si lo deseas
+        }));
+        setProducts(setproducts);
+        console.log('Productos obtenidos:', setproducts);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    }
+    fetchProducts();
+  }, []);
 
   const handleProductPressed = async (product: Product) => {
     console.log('Producto presionado:', product);
-    await addItemToCart({
-      id_usuario: user?.id_usuario!,
-      id_producto: product.id,
-      cantidad: 1,
-    });
+
+    try {
+      await addItemToCart({
+        id_usuario: user?.id_usuario!,
+        id_producto: product.id,
+        cantidad: 1,
+      });
+      console.log(`Producto ${product.title} agregado al carrito.`);
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+    }
   };
 
   return (
@@ -81,7 +96,7 @@ const productos = () => {
           }}
         />
 
-        <ProductGrid onProductPress={handleProductPressed} products={PRODUCTS} />
+        <ProductGrid onProductPress={handleProductPressed} products={products} />
 
         <Text className="mb-4 mt-9 text-center text-4xl font-bold text-primaryDark">
           Calidad en la que Puedes Confiar
