@@ -12,7 +12,9 @@ import { useRouter } from 'expo-router';
 import Toast from 'react-native-toast-message';
 import { Link } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
-import { SessionUserType, UserType } from '@/interfaces/IUser';
+import { SessionUserType } from '@/interfaces/IUser';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { useRef, useState } from 'react';
 
 interface SignInFormProps {
   handleLogin: (data: LoginInput) => Promise<SessionUserType>;
@@ -22,6 +24,9 @@ export function SignInForm({ handleLogin }: SignInFormProps) {
   const passwordInputRef = React.useRef<TextInput>(null);
   const router = useRouter();
   const { loginAuth } = useAuth();
+
+  const captcha = useRef<ReCAPTCHA>(null);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
 
   const {
     control,
@@ -34,8 +39,32 @@ export function SignInForm({ handleLogin }: SignInFormProps) {
     },
   });
 
+  const onChange = (token: string | null) => {
+    if (captcha.current) {
+      const value = captcha.current.getValue();
+      
+      if (value) {
+        console.log("✅ Captcha verificado");
+        setCaptchaVerified(true);
+      } else {
+        console.log("❌ Captcha no verificado");
+        setCaptchaVerified(false);
+      }
+    }
+  };
+
   const onSubmit = async (data: LoginInput) => {
     try {
+      // Verificar que el captcha fue completado
+      if (!captchaVerified) {
+        Toast.show({
+          type: 'error',
+          text1: 'Verificación requerida',
+          text2: 'Por favor, completa el captcha.',
+        });
+        return;
+      }
+
       const valid = loginSchema.safeParse(data);
       if (!valid.success) {
         const firstError = valid.error.errors[0]?.message || 'Datos inválidos.';
@@ -66,6 +95,10 @@ export function SignInForm({ handleLogin }: SignInFormProps) {
         text1: 'Error al iniciar sesión',
         text2: error.message || 'Ocurrió un error inesperado.',
       });
+      
+      // Resetear captcha en caso de error
+      captcha.current?.reset();
+      setCaptchaVerified(false);
     }
   };
 
@@ -150,10 +183,38 @@ export function SignInForm({ handleLogin }: SignInFormProps) {
               )}
             </View>
 
+            {/* reCAPTCHA */}
+            <View className="items-center justify-center">
+              <ReCAPTCHA
+                ref={captcha}
+                sitekey={process.env.EXPO_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+                onChange={onChange}
+                onExpired={() => {
+                  console.log('Captcha expirado');
+                  setCaptchaVerified(false);
+                }}
+                onErrored={() => {
+                  console.log('Error en captcha');
+                  setCaptchaVerified(false);
+                }}
+              />
+            </View>
+
+            {/* Indicador de verificación */}
+            {captchaVerified && (
+              <View className="flex-row items-center justify-center gap-2 rounded-lg bg-green-50 p-3">
+                <Text className="text-lg">✅</Text>
+                <Text className="text-sm font-medium text-green-700">
+                  Verificación completada
+                </Text>
+              </View>
+            )}
+
             <Button
               className="w-full"
               style={{ backgroundColor: COLORS.primaryDark }}
-              onPress={handleSubmit(onSubmit)}>
+              onPress={handleSubmit(onSubmit)}
+              disabled={!captchaVerified}>
               <Text className="text-white">Ingresar</Text>
             </Button>
           </View>
