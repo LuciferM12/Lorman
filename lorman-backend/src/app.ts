@@ -10,6 +10,7 @@ import cartRoutes from "./routes/cart.routes";
 import paymentsRoutes from "./routes/payments.routes";
 import { createCheckoutSession } from "./controllers/payment.controller";
 import { sendEmail } from "./utils/mail";
+import orderRoutes from "./routes/orders.routes";
 
 const app = express();
 
@@ -150,6 +151,7 @@ app.use("/products", productRoutes);
 app.use("/reviews", reviewRoutes);
 app.use("/faqs", faqRoutes);
 app.use("/cart", cartRoutes);
+app.use("/orders", orderRoutes)
 
 app.use(errorHandler);
 
