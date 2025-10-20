@@ -13,7 +13,7 @@ export const UserSchema = registerUserSchema.extend({
     id_usuario: z.number(),
     dias_entrega_preferidos: z.string().optional().default("").nullable(),
     fecha_registro: z.coerce.date(),
-    rol: z.enum(["admin", "cliente"]).default("cliente"),
+    rol: z.enum(["administrador", "cliente"]).default("cliente"),
 })
 
 export const UserResponseSchema = UserSchema.omit({ password_hash: true });

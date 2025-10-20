@@ -6,23 +6,6 @@ import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-rean
 import LormanFooter from '@/components/custom/Footer';
 import { ProfileCard } from '@/components/custom/profile/ProfileForm';
 
-const POLICIES = [
-  {
-    policy: 'Aviso de privacidad',
-    content:
-      'En Lorman, nos comprometemos a proteger tu privacidad. Nuestro Aviso de Privacidad completo detalla qué información recopilamos, cómo la usamos y las medidas que tomamos para protegerla. [Aquí puedes añadir un enlace al documento completo o detallarlo].',
-  },
-  {
-    policy: 'Términos de uso',
-    content:
-      'Al utilizar nuestro sitio web y aplicación, aceptas nuestros Términos de Uso. Este documento rige tu uso de nuestros servicios, tus responsabilidades como usuario y nuestras responsabilidades como proveedor. [Aquí puedes añadir un enlace al documento completo o detallarlo].',
-  },
-  {
-    policy: 'Políticas de Devolución, Entregas y Reembolsos',
-    content:
-      'Buscamos tu completa satisfacción. Nuestras políticas detallan los procedimientos para devoluciones de productos, los tiempos y condiciones de entrega, y el proceso para solicitar reembolsos en caso de ser aplicable. [Aquí puedes añadir un enlace al documento completo o detallarlo].',
-  },
-];
 
 const politicas = () => {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
