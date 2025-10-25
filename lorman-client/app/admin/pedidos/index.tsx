@@ -37,7 +37,6 @@ export default function PedidosScreen() {
   const fetchPedidos = async () => {
     try {
       const response = await getAllOrders(50, 0);
-      console.log('Pedidos API Response:', response);
       const mappedPedidos: Pedido[] = response.orders.map((order: any) => ({
         id_pedido: order.id_pedido,
         id_cliente: order.id_cliente,
