@@ -2,9 +2,17 @@ import { Text } from '@/components/ui/text';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import * as React from 'react';
-import { View, ScrollView, Pressable, Alert } from 'react-native';
-import { Search, Calendar, Package, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { View, ScrollView, Pressable } from 'react-native';
+import {
+  Search,
+  Calendar,
+  Package,
+  DollarSign,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react-native';
 import { getAllOrders, updateOrderStatus } from '@/api/orders';
+import OrderDetailsDialog from '@/components/custom/pedidos/DialogPedidos';
 
 type Pedido = {
   id_pedido: number;
@@ -27,23 +35,23 @@ const ITEMS_PER_PAGE = 5;
 
 export default function PedidosScreen() {
   const fetchPedidos = async () => {
-      try {
-        const response = await getAllOrders(50, 0);
-        console.log('Pedidos API Response:', response);
-        const mappedPedidos: Pedido[] = response.orders.map((order: any) => ({
-          id_pedido: order.id_pedido,
-          id_cliente: order.id_cliente,
-          nombre_cliente: order.usuarios.nombre_completo,
-          fecha_pedido: order.fecha_pedido,
-          direccion_entrega: order.direccion_entrega,
-          monto_total: order.monto_total,
-          estado_entrega: order.estado_entrega,
-        }));
-        setPedidos(mappedPedidos);
-      } catch (error) {
-        console.error('Error al obtener pedidos:', error);
-      }
+    try {
+      const response = await getAllOrders(50, 0);
+      console.log('Pedidos API Response:', response);
+      const mappedPedidos: Pedido[] = response.orders.map((order: any) => ({
+        id_pedido: order.id_pedido,
+        id_cliente: order.id_cliente,
+        nombre_cliente: order.usuarios.nombre_completo,
+        fecha_pedido: order.fecha_pedido,
+        direccion_entrega: order.direccion_entrega,
+        monto_total: order.monto_total,
+        estado_entrega: order.estado_entrega,
+      }));
+      setPedidos(mappedPedidos);
+    } catch (error) {
+      console.error('Error al obtener pedidos:', error);
     }
+  };
 
   React.useEffect(() => {
     fetchPedidos();
@@ -54,9 +62,10 @@ export default function PedidosScreen() {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [filterEstado, setFilterEstado] = React.useState<string>('todos');
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [selectedPedido, setSelectedPedido] = React.useState<Pedido | null>(null);
+  const [dialogVisible, setDialogVisible] = React.useState(false);
 
   const handleChangeEstado = async (id: number, nuevoEstado: string) => {
-    /*setPedidos(pedidos.map((p) => (p.id_pedido === id ? { ...p, estado_entrega: nuevoEstado } : p)));*/
     try {
       await updateOrderStatus(id, nuevoEstado);
       fetchPedidos();
@@ -66,12 +75,13 @@ export default function PedidosScreen() {
   };
 
   const handleViewDetails = (pedido: Pedido) => {
-    Alert.alert(
-      `Pedido #${pedido.id_pedido}`,
-      `Cliente: ${pedido.nombre_cliente}\nTotal: $${pedido.monto_total}\nEstado: ${
-        ESTADOS[pedido.estado_entrega as keyof typeof ESTADOS].label
-      }`
-    );
+    setSelectedPedido(pedido);
+    setDialogVisible(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogVisible(false);
+    setSelectedPedido(null);
   };
 
   // Filtrar pedidos
@@ -114,26 +124,26 @@ export default function PedidosScreen() {
         </View>
 
         {/* Stats Cards */}
-        <View className="mb-6 flex-row gap-4">
-          <Card className="flex-1">
+        <View className="mb-6 flex-row gap-4 max-sm:flex-wrap">
+          <Card className="flex-1 max-sm:min-w-28">
             <CardContent className="items-center p-4">
               <Text className="text-2xl font-bold text-gray-800">{stats.total}</Text>
               <Text className="text-xs text-gray-600">Total Pedidos</Text>
             </CardContent>
           </Card>
-          <Card className="flex-1">
+          <Card className="flex-1 max-sm:min-w-28">
             <CardContent className="items-center p-4">
               <Text className="text-2xl font-bold text-yellow-600">{stats.pendientes}</Text>
               <Text className="text-xs text-gray-600">Pendientes</Text>
             </CardContent>
           </Card>
-          <Card className="flex-1">
+          <Card className="flex-1 max-sm:min-w-28">
             <CardContent className="items-center p-4">
               <Text className="text-2xl font-bold text-blue-600">{stats.en_camino}</Text>
               <Text className="text-xs text-gray-600">En Camino</Text>
             </CardContent>
           </Card>
-          <Card className="flex-1">
+          <Card className="flex-1 max-sm:min-w-28">
             <CardContent className="items-center p-4">
               <Text className="text-2xl font-bold text-green-600">{stats.entregados}</Text>
               <Text className="text-xs text-gray-600">Entregados</Text>
@@ -144,8 +154,8 @@ export default function PedidosScreen() {
         {/* Search and Filter */}
         <Card className="mb-6">
           <CardContent className="p-4">
-            <View className="flex-row items-center gap-4">
-              <View className="flex-1 flex-row items-center gap-2">
+            <View className="flex-row items-center gap-4 max-lg:flex-col">
+              <View className="flex-1 flex-row items-center gap-2 max-lg:w-full">
                 <Search size={20} color="#666" />
                 <Input
                   placeholder="Buscar por cliente o ID..."
@@ -155,7 +165,7 @@ export default function PedidosScreen() {
                 />
               </View>
 
-              <View className="flex-row gap-2">
+              <View className="flex-row gap-2 max-lg:flex-wrap max-sm:justify-center">
                 {['todos', 'pendiente', 'en_camino', 'entregado'].map((estado) => (
                   <Pressable
                     key={estado}
@@ -167,7 +177,9 @@ export default function PedidosScreen() {
                       className={`text-sm font-semibold ${
                         filterEstado === estado ? 'text-white' : 'text-gray-700'
                       }`}>
-                      {estado === 'todos' ? 'Todos' : ESTADOS[estado as keyof typeof ESTADOS]?.label}
+                      {estado === 'todos'
+                        ? 'Todos'
+                        : ESTADOS[estado as keyof typeof ESTADOS]?.label}
                     </Text>
                   </Pressable>
                 ))}
@@ -181,7 +193,7 @@ export default function PedidosScreen() {
           {currentPedidos.map((pedido) => (
             <Card key={pedido.id_pedido}>
               <CardContent className="p-6">
-                <View className="flex-row items-start justify-between">
+                <View className="flex-row items-start justify-between gap-4 max-sm:flex-col max-sm:gap-4">
                   {/* Order Info */}
                   <View className="flex-1 gap-3">
                     <View className="flex-row items-center justify-between">
@@ -227,7 +239,7 @@ export default function PedidosScreen() {
                     </View>
 
                     {/* Estado Selector */}
-                    <View className="mt-2 flex-row gap-2">
+                    <View className="mt-2 flex-row gap-2 max-lg:flex-wrap">
                       <Text className="text-xs font-semibold text-gray-700">Cambiar estado:</Text>
                       {Object.keys(ESTADOS).map((estado) => (
                         <Pressable
@@ -283,7 +295,8 @@ export default function PedidosScreen() {
                   currentPage === 1 ? 'bg-gray-100' : 'border border-gray-300 bg-white'
                 }`}>
                 <ChevronLeft size={16} color={currentPage === 1 ? '#ccc' : '#666'} />
-                <Text className={`text-sm ${currentPage === 1 ? 'text-gray-400' : 'text-gray-700'}`}>
+                <Text
+                  className={`text-sm ${currentPage === 1 ? 'text-gray-400' : 'text-gray-700'}`}>
                   Anterior
                 </Text>
               </Pressable>
@@ -324,6 +337,11 @@ export default function PedidosScreen() {
           </View>
         )}
       </View>
+      <OrderDetailsDialog
+        visible={dialogVisible}
+        onClose={handleCloseDialog}
+        order={selectedPedido}
+      />
     </ScrollView>
   );
 }
