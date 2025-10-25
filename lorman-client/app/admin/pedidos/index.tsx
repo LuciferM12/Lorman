@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import * as React from 'react';
 import { View, ScrollView, Pressable, Alert } from 'react-native';
 import { Search, Calendar, Package, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { getAllOrders, updateOrderStatus } from '@/api/orders';
 
 type Pedido = {
   id_pedido: number;
@@ -17,7 +18,7 @@ type Pedido = {
 
 const ESTADOS = {
   pendiente: { color: 'bg-yellow-100 text-yellow-700', label: 'Pendiente' },
-  en_proceso: { color: 'bg-blue-100 text-blue-700', label: 'En Proceso' },
+  en_camino: { color: 'bg-blue-100 text-blue-700', label: 'En Camino' },
   entregado: { color: 'bg-green-100 text-green-700', label: 'Entregado' },
   cancelado: { color: 'bg-red-100 text-red-700', label: 'Cancelado' },
 };
@@ -25,78 +26,43 @@ const ESTADOS = {
 const ITEMS_PER_PAGE = 5;
 
 export default function PedidosScreen() {
-  const [pedidos, setPedidos] = React.useState<Pedido[]>([
-    {
-      id_pedido: 1,
-      id_cliente: 1,
-      nombre_cliente: 'Juan Pérez García',
-      fecha_pedido: '2024-10-15T10:30:00',
-      direccion_entrega: 'Av. Carranza 1234, Centro, SLP',
-      monto_total: 185.0,
-      estado_entrega: 'entregado',
-    },
-    {
-      id_pedido: 2,
-      id_cliente: 2,
-      nombre_cliente: 'María González López',
-      fecha_pedido: '2024-10-18T08:15:00',
-      direccion_entrega: 'Calle Hidalgo 567, Lomas, SLP',
-      monto_total: 120.0,
-      estado_entrega: 'en_proceso',
-    },
-    {
-      id_pedido: 3,
-      id_cliente: 1,
-      nombre_cliente: 'Juan Pérez García',
-      fecha_pedido: '2024-10-18T14:20:00',
-      direccion_entrega: 'Av. Carranza 1234, Centro, SLP',
-      monto_total: 95.0,
-      estado_entrega: 'pendiente',
-    },
-    {
-      id_pedido: 4,
-      id_cliente: 4,
-      nombre_cliente: 'Carlos Ramírez',
-      fecha_pedido: '2024-10-17T09:00:00',
-      direccion_entrega: 'Col. Moderna 890, SLP',
-      monto_total: 200.0,
-      estado_entrega: 'entregado',
-    },
-    {
-      id_pedido: 5,
-      id_cliente: 5,
-      nombre_cliente: 'Ana Martínez',
-      fecha_pedido: '2024-10-17T15:45:00',
-      direccion_entrega: 'Av. Universidad 456, SLP',
-      monto_total: 150.0,
-      estado_entrega: 'en_proceso',
-    },
-    {
-      id_pedido: 6,
-      id_cliente: 2,
-      nombre_cliente: 'María González López',
-      fecha_pedido: '2024-10-16T11:00:00',
-      direccion_entrega: 'Calle Hidalgo 567, Lomas, SLP',
-      monto_total: 80.0,
-      estado_entrega: 'pendiente',
-    },
-    {
-      id_pedido: 7,
-      id_cliente: 1,
-      nombre_cliente: 'Juan Pérez García',
-      fecha_pedido: '2024-10-14T13:30:00',
-      direccion_entrega: 'Av. Carranza 1234, Centro, SLP',
-      monto_total: 110.0,
-      estado_entrega: 'cancelado',
-    },
-  ]);
+  const fetchPedidos = async () => {
+      try {
+        const response = await getAllOrders(50, 0);
+        console.log('Pedidos API Response:', response);
+        const mappedPedidos: Pedido[] = response.orders.map((order: any) => ({
+          id_pedido: order.id_pedido,
+          id_cliente: order.id_cliente,
+          nombre_cliente: order.usuarios.nombre_completo,
+          fecha_pedido: order.fecha_pedido,
+          direccion_entrega: order.direccion_entrega,
+          monto_total: order.monto_total,
+          estado_entrega: order.estado_entrega,
+        }));
+        setPedidos(mappedPedidos);
+      } catch (error) {
+        console.error('Error al obtener pedidos:', error);
+      }
+    }
+
+  React.useEffect(() => {
+    fetchPedidos();
+  }, []);
+
+  const [pedidos, setPedidos] = React.useState<Pedido[]>([]);
 
   const [searchQuery, setSearchQuery] = React.useState('');
   const [filterEstado, setFilterEstado] = React.useState<string>('todos');
   const [currentPage, setCurrentPage] = React.useState(1);
 
-  const handleChangeEstado = (id: number, nuevoEstado: string) => {
-    setPedidos(pedidos.map((p) => (p.id_pedido === id ? { ...p, estado_entrega: nuevoEstado } : p)));
+  const handleChangeEstado = async (id: number, nuevoEstado: string) => {
+    /*setPedidos(pedidos.map((p) => (p.id_pedido === id ? { ...p, estado_entrega: nuevoEstado } : p)));*/
+    try {
+      await updateOrderStatus(id, nuevoEstado);
+      fetchPedidos();
+    } catch (error) {
+      console.error('Error al actualizar estado del pedido:', error);
+    }
   };
 
   const handleViewDetails = (pedido: Pedido) => {
@@ -121,7 +87,7 @@ export default function PedidosScreen() {
   const stats = {
     total: pedidos.length,
     pendientes: pedidos.filter((p) => p.estado_entrega === 'pendiente').length,
-    en_proceso: pedidos.filter((p) => p.estado_entrega === 'en_proceso').length,
+    en_camino: pedidos.filter((p) => p.estado_entrega === 'en_camino').length,
     entregados: pedidos.filter((p) => p.estado_entrega === 'entregado').length,
   };
 
@@ -163,8 +129,8 @@ export default function PedidosScreen() {
           </Card>
           <Card className="flex-1">
             <CardContent className="items-center p-4">
-              <Text className="text-2xl font-bold text-blue-600">{stats.en_proceso}</Text>
-              <Text className="text-xs text-gray-600">En Proceso</Text>
+              <Text className="text-2xl font-bold text-blue-600">{stats.en_camino}</Text>
+              <Text className="text-xs text-gray-600">En Camino</Text>
             </CardContent>
           </Card>
           <Card className="flex-1">
@@ -190,7 +156,7 @@ export default function PedidosScreen() {
               </View>
 
               <View className="flex-row gap-2">
-                {['todos', 'pendiente', 'en_proceso', 'entregado'].map((estado) => (
+                {['todos', 'pendiente', 'en_camino', 'entregado'].map((estado) => (
                   <Pressable
                     key={estado}
                     onPress={() => setFilterEstado(estado)}
