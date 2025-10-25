@@ -13,3 +13,8 @@ export async function getOrderById(id_pedido: number): Promise<any> {
     const response = await axios.get(`${API_URL}/orders/${id_pedido}`);
     return response.data.order;
 }
+
+export async function updateOrderStatus(id_pedido: number, newStatus: string): Promise<any> {
+    const response = await axios.patch(`${API_URL}/orders/${id_pedido}/status`, { estado_entrega: newStatus });
+    return response.data;
+}
