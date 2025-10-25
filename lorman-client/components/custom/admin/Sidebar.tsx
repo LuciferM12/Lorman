@@ -7,6 +7,8 @@ import {
   Package,
   FileText,
   Palette,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react-native';
 import { Link, usePathname } from 'expo-router';
 
@@ -17,26 +19,44 @@ type MenuItem = {
   route: string;
 };
 
+export const menuItems: MenuItem[] = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, route: '/admin' },
+  { id: 'usuarios', label: 'Usuarios', icon: Users, route: '/admin/usuarios' },
+  { id: 'productos', label: 'Productos', icon: Package, route: '/admin/productos' },
+  { id: 'pedidos', label: 'Pedidos', icon: FileText, route: '/admin/pedidos' },
+  {
+    id: 'personalizacion',
+    label: 'Personalización',
+    icon: Palette,
+    route: '/admin/personalizacion',
+  },
+];
+
 export default function AdminSidebar() {
   const pathname = usePathname();
-
-  const menuItems: MenuItem[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, route: '/admin' },
-    { id: 'usuarios', label: 'Gestión de Usuarios', icon: Users, route: '/admin/usuarios' },
-    { id: 'productos', label: 'Gestión de Productos', icon: Package, route: '/admin/productos' },
-    { id: 'pedidos', label: 'Pedidos', icon: FileText, route: '/admin/pedidos' },
-    { id: 'personalizacion', label: 'Personalización', icon: Palette, route: '/admin/personalizacion' },
-  ];
+  const [isCollapsed, setIsCollapsed] = React.useState(false);
 
   return (
-    <View className="w-64 bg-[#0d4682] p-6">
+    <View
+      className={`${isCollapsed ? 'w-20 p-3' : 'w-64 p-6'} hidden bg-primaryDark transition-all duration-300 md:flex`}>
       {/* Logo */}
-      <View className="mb-8 flex-row items-center gap-3">
+      <View className="mb-8 flex-row items-center justify-center gap-3">
         <View className="h-10 w-10 items-center justify-center rounded bg-white">
-          <Text className="text-lg font-bold text-[#0d4682]">L</Text>
+          <Text className="text-lg font-bold text-primaryDark">L</Text>
         </View>
-        <Text className="text-xl font-bold text-white">Lorman</Text>
+
+        {!isCollapsed && <Text className="text-xl font-bold text-white">Lorman</Text>}
       </View>
+
+      <Pressable
+        onPress={() => setIsCollapsed(!isCollapsed)}
+        className="mb-4 flex-row items-center justify-center rounded-lg">
+        {isCollapsed ? (
+          <ChevronRight size={20} color="#fff" />
+        ) : (
+          <ChevronLeft size={20} color="#fff" />
+        )}
+      </Pressable>
 
       {/* Menu Items */}
       <View className="flex-1 gap-2">
@@ -47,18 +67,18 @@ export default function AdminSidebar() {
           return (
             <Link href={item.route as any} key={item.id} asChild>
               <Pressable
-                className={`flex-row items-center gap-3 rounded-lg p-3 ${
+                className={`flex-row items-center rounded-lg ${
                   isSelected ? 'bg-white/20' : ''
-                }`}
-              >
-                <Icon size={20} color="#fff" />
-                <Text
-                  className={`text-lg font-semibold ${
-                    isSelected ? 'text-white' : 'text-white/90'
-                  }`}
-                >
-                  {item.label}
-                </Text>
+                } ${isCollapsed ? 'justify-center p-3' : 'gap-3 p-3'}`}>
+                <Icon size={isCollapsed ? 28 : 20} color="#fff" />
+                {!isCollapsed && (
+                  <Text
+                    className={`text-lg font-semibold ${
+                      isSelected ? 'text-white' : 'text-white/90'
+                    }`}>
+                    {item.label}
+                  </Text>
+                )}
               </Pressable>
             </Link>
           );
@@ -67,14 +87,16 @@ export default function AdminSidebar() {
 
       {/* User Profile */}
       <View className="mt-auto border-t border-white/20 pt-4">
-        <View className="flex-row items-center gap-3">
+        <View className={`flex-row items-center gap-3 ${isCollapsed ? 'justify-center' : ''}`}>
           <View className="h-10 w-10 items-center justify-center rounded-full bg-white/20">
             <Text className="text-sm font-bold text-white">A</Text>
           </View>
-          <View className="flex-1">
-            <Text className="text-sm font-semibold text-white">Administrador</Text>
-            <Text className="text-xs text-white/70">Ver perfil</Text>
-          </View>
+          {!isCollapsed && (
+            <View className="flex-1">
+              <Text className="text-sm font-semibold text-white">Administrador</Text>
+              <Text className="text-xs text-white/70">Ver perfil</Text>
+            </View>
+          )}
         </View>
       </View>
     </View>
