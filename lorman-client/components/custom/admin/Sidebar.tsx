@@ -19,35 +19,38 @@ type MenuItem = {
   route: string;
 };
 
+export const menuItems: MenuItem[] = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, route: '/admin' },
+  { id: 'usuarios', label: 'Usuarios', icon: Users, route: '/admin/usuarios' },
+  { id: 'productos', label: 'Productos', icon: Package, route: '/admin/productos' },
+  { id: 'pedidos', label: 'Pedidos', icon: FileText, route: '/admin/pedidos' },
+  {
+    id: 'personalizacion',
+    label: 'Personalización',
+    icon: Palette,
+    route: '/admin/personalizacion',
+  },
+];
+
 export default function AdminSidebar() {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
 
-  const menuItems: MenuItem[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, route: '/admin' },
-    { id: 'usuarios', label: 'Gestión de Usuarios', icon: Users, route: '/admin/usuarios' },
-    { id: 'productos', label: 'Gestión de Productos', icon: Package, route: '/admin/productos' },
-    { id: 'pedidos', label: 'Pedidos', icon: FileText, route: '/admin/pedidos' },
-    { id: 'personalizacion', label: 'Personalización', icon: Palette, route: '/admin/personalizacion' },
-  ];
-
   return (
-    <View className={`${isCollapsed ? 'w-20 p-3' : 'w-64 p-6'} bg-[#0d4682] transition-all duration-300`}>
+    <View
+      className={`${isCollapsed ? 'w-20 p-3' : 'w-64 p-6'} hidden bg-primaryDark transition-all duration-300 md:flex`}>
       {/* Logo */}
       <View className="mb-8 flex-row items-center justify-center gap-3">
         <View className="h-10 w-10 items-center justify-center rounded bg-white">
-          <Text className="text-lg font-bold text-[#0d4682]">L</Text>
+          <Text className="text-lg font-bold text-primaryDark">L</Text>
         </View>
-        
-        {!isCollapsed && (
-          <Text className="text-xl font-bold text-white">Lorman</Text>
-        )}
+
+        {!isCollapsed && <Text className="text-xl font-bold text-white">Lorman</Text>}
       </View>
 
       <Pressable
         onPress={() => setIsCollapsed(!isCollapsed)}
-        className="mb-4 flex-row items-center justify-center rounded-lg"
-      >
+        className="mb-4 flex-row items-center justify-center rounded-lg">
         {isCollapsed ? (
           <ChevronRight size={20} color="#fff" />
         ) : (
@@ -66,17 +69,13 @@ export default function AdminSidebar() {
               <Pressable
                 className={`flex-row items-center rounded-lg ${
                   isSelected ? 'bg-white/20' : ''
-                } ${isCollapsed ? 'justify-center p-3' : 'gap-3 p-3'}`}
-              >
-                {/* Iconos más grandes cuando está colapsado (28px vs 20px) */}
+                } ${isCollapsed ? 'justify-center p-3' : 'gap-3 p-3'}`}>
                 <Icon size={isCollapsed ? 28 : 20} color="#fff" />
-                {/* Ocultar etiquetas de texto cuando está colapsado */}
                 {!isCollapsed && (
                   <Text
                     className={`text-lg font-semibold ${
                       isSelected ? 'text-white' : 'text-white/90'
-                    }`}
-                  >
+                    }`}>
                     {item.label}
                   </Text>
                 )}
