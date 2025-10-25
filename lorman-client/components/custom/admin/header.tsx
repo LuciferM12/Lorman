@@ -13,7 +13,9 @@ export default function AdminHeader({ onLogout }: AdminHeaderProps) {
 
   return (
     <View className="flex-row items-center justify-between border-b border-gray-200 bg-white px-8 py-4">
-      <Text className="max-2xl:text-xl text-lg max-sm:text-base font-bold text-[#0d4682]">Panel de Administración</Text>
+      <Text className="text-lg font-bold text-[#0d4682] max-2xl:text-xl max-sm:text-base">
+        Panel de Administración
+      </Text>
 
       <View className="flex-row items-center gap-4">
         {/* Notificaciones */}
@@ -31,10 +33,9 @@ export default function AdminHeader({ onLogout }: AdminHeaderProps) {
           onPress={onLogout}
           className="flex-row items-center gap-2 rounded-lg border border-red-500 px-4 py-2">
           <LogOut size={18} color="#ef4444" />
-          <View className='max-sm:hidden'>
+          <View className="max-sm:hidden">
             <Text className="text-sm font-semibold text-red-500">Cerrar Sesión</Text>
           </View>
-          
         </Pressable>
       </View>
     </View>
