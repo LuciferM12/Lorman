@@ -16,6 +16,5 @@ export async function getOrderById(id_pedido: number): Promise<any> {
 
 export async function updateOrderStatus(id_pedido: number, newStatus: string): Promise<any> {
     const response = await axios.patch(`${API_URL}/orders/${id_pedido}/status`, { estado_entrega: newStatus });
-    console.log("Response from updateOrderStatus:", response.data);
     return response.data;
 }
