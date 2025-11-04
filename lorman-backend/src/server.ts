@@ -7,7 +7,7 @@ const PORT = Number(process.env.PORT ?? 8080);
 
 // Solo ejecutar listen en desarrollo local
 if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Server is running at http://192.168.1.7:${PORT}`);
   });
 }

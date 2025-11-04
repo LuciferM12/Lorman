@@ -1,5 +1,5 @@
 // components/ReviewGrid.tsx
-import { ScrollView } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { ReviewCard } from './reviewCard';
 
 const mockReviews = [
@@ -52,15 +52,15 @@ const mockReviews = [
 
 export function ReviewGrid() {
   return (
-    <div className="space-y-4">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Todas las Opiniones</h2>
-        <p className="text-muted-foreground">
+    <View className="space-y-4">
+      <View className="mb-6 flex items-center justify-between">
+        <Text className="text-2xl font-semibold">Todas las Opiniones</Text>
+        <Text className="text-muted-foreground">
           {mockReviews.length} {mockReviews.length === 1 ? 'opinión' : 'opiniones'}
-        </p>
-      </div>
+        </Text>
+      </View>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <View className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {mockReviews.map((review) => (
           <ReviewCard
             key={review.id}
@@ -70,7 +70,7 @@ export function ReviewGrid() {
             date={review.date}
           />
         ))}
-      </div>
-    </div>
+      </View>
+    </View>
   );
 }
