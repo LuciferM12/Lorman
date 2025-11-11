@@ -24,7 +24,7 @@ const Promotions: React.FC = () => {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   // ---------------------------
-  //  Datos base (tu fuente real)
+  //  Datos base
   // ---------------------------
   const promotionsBase: Promotion[] = [
     {
@@ -58,14 +58,23 @@ const Promotions: React.FC = () => {
   const promotionsData = [...promotionsBase, ...promotionsBase, ...promotionsBase];
 
   // ---------------------------
-  //  Layout y constantes
+  //  Layout responsivo
   // ---------------------------
   const maxWidth = 1920;
   const constrainedWidth = Math.min(screenWidth, maxWidth);
-  const itemWidth = Math.min(constrainedWidth - 64, 350);
-  const itemHeight = Math.max(180, screenHeight * 0.4);
+
+  // Ancho de tarjeta: 90% del ancho disponible, máximo 380px
+  const itemWidth = Math.min(constrainedWidth * 0.9, 380);
+  const itemMinHeight = 220; // Altura mínima
   const itemMarginHorizontal = 12;
   const snapDistance = itemWidth + itemMarginHorizontal * 2;
+
+  // Escala de fuente según ancho
+  const scale = Math.min(constrainedWidth / 400, 1.2);
+  const titleFontSize = 28 * scale;
+  const subtitleFontSize = 18 * scale;
+  const descFontSize = 14 * scale;
+  const buttonFontSize = 15 * scale;
 
   // ---------------------------
   //  Refs y estado
@@ -73,7 +82,7 @@ const Promotions: React.FC = () => {
   const flatListRef = useRef<FlatList<Promotion> | null>(null);
   const currentIndexRef = useRef<number>(0);
   const autoplayIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [activeIndex, setActiveIndex] = useState<number>(0); // indicador (0..promotionsBase.length-1)
+  const [activeIndex, setActiveIndex] = useState<number>(0);
 
   const getItemLayout = (data: ArrayLike<Promotion> | null | undefined, index: number) => ({
     length: snapDistance,
@@ -82,34 +91,29 @@ const Promotions: React.FC = () => {
   });
 
   // ---------------------------
-  //  Inicializar en bloque del medio + autoplay
+  //  Inicializar + autoplay
   // ---------------------------
   useEffect(() => {
-    // Start in the middle block so user can scroll both directions
     const middleIndex = promotionsBase.length;
     flatListRef.current?.scrollToOffset({ offset: middleIndex * snapDistance, animated: false });
     currentIndexRef.current = middleIndex;
     setActiveIndex(middleIndex % promotionsBase.length);
 
-    if (autoplayIntervalRef.current) {
-      clearInterval(autoplayIntervalRef.current);
-    }
+    if (autoplayIntervalRef.current) clearInterval(autoplayIntervalRef.current);
+
     autoplayIntervalRef.current = setInterval(() => {
       const next = currentIndexRef.current + 1;
       const total = promotionsData.length;
       const baseLen = promotionsBase.length;
 
-      // Si llegamos al final del bloque derecho, saltamos al bloque del medio
       if (next >= total - baseLen) {
-        // Primero hacemos scroll animado al siguiente
         flatListRef.current?.scrollToOffset({ offset: next * snapDistance, animated: true });
-        // Después de la animación, saltamos sin animación al bloque del medio
         setTimeout(() => {
           const jumpTo = next - baseLen;
           flatListRef.current?.scrollToOffset({ offset: jumpTo * snapDistance, animated: false });
           currentIndexRef.current = jumpTo;
           setActiveIndex(jumpTo % baseLen);
-        }, 300); // Tiempo de la animación
+        }, 300);
       } else {
         flatListRef.current?.scrollToOffset({ offset: next * snapDistance, animated: true });
         currentIndexRef.current = next;
@@ -120,11 +124,10 @@ const Promotions: React.FC = () => {
     return () => {
       if (autoplayIntervalRef.current) clearInterval(autoplayIntervalRef.current);
     };
-    // recalcula si cambia snapDistance o la cantidad base
   }, [snapDistance, promotionsBase.length]);
 
   // ---------------------------
-  //  Manejo del final/inicio para loop suave
+  //  Manejo de scroll
   // ---------------------------
   const onMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetX = event.nativeEvent.contentOffset.x;
@@ -132,13 +135,10 @@ const Promotions: React.FC = () => {
     const total = promotionsData.length;
     const baseLen = promotionsBase.length;
 
-    // Si llegamos muy al principio del array (bloque izquierdo), saltamos al bloque del medio
     if (index < baseLen) {
       index = index + baseLen;
       flatListRef.current?.scrollToOffset({ offset: index * snapDistance, animated: false });
-    }
-    // Si llegamos muy al final (bloque derecho), saltamos al bloque del medio
-    else if (index >= total - baseLen) {
+    } else if (index >= total - baseLen) {
       index = index - baseLen;
       flatListRef.current?.scrollToOffset({ offset: index * snapDistance, animated: false });
     }
@@ -147,62 +147,59 @@ const Promotions: React.FC = () => {
     setActiveIndex(index % baseLen);
   };
 
-  // ---------------------------
-  //  Scroll manual por indicadores
-  // ---------------------------
   const scrollToBaseIndex = (baseIndex: number) => {
-    // Queremos movernos al bloque del medio con ese baseIndex
-    const target = promotionsBase.length + baseIndex; // bloque del medio + baseIndex
+    const target = promotionsBase.length + baseIndex;
     flatListRef.current?.scrollToOffset({ offset: target * snapDistance, animated: true });
     currentIndexRef.current = target;
     setActiveIndex(baseIndex);
   };
 
   // ---------------------------
-  //  Render de tarjeta
+  //  Tarjeta adaptable
   // ---------------------------
   const PromotionCard = ({ item }: { item: Promotion }) => (
     <View
       style={{
         width: itemWidth,
-        height: itemHeight,
+        minHeight: itemMinHeight,
         marginHorizontal: itemMarginHorizontal,
         borderRadius: 16,
         overflow: 'hidden',
         backgroundColor: 'white',
-      }}
-      className="shadow">
-      {/* Top colored section with promo code */}
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 5,
+      }}>
+      {/* Sección superior con color */}
       <View
         style={{
           backgroundColor: item.bgColor,
-          height: '50%',
+          padding: 20,
           justifyContent: 'center',
           alignItems: 'center',
-          position: 'relative',
-          paddingHorizontal: 20,
+          minHeight: 120,
         }}>
-        {/* Main title centered */}
         <Text
           style={{
-            fontSize: 32,
+            fontSize: titleFontSize,
             fontWeight: '700',
             color: item.bgColor === '#A8D8F0' ? '#1E3A5F' : 'white',
             textAlign: 'center',
-            marginBottom: 16,
+            marginBottom: 12,
           }}>
           {item.title}
         </Text>
 
-        {/* Promo Code Badge */}
         <View
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.2)',
             borderWidth: 2,
             borderColor: 'white',
             borderStyle: 'dashed',
-            paddingHorizontal: 20,
-            paddingVertical: 10,
+            paddingHorizontal: 16,
+            paddingVertical: 8,
             borderRadius: 8,
           }}>
           <Text
@@ -211,37 +208,35 @@ const Promotions: React.FC = () => {
               fontWeight: '600',
               color: 'white',
               textAlign: 'center',
-              marginBottom: 4,
               opacity: 0.9,
             }}>
             CÓDIGO PROMOCIONAL
           </Text>
           <Text
             style={{
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: '700',
               color: 'white',
               textAlign: 'center',
-              letterSpacing: 2,
+              letterSpacing: 1.5,
             }}>
             {item.promoCode}
           </Text>
         </View>
       </View>
 
-      {/* Bottom white section */}
+      {/* Sección inferior */}
       <View
         style={{
           backgroundColor: 'white',
-          height: '50%',
           padding: 20,
+          flex: 1,
           justifyContent: 'space-between',
         }}>
         <View>
-          {/* Subtitle */}
           <Text
             style={{
-              fontSize: 18,
+              fontSize: subtitleFontSize,
               fontWeight: '700',
               color: '#1E3A5F',
               marginBottom: 8,
@@ -249,31 +244,33 @@ const Promotions: React.FC = () => {
             {item.subtitle}
           </Text>
 
-          {/* Description */}
           <Text
             style={{
-              fontSize: 14,
+              fontSize: descFontSize,
               color: '#4A5568',
-              lineHeight: 20,
-              marginBottom: 9,
+              lineHeight: descFontSize * 1.5,
             }}>
-            {constrainedWidth < 600 && item.description.length > 20
-              ? `${item.description.substring(0, 20)}...`
-              : item.description}
+            {item.description}
           </Text>
         </View>
 
-        {/* Button */}
         <TouchableOpacity
           style={{
             backgroundColor: '#2B9FD9',
             paddingVertical: 12,
-            paddingHorizontal: 24,
+            paddingHorizontal: 20,
             borderRadius: 8,
             alignItems: 'center',
-          }}
-          className="shadow">
-          <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>Ver Oferta</Text>
+            marginTop: 16,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.15,
+            shadowRadius: 4,
+            elevation: 3,
+          }}>
+          <Text style={{ color: 'white', fontWeight: '600', fontSize: buttonFontSize }}>
+            Ver Oferta
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -286,11 +283,12 @@ const Promotions: React.FC = () => {
           maxWidth,
           alignSelf: 'center',
           width: '100%',
-          paddingVertical: 28,
+          paddingVertical: 32,
           paddingHorizontal: 16,
-          position: 'relative',
         }}>
-        <Text className="mb-4 text-center text-4xl font-bold text-white">Promociones Activas</Text>
+        <Text className="mb-4 text-center text-4xl font-bold text-white">
+          Promociones Activas
+        </Text>
         <Text className="mb-8 text-center text-xl text-white/75">
           ¡Aprovecha nuestras ofertas especiales y ahorra en tus productos favoritos!
         </Text>
@@ -313,34 +311,24 @@ const Promotions: React.FC = () => {
           initialNumToRender={promotionsBase.length * 2}
         />
 
+        {/* Gradientes laterales */}
         <LinearGradient
           pointerEvents="none"
           colors={['#4A90E2', 'transparent']}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 1, y: 0.5 }}
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: 60,
-          }}
+          style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 60 }}
         />
         <LinearGradient
           pointerEvents="none"
           colors={['transparent', '#4A90E2']}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 1, y: 0.5 }}
-          style={{
-            position: 'absolute',
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: 60,
-          }}
+          style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 60 }}
         />
 
-        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 14 }}>
+        {/* Indicadores */}
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 16 }}>
           {promotionsBase.map((_, idx) => {
             const isActive = activeIndex % promotionsBase.length === idx;
             return (
@@ -348,11 +336,12 @@ const Promotions: React.FC = () => {
                 key={idx}
                 onPress={() => scrollToBaseIndex(idx)}
                 style={{
-                  width: isActive ? 24 : 8,
+                  width: isActive ? 28 : 8,
                   height: 8,
                   borderRadius: 4,
                   marginHorizontal: 6,
                   backgroundColor: isActive ? 'white' : 'rgba(255,255,255,0.4)',
+                  transition: 'all 0.3s ease',
                 }}
               />
             );
