@@ -18,7 +18,7 @@ const NAV_ITEMS = [
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, logoutAuth } = useAuth();
+  const { isAuthenticated, logoutAuth, user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleMenuNavigation = (route: string) => {
@@ -61,7 +61,6 @@ const Header = () => {
 
             {isAuthenticated ? (
               <View className="flex-row items-center gap-4">
-                
                 <Button variant="link" size="sm" onPress={() => router.push('/pedidos')}>
                   <Text className="text-lg font-semibold text-zinc-600">Mis Pedidos</Text>
                 </Button>
@@ -73,6 +72,11 @@ const Header = () => {
                   className="rounded-lg bg-[#1e56a0] px-4 py-2">
                   <Text className="text-lg font-bold text-white">Perfil</Text>
                 </Button>
+                {user && user.rol.includes('administrador') && (
+                  <Button onPress={() => handleMenuNavigation('/admin')} className="bg-[#1e56a0]">
+                    <Text className="text-lg font-bold text-white">Admin</Text>
+                  </Button>
+                )}
                 <Button variant="link" size="sm" onPress={logoutAuth}>
                   <Text className="text-lg font-semibold text-red-600">Cerrar sesión</Text>
                 </Button>
@@ -133,6 +137,11 @@ const Header = () => {
                 <Button onPress={() => handleMenuNavigation('/perfil')} className="bg-[#1e56a0]">
                   <Text className="text-lg font-bold text-white">Perfil</Text>
                 </Button>
+                {user && user.rol.includes('administrador') && (
+                  <Button onPress={() => handleMenuNavigation('/admin')} className="bg-[#1e56a0]">
+                    <Text className="text-lg font-bold text-white">Admin</Text>
+                  </Button>
+                )}
                 <Button variant="link" onPress={handleLogout}>
                   <Text className="text-lg font-semibold text-red-600">Cerrar sesión</Text>
                 </Button>
