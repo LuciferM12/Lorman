@@ -25,8 +25,12 @@ const ProductRepository = {
     },
 
     async list(limit = 100, offset = 0): Promise<ProductDTO[]> {
-        const { data, error } = await supabaseClient.from(TABLE).select('*').range(offset, offset + limit - 1);
-
+        const { data, error } = await supabaseClient
+            .from(TABLE)
+            .select('*')
+            .eq('eliminado', false)
+            .order('id_producto')
+            .range(offset, offset + limit - 1);
         if (error) {
             throw new Error(`Error listando productos: ${error.message}`);
         }
@@ -43,7 +47,7 @@ const ProductRepository = {
     },
 
     async delete(id: number): Promise<void> {
-        const { error } = await supabaseClient.from(TABLE).delete().eq('id_producto', id);
+        const { error } = await supabaseClient.from(TABLE).update({ eliminado: true }).eq('id_producto', id);
 
         if (error) {
             throw new Error(`Error eliminando el producto: ${error.message}`);

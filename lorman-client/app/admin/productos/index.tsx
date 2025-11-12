@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Pencil, Trash2, Search, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import AddProductDialog from '@/components/custom/customize/ProductDialog';
-import { createProduct, getProducts, updateProduct } from '@/api/products';
+import { createProduct, deleteProduct, getProducts, updateProduct } from '@/api/products';
 
 type Producto = {
   id_producto: number;
@@ -63,15 +63,10 @@ export default function ProductosScreen() {
     }
   };
 
-  const handleDeleteProduct = (id: number, nombre: string) => {
-    Alert.alert('Eliminar Producto', `¿Estás seguro de eliminar "${nombre}"?`, [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Eliminar',
-        style: 'destructive',
-        onPress: () => setProductos((prev) => prev.filter((p) => p.id_producto !== id)),
-      },
-    ]);
+  const handleDeleteProduct = async (id: number) => {
+    console.log('Deleting product with id:', id);
+    await deleteProduct(id);
+    fetchProducts();
   };
 
   const handleToggleDisponible = (id: number) => {
@@ -215,7 +210,7 @@ export default function ProductosScreen() {
                       </Pressable>
                       <Pressable
                         onPress={() =>
-                          handleDeleteProduct(producto.id_producto, producto.nombre_producto)
+                          handleDeleteProduct(producto.id_producto)
                         }
                         className="rounded bg-red-100 p-2">
                         <Trash2 size={16} color="#dc2626" />
