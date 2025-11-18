@@ -10,7 +10,7 @@ export const productRegisterSchema = z.object({
 
 export const productCart = productRegisterSchema.omit({ stock: true }).extend({
     id_producto: z.number().min(1, "El ID del producto es requerido"),
-    imagen: z.string().url("La imagen debe ser una URL válida").optional().nullable(),
+    imagen: z.string().optional().nullable(),
 });
 
 export const productUpdatedSchema = z.object({
