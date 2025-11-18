@@ -56,19 +56,19 @@ const ProductService = {
         if (!product) {
             throw new Error("Producto no encontrado");
         }
-        const updatedProduct = await ProductRepository.update(id, data);
+        let updateData = { ...data };
         if (imageFile) {
-            const path = `products/${updatedProduct.id_producto}/${imageFile.originalname}`;
-            const { data, error } = await supabaseClient.storage.from(bucketName).upload(path, imageFile.buffer, {
+            const path = `products/${product.id_producto}/${imageFile.originalname}`;
+            const { data: uploadData, error } = await supabaseClient.storage.from(bucketName).upload(path, imageFile.buffer, {
                 contentType: imageFile.mimetype,
                 upsert: false,
             });
             if (error) {
                 throw new Error(`Error subiendo la imagen del producto: ${error.message}`);
             }
-            const updatedProductWithImage = await ProductRepository.update(updatedProduct.id_producto, { imagen: path });
-            return updatedProductWithImage;
+            updateData.imagen = path;
         }
+        const updatedProduct = await ProductRepository.update(id, updateData);
         return updatedProduct;
     },
 
