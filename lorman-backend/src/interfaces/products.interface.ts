@@ -14,7 +14,7 @@ export const productCart = productRegisterSchema.omit({ stock: true }).extend({
 
 export const ProductSchema = productRegisterSchema.extend({
     id_producto: z.number(),
-    disponible: z.boolean().default(true),
+    disponible: z.coerce.boolean().default(true),
 })
 
 export type ProductRegisterDTO = z.infer<typeof productRegisterSchema>;

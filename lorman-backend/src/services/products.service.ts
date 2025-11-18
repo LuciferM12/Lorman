@@ -7,9 +7,6 @@ const ProductService = {
     async createProduct(data: ProductRegisterDTO, imageFile?: Express.Multer.File): Promise<ProductDTO> {
         const newProduct = await ProductRepository.create(data);
         if (imageFile) {
-            if (!bucketName) {
-                throw new Error("BUCKET_NAME no está definido en las variables de entorno");
-            }
             const path = `products/${newProduct.id_producto}/${imageFile.originalname}`;
             const { data, error } = await supabaseClient.storage.from(bucketName).upload(path, imageFile.buffer, {
                 contentType: imageFile.mimetype,
@@ -54,12 +51,24 @@ const ProductService = {
         return productsWithUrls;
     },
 
-    async updateProduct(id: number, data: Partial<ProductDTO>): Promise<ProductDTO> {
+    async updateProduct(id: number, data: Partial<ProductDTO>, imageFile?: Express.Multer.File): Promise<ProductDTO> {
         const product = await ProductRepository.findById(id);
         if (!product) {
             throw new Error("Producto no encontrado");
         }
         const updatedProduct = await ProductRepository.update(id, data);
+        if (imageFile) {
+            const path = `products/${updatedProduct.id_producto}/${imageFile.originalname}`;
+            const { data, error } = await supabaseClient.storage.from(bucketName).upload(path, imageFile.buffer, {
+                contentType: imageFile.mimetype,
+                upsert: false,
+            });
+            if (error) {
+                throw new Error(`Error subiendo la imagen del producto: ${error.message}`);
+            }
+            const updatedProductWithImage = await ProductRepository.update(updatedProduct.id_producto, { imagen: path });
+            return updatedProductWithImage;
+        }
         return updatedProduct;
     },
 
