@@ -20,8 +20,20 @@ const ProductController = {
 
     async getAll(req: Request, res: Response) {
         try {
-            const products = await ProductService.listProducts();
-            res.status(200).json({ products });
+            // Parse pagination parameters from query string
+            const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 100;
+            const offset = req.query.offset ? parseInt(req.query.offset as string, 10) : 0;
+
+            // Validate pagination parameters
+            if (isNaN(limit) || limit <= 0 || limit > 100) {
+                return res.status(400).json({ error: "El parámetro 'limit' debe ser un entero positivo entre 1 y 100" });
+            }
+            if (isNaN(offset) || offset < 0) {
+                return res.status(400).json({ error: "El parámetro 'offset' debe ser un entero no negativo" });
+            }
+
+            const products = await ProductService.listProducts(limit, offset);
+            res.status(200).json({ products, pagination: { limit, offset, count: products.length } });
         } catch (error: any) {
             res.status(400).json({ message: error.message });
         }
