@@ -8,7 +8,7 @@ const ProductService = {
         const newProduct = await ProductRepository.create(data);
         if (imageFile) {
             const path = `products/${newProduct.id_producto}/${imageFile.originalname}`;
-            const { data, error } = await supabaseClient.storage.from(bucketName).upload(path, imageFile.buffer, {
+            const { error } = await supabaseClient.storage.from(bucketName).upload(path, imageFile.buffer, {
                 contentType: imageFile.mimetype,
                 upsert: false,
             });
