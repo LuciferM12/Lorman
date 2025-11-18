@@ -6,11 +6,15 @@ const ProductController = {
     async createProduct(req: Request, res: Response) {
         try {
             const parsed = productRegisterSchema.safeParse(req.body);
+            const imageFile = req.file;
+            if (!imageFile) {
+                console.log("No se proporcionó ningún archivo de imagen.");
+            }
             if (!parsed.success) {
                 return res.status(400).json({ error: "Solicitud de datos inválida", details: parsed.error.flatten().fieldErrors })
             }
 
-            const newProduct = await ProductService.createProduct(parsed.data);
+            const newProduct = await ProductService.createProduct(parsed.data, imageFile);
             res.status(201).json({ message: "Producto creado exitosamente", product: newProduct });
         } catch (error: any) {
             res.status(400).json({ message: error.message });

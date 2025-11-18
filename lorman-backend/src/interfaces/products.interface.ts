@@ -5,6 +5,7 @@ export const productRegisterSchema = z.object({
     descripcion: z.string().optional(),
     precio_unitario: z.coerce.number().min(0, "El precio unitario debe ser un número positivo"),
     stock: z.coerce.number().min(0, "El stock debe ser un número positivo"),
+    imagen: z.string().optional().nullable(),
 })
 
 export const productCart = productRegisterSchema.omit({ stock: true }).extend({

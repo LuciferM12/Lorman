@@ -1,5 +1,5 @@
-import { View, Text, Pressable, StyleSheet, Dimensions } from 'react-native';
-import { Plus } from 'lucide-react-native';
+import { View, Text, Pressable, StyleSheet, Dimensions, Image } from 'react-native';
+import { Plus, ImageIcon } from 'lucide-react-native';
 import { useAuth } from '@/context/AuthContext';
 
 const { width } = Dimensions.get('window');
@@ -12,7 +12,7 @@ export type Product = {
   price: string;
   backgroundColor: string;
   textColor?: string;
-  imageSource?: any;
+  imagen?: string;
 };
 
 type ProductCardProps = {
@@ -22,14 +22,29 @@ type ProductCardProps = {
 
 export const ProductCard = ({ product, onPress }: ProductCardProps) => {
   const { isAuthenticated } = useAuth();
-  const isLightCard = false
+  const isLightCard = false;
 
   return (
     <View style={[styles.card, { backgroundColor: product.backgroundColor }]}>
       <View style={styles.imageContainer}>
-        <Text style={[styles.imageText, isLightCard && { color: product.textColor }]}>
-          {product.title.split(' ')[0]}
-        </Text>
+        {product.imagen ? (
+          <Image
+            source={{ uri: product.imagen }}
+            style={styles.productImage}
+            resizeMode="cover"
+            onError={(error) => {
+              console.error('❌ Error cargando imagen del producto:', product.title, error);
+            }}
+          />
+        ) : (
+          // Fallback si no hay imagen
+          <View style={styles.placeholderContainer}>
+            <ImageIcon size={48} color="rgba(255,255,255,0.5)" />
+            <Text style={[styles.imageText, isLightCard && { color: product.textColor }]}>
+              {product.title.split(' ')[0]}
+            </Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.content}>
@@ -50,6 +65,7 @@ export const ProductCard = ({ product, onPress }: ProductCardProps) => {
           style={[styles.description, isLightCard && { color: product.textColor, opacity: 0.8 }]}>
           {product.description}
         </Text>
+
         {isAuthenticated && (
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <Pressable
@@ -106,14 +122,24 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: '100%',
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
+  productImage: {
+    width: '100%',
+    height: '100%',
+  },
+  placeholderContainer: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+  },
   imageText: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
+    opacity: 0.7,
   },
   content: {
     padding: 24,
