@@ -32,9 +32,6 @@ export const ProductCard = ({ product, onPress }: ProductCardProps) => {
             source={{ uri: product.imagen }}
             style={styles.productImage}
             resizeMode="cover"
-            onError={(error) => {
-              console.error('❌ Error cargando imagen del producto:', product.title, error);
-            }}
           />
         ) : (
           // Fallback si no hay imagen
