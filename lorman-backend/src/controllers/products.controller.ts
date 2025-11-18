@@ -6,11 +6,12 @@ const ProductController = {
     async createProduct(req: Request, res: Response) {
         try {
             const parsed = productRegisterSchema.safeParse(req.body);
+            const imageFile = req.file;
             if (!parsed.success) {
                 return res.status(400).json({ error: "Solicitud de datos inválida", details: parsed.error.flatten().fieldErrors })
             }
 
-            const newProduct = await ProductService.createProduct(parsed.data);
+            const newProduct = await ProductService.createProduct(parsed.data, imageFile);
             res.status(201).json({ message: "Producto creado exitosamente", product: newProduct });
         } catch (error: any) {
             res.status(400).json({ message: error.message });
@@ -35,12 +36,13 @@ const ProductController = {
             if (isNaN(productId) || productId <= 0) {
                 return res.status(400).json({ error: "El ID del producto debe ser un entero positivo" });
             }
+            const imageFile = req.file;
             const updatedData = { ...req.body, id_producto: productId };
             const parsed = ProductSchema.safeParse(updatedData);
             if (!parsed.success) {
                 return res.status(400).json({ error: "Solicitud de datos inválida", details: parsed.error.flatten().fieldErrors })
             }
-            const updatedProduct = await ProductService.updateProduct(productId, parsed.data);
+            const updatedProduct = await ProductService.updateProduct(productId, parsed.data, imageFile);
             res.status(200).json({ message: "Producto actualizado exitosamente", product: updatedProduct });
         } catch (error: any) {
             res.status(400).json({ message: error.message });

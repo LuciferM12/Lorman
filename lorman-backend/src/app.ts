@@ -29,7 +29,6 @@ app.use(express.json());
 
 app.post("/create-checkout-session", createCheckoutSession);
 
-// TODO: Routes must be defined here 
 app.get("/ping", async (req, res) => {
     const { data, error } = await supabaseClient.from("usuarios").select("*").limit(1);
     if (error) {
@@ -38,7 +37,6 @@ app.get("/ping", async (req, res) => {
     return res.json({ message: "Conexión exitosa", data });
 });
 
-// 🧪 Endpoint de prueba para emails
 app.post("/test-email", async (req, res) => {
     try {
         const { to, type = 'simple' } = req.body;
@@ -146,7 +144,7 @@ app.post("/test-email", async (req, res) => {
     }
 });
 
-// Endpoint de contacto
+
 app.post("/contactEmail", async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;

@@ -26,6 +26,7 @@ const productos = () => {
           description: prod.descripcion,
           price: `$${prod.precio_unitario} MXN`,
           backgroundColor: '#2A9FD8', // Puedes asignar colores dinámicamente si lo deseas
+          imagen: prod.imagen
         }));
         setProducts(setproducts);
         console.log('Productos obtenidos:', setproducts);
