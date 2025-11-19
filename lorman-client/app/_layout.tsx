@@ -1,7 +1,6 @@
-import Header from '@/components/custom/Header';
 import { AuthProvider } from '@/context/AuthContext';
 import '@/global.css';
-
+import { StripeProvider } from '@stripe/stripe-react-native';
 import { NAV_THEME } from '@/lib/theme';
 import { ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
@@ -19,6 +18,7 @@ export {
 
 export default function RootLayout() {
   const { colorScheme } = useColorScheme();
+  const publishableKey = process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
 
   return (
     <>
@@ -27,60 +27,78 @@ export default function RootLayout() {
         <Head>
           {/* Básicos */}
           <title>Lorman SLP</title>
-          <meta name="description" content="Lorman es tu distribuidora de confianza de agua purificada en México. Ofrecemos garrafones de 20L, 10L y botellas con entrega a domicilio. Calidad garantizada y servicio excepcional." />
-          <meta name="keywords" content="agua purificada, garrafones, distribuidora agua, agua a domicilio, Lorman, agua embotellada, garrafón 20L, garrafón 10L, agua de calidad, México" />
+          <meta
+            name="description"
+            content="Lorman es tu distribuidora de confianza de agua purificada en México. Ofrecemos garrafones de 20L, 10L y botellas con entrega a domicilio. Calidad garantizada y servicio excepcional."
+          />
+          <meta
+            name="keywords"
+            content="agua purificada, garrafones, distribuidora agua, agua a domicilio, Lorman, agua embotellada, garrafón 20L, garrafón 10L, agua de calidad, México"
+          />
           <meta name="author" content="Lorman Distribuidora" />
           <meta charSet="utf-8" />
-          
+
           {/* Viewport y responsividad */}
-          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-          
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+          />
+
           {/* Theme color */}
           <meta name="theme-color" content="#17a2b8" />
           <meta name="msapplication-TileColor" content="#17a2b8" />
-          
+
           {/* Open Graph / Facebook */}
           <meta property="og:type" content="website" />
           <meta property="og:site_name" content="Lorman" />
           <meta property="og:title" content="Lorman - Distribuidora de Agua Purificada" />
-          <meta property="og:description" content="Agua purificada de calidad premium. Garrafones de 20L, 10L y botellas con entrega a domicilio en toda la región." />
+          <meta
+            property="og:description"
+            content="Agua purificada de calidad premium. Garrafones de 20L, 10L y botellas con entrega a domicilio en toda la región."
+          />
           <meta property="og:locale" content="es_MX" />
           <meta property="og:url" content="https://lorman.com" />
           <meta property="og:image" content="https://lorman.com/og-image.jpg" />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
           <meta property="og:image:alt" content="Lorman - Agua Purificada de Calidad" />
-          
+
           {/* Twitter Card */}
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:site" content="@Lorman" />
           <meta name="twitter:creator" content="@Lorman" />
           <meta name="twitter:title" content="Lorman - Distribuidora de Agua Purificada" />
-          <meta name="twitter:description" content="Agua purificada de calidad con entrega a domicilio. Garrafones y botellas para tu hogar y negocio." />
+          <meta
+            name="twitter:description"
+            content="Agua purificada de calidad con entrega a domicilio. Garrafones y botellas para tu hogar y negocio."
+          />
           <meta name="twitter:image" content="https://lorman.com/twitter-image.jpg" />
-          
+
           {/* SEO adicional */}
-          <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+          <meta
+            name="robots"
+            content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+          />
           <meta name="googlebot" content="index, follow" />
           <meta name="language" content="Spanish" />
           <meta name="geo.region" content="MX" />
           <meta name="geo.placename" content="México" />
-          
+
           {/* Canonical URL */}
           <link rel="canonical" href="https://lorman.com" />
-          
+
           {/* Favicons */}
           <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
           <link rel="manifest" href="/site.webmanifest" />
           <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#17a2b8" />
-          
+
           {/* Preconnect para optimización */}
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-          
+
           {/* PWA */}
           <meta name="application-name" content="Lorman" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -88,11 +106,11 @@ export default function RootLayout() {
           <meta name="apple-mobile-web-app-title" content="Lorman" />
           <meta name="format-detection" content="telephone=no" />
           <meta name="mobile-web-app-capable" content="yes" />
-          
+
           {/* Microsoft */}
           <meta name="msapplication-config" content="/browserconfig.xml" />
           <meta name="msapplication-tap-highlight" content="no" />
-          
+
           {/* Schema.org para Google */}
           <script type="application/ld+json">
             {`
@@ -121,7 +139,7 @@ export default function RootLayout() {
               }
             `}
           </script>
-          
+
           {/* LocalBusiness Schema */}
           <script type="application/ld+json">
             {`
@@ -160,12 +178,14 @@ export default function RootLayout() {
       <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
         <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
         <AuthProvider>
-          <View className="flex h-screen w-screen items-center justify-center">
-            <View style={{ flex: 1 }} className="w-full">
-              <Stack screenOptions={{ headerShown: false }} />
-              <PortalHost />
+          <StripeProvider publishableKey={publishableKey}>
+            <View className="flex h-screen w-screen items-center justify-center">
+              <View style={{ flex: 1 }} className="w-full">
+                <Stack screenOptions={{ headerShown: false }} />
+                <PortalHost />
+              </View>
             </View>
-          </View>
+          </StripeProvider>
         </AuthProvider>
         <Toast position="bottom" />
       </ThemeProvider>
