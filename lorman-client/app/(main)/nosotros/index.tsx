@@ -92,23 +92,23 @@ const nosotros = () => {
 
         <View className="flex items-center justify-center p-4 py-12">
           <View className="w-full max-w-[90%] items-center lg:w-[1920px]">
-            <View className="mb-8 w-full flex-row items-start justify-around">
+            <View className="mb-8 w-full flex-col items-center space-y-6 lg:flex-row lg:items-start lg:justify-around lg:space-y-0">
               {features.map((feature, index) => (
-                <FeatureCard
-                  key={index}
-                  iconName={feature.iconName}
-                  title={feature.title}
-                  description={feature.description}
-                />
+          <FeatureCard
+            key={index}
+            iconName={feature.iconName}
+            title={feature.title}
+            description={feature.description}
+          />
               ))}
             </View>
 
             <Separator className="m-10" />
 
-            <Text className="mb-4 text-center text-4xl font-bold text-primaryDark">
+            <Text className="mb-4 text-center text-2xl font-bold text-primaryDark lg:text-4xl">
               Nuestro proceso de purificación
             </Text>
-            <Text className="mb-8 text-center text-xl text-primaryDark/75">
+            <Text className="mb-8 text-center text-base text-primaryDark/75 lg:text-xl">
               Descubre cómo garantizamos la pureza y calidad en cada gota de agua que entregamos.
             </Text>
 
@@ -116,28 +116,32 @@ const nosotros = () => {
 
             <Separator className="m-10" />
 
-            <Text className="mb-4 text-center text-4xl font-bold text-primaryDark">
+            <Text className="mb-4 text-center text-2xl font-bold text-primaryDark lg:text-4xl">
               Preguntas Frecuentes
             </Text>
-            <Text className="mb-8 text-center text-xl text-primaryDark/75">
+            <Text className="mb-8 text-center text-base text-primaryDark/75 lg:text-xl">
               Encuentra respuestas a las preguntas más comunes sobre nuestros productos y servicios.
             </Text>
 
-            <Accordion type="single" collapsible className="w-full lg:w-3/4" defaultValue="item-0">
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full space-y-4 lg:w-3/4 lg:space-y-0"
+              defaultValue="item-0">
               {FAQ_DATA.map((faq, index) => (
-                <View key={`faq-${index}`} className="w-full">
-                  <AccordionItem value={`item-${index}`}>
-                    <AccordionTrigger>
-                      <Text className="text-xl font-semibold text-primaryDark lg:text-2xl">
-                        {faq.question}
-                      </Text>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <Text className="text-base lg:text-lg">{faq.answer}</Text>
-                    </AccordionContent>
-                  </AccordionItem>
-                  {index < FAQ_DATA.length - 1 && <Separator className="my-3" />}
-                </View>
+          <View key={`faq-${index}`} className="w-full">
+            <AccordionItem value={`item-${index}`}>
+              <AccordionTrigger>
+                <Text className="text-base font-semibold text-primaryDark lg:text-xl">
+            {faq.question}
+                </Text>
+              </AccordionTrigger>
+              <AccordionContent>
+                <Text className="text-sm lg:text-base">{faq.answer}</Text>
+              </AccordionContent>
+            </AccordionItem>
+            {index < FAQ_DATA.length - 1 && <Separator className="my-3" />}
+          </View>
               ))}
             </Accordion>
           </View>

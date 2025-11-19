@@ -72,13 +72,17 @@ const productos = () => {
 
         <ProductGrid onProductPress={handleProductPressed} products={products} />
 
-        <Text className="mb-4 mt-9 text-center text-4xl font-bold text-primaryDark">
-          Calidad en la que Puedes Confiar
-        </Text>
-        <Text className="mb-8 text-center text-xl text-primaryDark/75">
-          Nuestro compromiso es con tu bienestar, por eso seguimos los más altos estándares de
-          calidad.
-        </Text>
+        <View className="mb-4 mt-9 px-4 md:px-8 lg:px-16">
+          <Text className="text-center text-2xl font-bold text-primaryDark sm:text-3xl md:text-4xl lg:text-5xl">
+            Calidad en la que Puedes Confiar
+          </Text>
+        </View>
+        <View className="mb-8 px-4 md:px-8 lg:px-16">
+          <Text className="text-center text-base text-primaryDark/75 sm:text-lg md:text-xl lg:text-2xl">
+            Nuestro compromiso es con tu bienestar, por eso seguimos los más altos estándares de
+            calidad.
+          </Text>
+        </View>
 
         
         <LormanFooter />

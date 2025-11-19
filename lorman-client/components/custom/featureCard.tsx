@@ -10,12 +10,12 @@ interface FeatureCardProps {
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ iconName, title, description }) => {
   return (
-    <View className="flex-1 items-center px-2">
+    <View className="flex-1 items-center px-2 pb-7">
       <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-blue-600">
         <Feather name={iconName} size={32} color="white" />
       </View>
 
-      <Text className="mb-2 text-center text-4xl font-bold text-gray-800 dark:text-gray-100">
+      <Text className="mb-2 text-center text-4xl font-bold dark:text-gray-100 text-black">
         {title}
       </Text>
 

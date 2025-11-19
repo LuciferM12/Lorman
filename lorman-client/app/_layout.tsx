@@ -6,7 +6,6 @@ import { ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useColorScheme } from 'nativewind';
 import { View, Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Head from 'expo-router/head';
@@ -17,7 +16,6 @@ export {
 } from 'expo-router';
 
 export default function RootLayout() {
-  const { colorScheme } = useColorScheme();
   const publishableKey = process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
 
   return (
@@ -175,8 +173,9 @@ export default function RootLayout() {
         </Head>
       )}
 
-      <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+      {/* Fuerza el tema claro en todos los componentes */}
+      <ThemeProvider value={NAV_THEME['light']}>
+        <StatusBar style="dark" />
         <AuthProvider>
           <StripeProvider publishableKey={publishableKey}>
             <View className="flex h-screen w-screen items-center justify-center">
