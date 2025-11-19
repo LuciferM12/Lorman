@@ -10,7 +10,7 @@ const ProductService = {
             const path = `products/${newProduct.id_producto}/${imageFile.originalname}`;
             const { error } = await supabaseClient.storage.from(bucketName).upload(path, imageFile.buffer, {
                 contentType: imageFile.mimetype,
-                upsert: false,
+                upsert: true,
             });
             if (error) {
                 throw new Error(`Error subiendo la imagen del producto: ${error.message}`);
@@ -61,7 +61,7 @@ const ProductService = {
             const path = `products/${product.id_producto}/${imageFile.originalname}`;
             const { data: uploadData, error } = await supabaseClient.storage.from(bucketName).upload(path, imageFile.buffer, {
                 contentType: imageFile.mimetype,
-                upsert: false,
+                upsert: true,
             });
             if (error) {
                 throw new Error(`Error subiendo la imagen del producto: ${error.message}`);
