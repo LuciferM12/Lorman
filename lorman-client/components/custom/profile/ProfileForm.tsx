@@ -16,6 +16,7 @@ export interface ProfileData {
   address: string
   phone: string
   deliveryDays: string
+  role?: string
 }
 
 interface ProfileCardProps {
