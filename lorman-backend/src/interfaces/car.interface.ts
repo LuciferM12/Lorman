@@ -17,7 +17,7 @@ export const carDetailUpdateSchema = z.object({
 
 export const carDetailSchemaWithId = carDetailSchema.extend({
     id_detalle_carrito: z.coerce.number().min(1, "El ID del detalle del carrito es requerido"),
-    productos: productCart,
+    productos: productCart.optional(),
 })
 
 export const carDetailUpdateSchemaWithoutProductos = carDetailSchemaWithId.omit({ productos: true });
