@@ -33,7 +33,20 @@ const UserService = {
 
         const token = generateToken({ id_usuario: user.id_usuario, email: user.email, rol: user.rol });
         return { token, user: userWithoutPassword };
-    }
+    },
+
+    async getUserByEmail(email: string): Promise<UserResponseDTO | null> {
+        const user = await UserRepository.findByEmail(email);
+        if (!user) {
+            return null;
+        }
+        return UserResponseSchema.parse(user);
+    },
+
+    async updateUser(id: number, data: Partial<RegisterUserDTO>): Promise<UserResponseDTO> {
+        const updatedUser = await UserRepository.update(id, data);
+        return UserResponseSchema.parse(updatedUser);
+    },
 }
 
 export default UserService;
