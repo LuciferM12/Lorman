@@ -28,3 +28,41 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     })
     return res.json(session)
 }
+
+export const createPaymentIntent = async (req: Request, res: Response) => {
+    try {
+        const { items, user } = req.body;
+
+        // Calcular el monto total
+        const amount = items.reduce(
+            (sum: number, item: CartItem) => sum + (item.precio * item.cantidad),
+            0
+        );
+
+        // Crear el Payment Intent
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: Math.round(amount * 100), // Convertir a centavos
+            currency: 'mxn',
+            metadata: {
+                user: user || '',
+                items: JSON.stringify(items.map((item: CartItem) => ({
+                    id: item.id,
+                    name: item.name,
+                    cantidad: item.cantidad,
+                    precio: item.precio
+                }))),
+            },
+            automatic_payment_methods: {
+                enabled: true,
+            },
+        });
+
+        res.json({
+            clientSecret: paymentIntent.client_secret,
+            paymentIntentId: paymentIntent.id,
+        });
+    } catch (error) {
+        console.error('Error creating payment intent:', error);
+        res.status(500).json({ error: 'Error al crear el intento de pago' });
+    }
+};
