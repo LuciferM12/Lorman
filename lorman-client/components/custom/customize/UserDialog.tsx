@@ -200,11 +200,10 @@ export default function AddUserDialog({ visible, onClose, onSubmit, initialData 
 
                 {/* Dirección */}
                 <View className="gap-2">
-                  <Label nativeID="direccion">Dirección *</Label>
+                  <Label nativeID="direccion">Dirección</Label>
                   <Controller
                     control={control}
                     name="direccion"
-                    rules={{ required: 'La dirección es obligatoria' }}
                     render={({ field: { onChange, onBlur, value } }) => (
                       <Input placeholder="Calle, número, colonia, ciudad" value={value} onChangeText={onChange} onBlur={onBlur} multiline numberOfLines={2} style={{ height: 60, textAlignVertical: 'top' }} accessibilityLabel="direccion" />
                     )}
