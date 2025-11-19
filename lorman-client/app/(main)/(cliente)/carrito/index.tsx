@@ -1,18 +1,25 @@
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Platform, Alert } from 'react-native';
+import { useStripe } from '@stripe/stripe-react-native';
 import CartProductsList from '@/components/custom/cart/cartProductList';
 import CartSummary from '@/components/custom/cart/cartSummary';
 import LormanFooter from '@/components/custom/Footer';
 import { CarDetailWithIdDTO, CartItem } from '@/interfaces/ICart';
-import { createCheckoutSession, getCartDetails, removeCartItem, updateCartItemQuantity } from '@/api/cart';
+import {
+  createCheckoutSession,
+  createPaymentIntent,
+  getCartDetails,
+  removeCartItem,
+  updateCartItemQuantity,
+} from '@/api/cart';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
 
 export default function ShoppingCartScreen() {
   const router = useRouter();
   const { user } = useAuth();
-  //const shippingCost = 15.0;
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [cartItems, setCartItems] = React.useState<CartItem[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -43,11 +50,80 @@ export default function ShoppingCartScreen() {
     fetchCartDetails();
   }, [user]);
 
-  // Calcular subtotal
   const subtotal = cartItems.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
   const total = subtotal;
 
-  // Incrementar cantidad
+  // Función para móviles (Payment Sheet)
+  const handleCheckoutMobile = async () => {
+    try {
+      setLoading(true);
+
+      // 1. Crear Payment Intent
+      const { clientSecret, paymentIntentId } = await createPaymentIntent(
+        cartItems,
+        user?.email || ''
+      );
+
+      // 2. Inicializar el Payment Sheet
+      const { error: initError } = await initPaymentSheet({
+        merchantDisplayName: 'Lorman',
+        paymentIntentClientSecret: clientSecret,
+        defaultBillingDetails: {
+          email: user?.email,
+        },
+        returnURL: 'tu-app://stripe-redirect', // Importante para deep linking
+      });
+
+      if (initError) {
+        Alert.alert('Error', initError.message);
+        return;
+      }
+
+      // 3. Presentar el Payment Sheet
+      const { error: presentError } = await presentPaymentSheet();
+
+      if (presentError) {
+        Alert.alert('Pago cancelado', presentError.message);
+      } else {
+        Alert.alert('¡Pago exitoso!', 'Tu pedido ha sido procesado correctamente', [
+          {
+            text: 'OK',
+            onPress: () => router.push('/success'),
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error('Error en checkout móvil:', error);
+      Alert.alert('Error', 'Hubo un problema al procesar el pago');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para web (Checkout Session)
+  const handleCheckoutWeb = async () => {
+    try {
+      setLoading(true);
+      const response = await createCheckoutSession(cartItems, user?.email || '');
+      if (response.url) {
+        window.location.href = response.url;
+      }
+    } catch (error) {
+      console.error('Error en checkout web:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Decidir qué función usar según la plataforma
+  const handleCheckout = () => {
+    if (Platform.OS === 'web') {
+      handleCheckoutWeb();
+    } else {
+      handleCheckoutMobile();
+    }
+  };
+
   const incrementQuantity = async (id_producto: number, id_detalle_carrito: number) => {
     const item = cartItems.find(
       (i) => i.id === id_producto && i.id_detalle_carrito === id_detalle_carrito
@@ -64,7 +140,6 @@ export default function ShoppingCartScreen() {
     }
   };
 
-  // Decrementar cantidad
   const decrementQuantity = async (id_producto: number, id_detalle_carrito: number) => {
     const item = cartItems.find(
       (i) => i.id === id_producto && i.id_detalle_carrito === id_detalle_carrito
@@ -81,7 +156,6 @@ export default function ShoppingCartScreen() {
     }
   };
 
-  // Eliminar item
   const removeItem = async (id: number) => {
     setLoading(true);
     try {
@@ -94,27 +168,16 @@ export default function ShoppingCartScreen() {
     }
   };
 
-  const handleCheckout = async () => {
-    const response = await createCheckoutSession(cartItems, user?.email || '');
-    response.url && router.push(response.url);
-  };
-
   const handleContinueShopping = () => {
-    console.log('Continuar comprando...');
-    // Navegar de regreso a la tienda
+    router.push('/'); // O la ruta de tu tienda
   };
 
   return (
-    <ScrollView 
-      className="mt-20 flex-1 bg-gray-50"
-      contentContainerStyle={{ flexGrow: 1 }}
-    >
+    <ScrollView className="mt-20 flex-1 bg-gray-50" contentContainerStyle={{ flexGrow: 1 }}>
       <View className="flex-1 p-6">
-        {/* Título */}
         <Text className="mb-6 text-3xl font-bold text-[#0d4682]">Carrito de Compras</Text>
 
         <View className="gap-6 md:flex-row md:items-start">
-          {/* Columna Izquierda - Productos */}
           <View className="flex-1">
             <CartProductsList
               loading={loading}
@@ -126,11 +189,9 @@ export default function ShoppingCartScreen() {
             />
           </View>
 
-          {/* Columna Derecha - Resumen */}
           <View className="w-full md:w-80">
             <CartSummary
               subtotal={subtotal}
-              //shippingCost={shippingCost}
               total={total}
               onCheckout={handleCheckout}
               isDisabled={cartItems.length === 0 || loading}
