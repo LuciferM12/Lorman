@@ -12,5 +12,12 @@ export const sessionUserSchema = z.object({
     token: z.string(),
 });
 
+export const userUpdateSchema = userSchema.extend({
+    direccion: z.string().optional(),
+    telefono: z.string().optional(),
+    dias_entrega_preferidos: z.string().optional(),
+})
+
 export type UserType = z.infer<typeof userSchema>;
 export type SessionUserType = z.infer<typeof sessionUserSchema>;    
+export type UserUpdateType = z.infer<typeof userUpdateSchema>;

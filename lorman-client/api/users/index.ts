@@ -1,3 +1,4 @@
+import { ProfileData } from '@/components/custom/profile/ProfileForm';
 import { LoginInput } from '@/interfaces/ILogin'
 import { RegisterType } from '@/interfaces/IRegister';
 import axios from 'axios'
@@ -38,6 +39,48 @@ export async function register(data: RegisterType) {
             telefono: data.telefono,
         })
         return response.data
+    } catch (error: any) {
+        if (error.response) {
+            throw new Error(
+                `${error.response.data && typeof error.response.data === 'object'
+                    ? (error.response.data.message || JSON.stringify(error.response.data))
+                    : error.response.data
+                }`
+            );
+        } else {
+            throw new Error(`Error en la solicitud: ${error.message}`);
+        }
+    }
+}
+
+export async function getUserByEmail(email: string) {
+    try {
+        const response = await axios.get(`${API_URL}/users/email/${email}`);
+        return response.data;
+    } catch (error: any) {
+        if (error.response) {
+            throw new Error(
+                `${error.response.data && typeof error.response.data === 'object'
+                    ? (error.response.data.message || JSON.stringify(error.response.data))
+                    : error.response.data
+                }`
+            );
+        } else {
+            throw new Error(`Error en la solicitud: ${error.message}`);
+        }
+    }
+}
+
+export async function updateUser(id: number, data: Partial<ProfileData>) {
+    try {
+        const response = await axios.put(`${API_URL}/users/${id}`, {
+            nombre_completo: data.fullName,
+            email: data.email,
+            telefono: data.phone,
+            direccion: data.address,
+            dias_entrega_preferidos: data.deliveryDays,
+        });
+        return response.data;
     } catch (error: any) {
         if (error.response) {
             throw new Error(
