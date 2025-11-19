@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react';
-import { Text, View, Image, Pressable, Modal, SafeAreaView } from 'react-native';
+import { Text, View, Image, Pressable, Modal, SafeAreaView, Platform, Dimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '../ui/button';
 import { Link, useRouter, usePathname } from 'expo-router';
 
@@ -15,11 +16,23 @@ const NAV_ITEMS = [
   { id: 3, title: 'Contacto', route: '/contacto' },
 ];
 
+// Detecta si es móvil (ancho menor a 768px)
+const isMobile = Dimensions.get('window').width < 768;
+const HEADER_HEIGHT = isMobile ? 60 : 60;
+
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated, logoutAuth, user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const insets = useSafeAreaInsets();
+
+  // Aplica paddingTop y altura extra en móvil
+  const headerStyle = {
+    paddingTop: insets.top,
+    height: HEADER_HEIGHT + insets.top,
+  };
 
   const handleMenuNavigation = (route: string) => {
     setIsMobileMenuOpen(false);
@@ -33,11 +46,23 @@ const Header = () => {
 
   return (
     <>
-      <View className="absolute left-0 right-0 top-0 z-50 h-20 items-center justify-center bg-white shadow-sm">
-        <View className="flex w-full max-w-[1920px] flex-row items-center justify-between px-6">
+      <View
+        className="absolute left-0 right-0 top-0 z-50 items-center justify-center bg-white shadow-sm"
+        style={headerStyle}>
+        <View
+          className="flex w-full max-w-[1920px] flex-row items-center justify-between px-6"
+          style={{ width: '100%' }}>
           <Link href="/" asChild>
             <Pressable className="flex-row items-center gap-1 active:opacity-80">
-              <Image source={LOGO_IMAGE} style={{ width: 70, height: 70, resizeMode: 'contain' }} />
+              <Image
+                source={LOGO_IMAGE}
+                style={{
+                  width: isMobile ? 75 : 70,
+                  height: isMobile ? 75 : 70,
+                  resizeMode: 'contain',
+                  marginTop: isMobile ? 8 : 0,
+                }}
+              />
               <Text className="text-3xl font-semibold text-blue-900">Lorman</Text>
             </Pressable>
           </Link>

@@ -128,16 +128,16 @@ export default function Screen() {
         </View>
       </View>
 
-      <View className="mb-16 mt-9 w-full flex-row items-start justify-around">
-        {features.map((feature, index) => (
+     <View className="mb-8 w-full flex-col items-center space-y-6 lg:flex-row lg:items-start lg:justify-around lg:space-y-0">
+              {features.map((feature, index) => (
           <FeatureCard
             key={index}
             iconName={feature.iconName}
             title={feature.title}
             description={feature.description}
           />
-        ))}
-      </View>
+              ))}
+            </View>
 
       <LormanFooter />
     </Animated.ScrollView>
