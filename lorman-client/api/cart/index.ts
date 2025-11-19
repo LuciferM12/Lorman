@@ -1,4 +1,4 @@
-import { CartItem, DetailCartDTO, ResponseCartDetailDTO } from "@/interfaces/ICart";
+import { CartItem, ResponseCartDetailDTO } from "@/interfaces/ICart";
 import { API_URL } from "../users";
 import axios from "axios";
 import { ProductAdditionDTO, ProductQuantityUpdatedDTO, productUpdatedSchema } from "@/interfaces/IProduct";
@@ -13,6 +13,19 @@ export async function createCheckoutSession(cartItems: CartItem[], user: string)
         return response.data;
     } catch (error) {
         console.error("Error creating checkout session:", error);
+        throw error;
+    }
+}
+
+export async function createPaymentIntent(cartItems: CartItem[], user: string) {
+    try {
+        const response = await axios.post(`${API_URL}/create-payment-intent`, {
+            items: cartItems,
+            user
+        });
+        return response.data; // { clientSecret, paymentIntentId }
+    } catch (error) {
+        console.error("Error creating payment intent:", error);
         throw error;
     }
 }
