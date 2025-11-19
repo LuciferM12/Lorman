@@ -5,7 +5,8 @@ export const registerUserSchema = z.object({
     email: z.string().email("Dirección de correo electrónico inválida"),
     telefono: z.string().min(10, "El numero de teléfono debe tener 10 caracteres").optional(),
     password_hash: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
-    direccion: z.string().default("").nullable(),
+    direccion: z.string().default("").nullable().optional(),
+    rol: z.enum(["administrador", "cliente"]).default("cliente").optional(),
 })
 
 // TODO: Change direccion to be optional at database level and remove default here

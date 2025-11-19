@@ -6,6 +6,10 @@ export const registerSchema = z.object({
     confirmPassword: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
     nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
     telefono: z.string().min(7, "El teléfono debe tener al menos 7 caracteres"),
+    direccion: z.string().optional(),
+    rol: z.enum(["administrador", "cliente"]).optional().default("cliente"),
+    fecha_registro: z.coerce.date().optional().default(new Date()),
+    
 });
 
 export type RegisterType = z.infer<typeof registerSchema>;
