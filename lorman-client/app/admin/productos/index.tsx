@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Plus, Pencil, Trash2, Search, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import AddProductDialog from '@/components/custom/customize/ProductDialog';
 import { createProduct, deleteProduct, getProducts, updateProduct } from '@/api/products';
+import Toast from 'react-native-toast-message';
 
 type Producto = {
   id_producto: number;
@@ -89,12 +90,27 @@ export default function ProductosScreen() {
     try {
       if (data.id_producto) {
         await updateProduct(data.id_producto, productoAGuardar);
+        Toast.show({
+          type: 'success',
+          text1: 'Producto actualizado',
+          text2: 'El producto ha sido actualizado exitosamente.',
+        });
       } else {
         await createProduct(productoAGuardar);
+        Toast.show({
+          type: 'success',
+          text1: 'Producto creado',
+          text2: 'El producto ha sido creado exitosamente.',
+        });
       }
       const response: Producto[] = await getProducts();
       setProductos(response);
     } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Hubo un problema al realizar la operación.',
+      });
       console.error('Error updating product:', error);
     }
 

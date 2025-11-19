@@ -13,6 +13,7 @@ import {
 } from 'lucide-react-native';
 import { getAllOrders, updateOrderStatus } from '@/api/orders';
 import OrderDetailsDialog from '@/components/custom/pedidos/DialogPedidos';
+import Toast from 'react-native-toast-message';
 
 type Pedido = {
   id_pedido: number;
@@ -67,8 +68,18 @@ export default function PedidosScreen() {
   const handleChangeEstado = async (id: number, nuevoEstado: string) => {
     try {
       await updateOrderStatus(id, nuevoEstado);
+      Toast.show({
+        type: 'success',
+        text1: 'Estado actualizado',
+        text2: 'El estado del pedido ha sido actualizado exitosamente.',
+      });
       fetchPedidos();
     } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Hubo un problema al actualizar el estado del pedido.',
+      });
       console.error('Error al actualizar estado del pedido:', error);
     }
   };
