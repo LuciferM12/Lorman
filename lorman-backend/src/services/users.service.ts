@@ -47,6 +47,10 @@ const UserService = {
         const updatedUser = await UserRepository.update(id, data);
         return UserResponseSchema.parse(updatedUser);
     },
-}
 
+    async listUsers(limit = 100, offset = 0): Promise<UserResponseDTO[]> {
+        const users = await UserRepository.list(limit, offset);
+        return users.map(user => UserResponseSchema.parse(user));
+    }
+};
 export default UserService;

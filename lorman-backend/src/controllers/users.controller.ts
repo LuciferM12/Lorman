@@ -57,6 +57,17 @@ const UsersController = {
         } catch (error: any) {
             res.status(400).json({ message: error.message });
         }
+    },
+
+    async listUsers(req: Request, res: Response) {
+        try {
+            const limit = parseInt(req.query.limit as string) || 100;
+            const offset = parseInt(req.query.offset as string) || 0;
+            const users = await UserService.listUsers(limit, offset);
+            res.status(200).json({ users });
+        } catch (error: any) {
+            res.status(400).json({ message: error.message });
+        }
     }
 }
 

@@ -94,3 +94,23 @@ export async function updateUser(id: number, data: Partial<ProfileData>) {
         }
     }
 }
+
+export async function listUsers(limit = 100, offset = 0) {
+    try {
+        const response = await axios.get(`${API_URL}/users`, {
+            params: { limit, offset }
+        });
+        return response.data;
+    } catch (error: any) {
+        if (error.response) {
+            throw new Error(
+                `${error.response.data && typeof error.response.data === 'object'
+                    ? (error.response.data.message || JSON.stringify(error.response.data))
+                    : error.response.data
+                }`
+            );
+        } else {
+            throw new Error(`Error en la solicitud: ${error.message}`);
+        }
+    }
+}
