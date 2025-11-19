@@ -11,9 +11,7 @@ const CarritoService = {
     async createCarrito(data: Omit<CarritoDTO, "id_carrito">): Promise<CarritoDTO> {
         const existingCarrito = await CarritoRepository.findByCliente(data.id_usuario);
         if (existingCarrito) {
-            //throw new Error(`El usuario ya tiene un carrito activo`);
             return {} as CarritoDTO;
-
         }
 
         const newCarrito = await CarritoRepository.createCarrito(data);
@@ -23,8 +21,7 @@ const CarritoService = {
     async getCarritoByCliente(id_cliente: number): Promise<{ id_carrito: number } | null> {
         const carritoCompleto = await CarritoRepository.findByCliente(id_cliente);
         if (!carritoCompleto) {
-            //throw new Error(`Carrito no encontrado para el cliente con ID ${id_cliente}`);
-            return null
+            return null;
         }
 
         return { id_carrito: carritoCompleto.id_carrito };
@@ -49,8 +46,22 @@ const CarritoService = {
             throw new Error(`El carrito con ID ${data.id_carrito} no existe`);
         }
 
-        const newDetail = await CarritoRepository.addDetail(data);
-        return newDetail;
+        const existingProduct = await CarritoRepository.findByProductInCarrito(
+            data.id_carrito,
+            data.id_producto
+        );
+
+        if (existingProduct) {
+            const newQuantity = existingProduct.cantidad + data.cantidad;
+            const updated = await CarritoRepository.updateDetail(
+                existingProduct.id_detalle_carrito,
+                newQuantity
+            );
+            return updated;
+        } else {
+            const newDetail = await CarritoRepository.addDetail(data);
+            return newDetail;
+        }
     },
 
     async updateProductQuantity(id_detalle_carrito: number, cantidad: number): Promise<CarDetailUpdateWithoutProductosDTO> {
