@@ -27,7 +27,7 @@ export default function ShoppingCartScreen() {
           descripcion: detail.productos.descripcion,
           precio: detail.productos.precio_unitario,
           cantidad: detail.cantidad,
-          imagen: detail.productos.image || undefined,
+          imagen: detail.productos.imagen || undefined,
           id_detalle_carrito: detail.id_detalle_carrito,
         }));
         setCartItems(items);

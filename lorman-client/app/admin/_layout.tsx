@@ -6,6 +6,7 @@ import { Stack, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/context/AuthContext';
 import Toast from 'react-native-toast-message';
+import AdminBottomBar from '@/components/custom/admin/Bottombar';
 
 const AdminLayout = () => {
   const { user, isAuthenticated, logoutAuth, loading } = useAuth();
@@ -45,9 +46,15 @@ const AdminLayout = () => {
         <View className="flex-1">
           {/* Header */}
           <AdminHeader onLogout={handleLogout} />
-
-          {/* Content from Stack screens */}
-          <Stack screenOptions={{ headerShown: false }} />
+          <View className="flex-1 pb-0 md:pb-0">
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { paddingBottom: 80 }, 
+              }}
+            />
+          </View>
+          <AdminBottomBar />
         </View>
       </View>
     </SafeAreaView>

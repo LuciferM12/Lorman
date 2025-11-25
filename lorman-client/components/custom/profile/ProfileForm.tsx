@@ -5,38 +5,84 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Text } from "@/components/ui/text"
 import { useState, useEffect, useRef } from "react"
-import { View } from "react-native"
-import axios from "axios"
+import { View, ActivityIndicator } from "react-native"
+import { UserType } from "@/interfaces/IUser"
+import { getUserByEmail, updateUser } from "@/api/users" 
+import Toast from "react-native-toast-message"
 
-interface ProfileData {
+export interface ProfileData {
   fullName: string
   email: string
   address: string
   phone: string
   deliveryDays: string
+  role?: string
 }
 
-export function ProfileCard() {
+interface ProfileCardProps {
+  user: UserType | null
+}
+
+export function ProfileCard({ user }: ProfileCardProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isFetching, setIsFetching] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const isMounted = useRef(true)
 
-  const [formData, setFormData] = useState<ProfileData>({
-    fullName: "Juan Pérez",
-    email: "juan.perez@email.com",
-    address: "Av. Siempre Viva 742, Col. Centro, C.P. 78000",
-    phone: "444 123 4567",
-    deliveryDays: "Lunes, Miércoles y Viernes",
-  })
+  const initialData: ProfileData = {
+    fullName: '',
+    email: '',
+    address: '',
+    phone: '',
+    deliveryDays: '',
+  }
+
+  const [formData, setFormData] = useState<ProfileData>(initialData)
 
   useEffect(() => {
     isMounted.current = true
+    
+    const loadUserData = async () => {
+      if (!user?.email) {
+        setIsFetching(false)
+        return
+      }
+
+      try {
+        setIsFetching(true)
+        setError(null)
+        
+        const userData = await getUserByEmail(user.email)
+
+        if (userData) {
+          setFormData({
+            fullName: userData.user.nombre_completo || '',
+            email: userData.user.email || '',
+            address: userData.user.direccion || '',
+            phone: userData.user.telefono || '',
+            deliveryDays: userData.user.dias_entrega_preferidos || '',
+          })
+        }
+      } catch (err) {
+        console.error('Error loading user data:', err)
+        if (isMounted.current) {
+          setError('Error al cargar los datos del perfil')
+        }
+      } finally {
+        if (isMounted.current) {
+          setIsFetching(false)
+        }
+      }
+    }
+
+    loadUserData()
+
     return () => {
       isMounted.current = false
     }
-  }, [])
+  }, [user])
 
   const handleInputChange = (field: keyof ProfileData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -50,33 +96,19 @@ export function ProfileCard() {
     setSuccess(false)
 
     try {
-      const response = await axios.put("/api/profile", formData, {
-        headers: { "Content-Type": "application/json" },
-      })
-
-      console.log("Profile updated successfully:", response.data)
+      await updateUser(user!.id_usuario, formData)
       
-      if (isMounted.current) {
-        setSuccess(true)
-        setIsEditing(false)
-
-        // Reset success message after 3 seconds
-        setTimeout(() => {
-          if (isMounted.current) {
-            setSuccess(false)
-          }
-        }, 3000)
-      }
+      Toast.show({
+        type: 'success',
+        text1: 'Perfil actualizado exitosamente',
+      })
+      setIsEditing(false)
     } catch (err) {
       console.error("Error updating profile:", err)
-      
-      if (isMounted.current) {
-        if (axios.isAxiosError(err)) {
-          setError(err.response?.data?.message ?? "Error al actualizar el perfil")
-        } else {
-          setError("Error al actualizar el perfil")
-        }
-      }
+      Toast.show({
+        type: 'error',
+        text1: 'Error al actualizar el perfil',
+      })
     } finally {
       if (isMounted.current) {
         setIsLoading(false)
@@ -88,6 +120,35 @@ export function ProfileCard() {
     setIsEditing(false)
     setError(null)
     setSuccess(false)
+    
+    if (user?.email) {
+      getUserByEmail(user.email).then((userData) => {
+        if (isMounted.current && userData) {
+          setFormData({
+            fullName: userData.user.nombre_completo || '',
+            email: userData.user.email || '',
+            address: userData.user.direccion || '',
+            phone: userData.user.telefono || '',
+            deliveryDays: userData.user.dias_entrega_preferidos || '',
+          })
+        }
+      })
+    }
+  }
+
+  if (isFetching) {
+    return (
+      <Card className="w-full max-w-md p-8 shadow-lg">
+        <View className="flex items-center justify-center py-12">
+          <ActivityIndicator size="large" color="#1a9bcc" />
+          <Text className="mt-4 text-gray-600">Cargando perfil...</Text>
+        </View>
+      </Card>
+    )
+  }
+
+  const getInitial = () => {
+    return formData.fullName ? formData.fullName.charAt(0).toUpperCase() : 'U'
   }
 
   return (
@@ -95,9 +156,11 @@ export function ProfileCard() {
       {/* Avatar and Header */}
       <View className="flex flex-col items-center mb-8">
         <View className="w-20 h-20 rounded-full bg-[#1a4d7a] flex items-center justify-center mb-4">
-          <Text className="text-white text-3xl font-semibold">J</Text>
+          <Text className="text-white text-3xl font-semibold">{getInitial()}</Text>
         </View>
-        <Text className="text-xl font-semibold text-gray-900">{formData.fullName}</Text>
+        <Text className="text-xl font-semibold text-gray-900">
+          {formData.fullName || 'Usuario'}
+        </Text>
         <Text className="text-sm text-teal-600 mt-1">Cliente</Text>
       </View>
 
@@ -213,7 +276,7 @@ function FormField({
         />
       ) : (
         <View className="bg-gray-50 rounded-md px-4 py-3">
-          <Text className="text-sm text-gray-900">{value}</Text>
+          <Text className="text-sm text-gray-900">{value || 'No especificado'}</Text>
         </View>
       )}
     </View>

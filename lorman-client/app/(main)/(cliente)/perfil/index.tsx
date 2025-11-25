@@ -1,15 +1,16 @@
-import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import { Text, View } from 'react-native';
 import Banner from '@/components/custom/banner/banner';
 import Animated, { useAnimatedRef, useScrollViewOffset } from 'react-native-reanimated';
 import LormanFooter from '@/components/custom/Footer';
 import { ProfileCard } from '@/components/custom/profile/ProfileForm';
+import { useAuth } from '@/context/AuthContext';
 
 
 const politicas = () => {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
+  const { user } = useAuth();
 
   return (
     <View className="flex-1 bg-white">
@@ -30,7 +31,7 @@ const politicas = () => {
         />
 
         <View className="flex items-center justify-center p-4 py-12">
-          <ProfileCard />
+          <ProfileCard user={user} />
         </View>
 
         <LormanFooter />

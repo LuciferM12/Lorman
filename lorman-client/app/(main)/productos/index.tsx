@@ -9,6 +9,7 @@ import { addItemToCart } from '@/api/cart';
 import { useAuth } from '@/context/AuthContext';
 import { getProducts } from '@/api/products';
 import { ProductReturnDTO } from '@/interfaces/IProduct';
+import Toast from 'react-native-toast-message';
 
 const productos = () => {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -25,7 +26,8 @@ const productos = () => {
           title: prod.nombre_producto,
           description: prod.descripcion,
           price: `$${prod.precio_unitario} MXN`,
-          backgroundColor: '#2A9FD8', // Puedes asignar colores dinámicamente si lo deseas
+          backgroundColor: '#2A9FD8',
+          imagen: prod.imagen
         }));
         setProducts(setproducts);
         console.log('Productos obtenidos:', setproducts);
@@ -37,16 +39,23 @@ const productos = () => {
   }, []);
 
   const handleProductPressed = async (product: Product) => {
-    console.log('Producto presionado:', product);
-
     try {
       await addItemToCart({
         id_usuario: user?.id_usuario!,
         id_producto: product.id,
         cantidad: 1,
       });
-      console.log(`Producto ${product.title} agregado al carrito.`);
+      Toast.show({
+        type: 'success',
+        text1: 'Producto agregado al carrito',
+        text2: `${product.title} ha sido añadido a tu carrito.`,
+      })
     } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error al agregar producto',
+        text2: 'No se pudo añadir el producto a tu carrito.',
+      });
       console.error('Error adding product to cart:', error);
     }
   };

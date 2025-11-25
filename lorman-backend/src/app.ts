@@ -8,7 +8,7 @@ import reviewRoutes from "./routes/reviews.routes";
 import faqRoutes from "./routes/faq.routes";
 import cartRoutes from "./routes/cart.routes";
 import paymentsRoutes from "./routes/payments.routes";
-import { createCheckoutSession } from "./controllers/payment.controller";
+import { createCheckoutSession, createPaymentIntent } from "./controllers/payment.controller";
 import { sendEmail } from "./utils/mail";
 import orderRoutes from "./routes/orders.routes";
 
@@ -28,8 +28,8 @@ app.use("/payments", paymentsRoutes);
 app.use(express.json());
 
 app.post("/create-checkout-session", createCheckoutSession);
+app.post("/create-payment-intent", createPaymentIntent);
 
-// TODO: Routes must be defined here 
 app.get("/ping", async (req, res) => {
     const { data, error } = await supabaseClient.from("usuarios").select("*").limit(1);
     if (error) {
@@ -38,7 +38,6 @@ app.get("/ping", async (req, res) => {
     return res.json({ message: "Conexión exitosa", data });
 });
 
-// 🧪 Endpoint de prueba para emails
 app.post("/test-email", async (req, res) => {
     try {
         const { to, type = 'simple' } = req.body;
@@ -146,7 +145,7 @@ app.post("/test-email", async (req, res) => {
     }
 });
 
-// Endpoint de contacto
+
 app.post("/contactEmail", async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;

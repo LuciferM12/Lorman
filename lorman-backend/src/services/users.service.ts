@@ -33,7 +33,24 @@ const UserService = {
 
         const token = generateToken({ id_usuario: user.id_usuario, email: user.email, rol: user.rol });
         return { token, user: userWithoutPassword };
-    }
-}
+    },
 
+    async getUserByEmail(email: string): Promise<UserResponseDTO | null> {
+        const user = await UserRepository.findByEmail(email);
+        if (!user) {
+            return null;
+        }
+        return UserResponseSchema.parse(user);
+    },
+
+    async updateUser(id: number, data: Partial<RegisterUserDTO>): Promise<UserResponseDTO> {
+        const updatedUser = await UserRepository.update(id, data);
+        return UserResponseSchema.parse(updatedUser);
+    },
+
+    async listUsers(limit = 100, offset = 0): Promise<UserResponseDTO[]> {
+        const users = await UserRepository.list(limit, offset);
+        return users.map(user => UserResponseSchema.parse(user));
+    }
+};
 export default UserService;

@@ -5,11 +5,12 @@ export const productRegisterSchema = z.object({
     descripcion: z.string().optional(),
     precio_unitario: z.coerce.number().min(0, "El precio unitario debe ser un número positivo"),
     stock: z.coerce.number().min(0, "El stock debe ser un número positivo"),
+    imagen: z.string().optional().nullable(),
 })
 
 export const productCart = productRegisterSchema.omit({ stock: true }).extend({
     id_producto: z.number().min(1, "El ID del producto es requerido"),
-    image: z.string().url("La imagen debe ser una URL válida").optional().nullable(),
+    imagen: z.string().optional().nullable(),
 });
 
 export const productUpdatedSchema = z.object({
@@ -30,7 +31,7 @@ const productSchemaReturn = z.object({
     descripcion: z.string().optional(),
     id_producto: z.number().min(1, "El ID del producto es requerido"),
     precio_unitario: z.coerce.number().min(0, "El precio unitario debe ser un número positivo"),
-    image: z.string().url("La imagen debe ser una URL válida").optional().nullable(),
+    imagen: z.string().optional().nullable(),
     stock: z.coerce.number().min(0, "El stock debe ser un número positivo"),
     disponible: z.coerce.boolean()
 }) 
